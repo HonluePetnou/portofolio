@@ -159,10 +159,10 @@ export function HeroSection() {
 
         {/* Right Side - Profile Card */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="relative perspective-1000"
+          className="relative perspective-1000 h-[500px] w-full max-w-md mx-auto"
         >
           {/* Floating Animation Wrapper */}
           <motion.div
@@ -172,109 +172,113 @@ export function HeroSection() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="relative z-20"
+            className="relative w-full h-full z-20"
           >
-            <div className="glass-card p-6 space-y-6 max-w-sm mx-auto backdrop-blur-xl bg-white/5 border-white/10 shadow-2xl shadow-black/50">
-              {/* Profile Image with Ring */}
-              <div className="relative p-1 rounded-3xl bg-neon-blue">
-                <div className="relative w-full aspect-3/4 rounded-[20px] overflow-hidden bg-gray-900 border-4 border-black/50">
-                  <Image
-                    src="/me-pro.png"
-                    alt="Frédéric Armel Petnou"
-                    fill
-                    className="object-cover transition-transform duration-700 hover:scale-110"
-                    priority
-                  />
+            {/* Main Card Container */}
+            <div className="relative w-full h-full rounded-[40px] overflow-hidden border-2 border-white/5 bg-gray-900 shadow-2xl">
+              {/* Profile Image */}
+              <Image
+                src="/me-pro.png"
+                alt="Mansah"
+                fill
+                className="object-cover object-center scale-110"
+                priority
+              />
+
+              {/* Overlay Gradient for Text Readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent" />
+
+              {/* Bottom Glass Card Info */}
+              <div className="absolute bottom-4 left-4 right-4 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 shadow-lg">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-neon-blue/20">
+                      <Code className="w-5 h-5 text-neon-blue" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg leading-tight">
+                        Software Engineer
+                      </h3>
+                      {/* Rotating Role Text */}
+                      <div className="h-4 overflow-hidden relative w-32">
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={currentRoleIndex}
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -20, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="text-xs font-medium text-gray-400 absolute w-full truncate"
+                          >
+                            {roles[currentRoleIndex]}
+                          </motion.div>
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-neon-blue font-bold text-sm bg-neon-blue/10 px-3 py-1 rounded-full border border-neon-blue/20">
+                    Available
+                  </div>
+                </div>
+
+                {/* Tech Stack */}
+                <div className="space-y-2">
+                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider pl-1">
+                    Tech Stack
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {["React", "TS", "Python", "C", "SQL"].map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-3 py-1 rounded-full bg-black/40 border border-white/5 text-gray-200 text-xs font-medium"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Rotating Role Text */}
-              <div className="h-6 overflow-hidden relative flex justify-center items-center">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentRoleIndex}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-base font-bold text-white tracking-wide whitespace-nowrap absolute"
+            {/* Floating Social Icons - Right Side */}
+            <div className="absolute top-8 -right-6 md:-right-16 flex flex-col gap-3 z-30">
+              <AnimatePresence mode="popLayout">
+                {visibleSocials.map((social, index) => (
+                  <motion.a
+                    key={social.label}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ delay: index * 0.1 }}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-900/80 backdrop-blur-md border border-white/10 hover:bg-neon-blue hover:border-neon-blue hover:scale-110 transition-all shadow-lg group"
+                    aria-label={social.label}
                   >
-                    {roles[currentRoleIndex].toUpperCase()}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+                    <social.icon className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                  </motion.a>
+                ))}
 
-              {/* Role Badge and Status */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-neon-blue/20 border border-neon-blue/20 flex items-center justify-center">
-                    <Code className="w-6 h-6 text-neon-blue" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-base font-bold text-white tracking-wide">
-                      ENGINEER & QA
-                    </div>
-                    <div className="text-xs font-medium text-neon-blue">
-                      Focus on Quality
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  ONLINE
-                </div>
-              </div>
-
-              {/* Social Links */}
-              <div className="grid grid-cols-4 gap-3 pt-4">
-                <AnimatePresence mode="popLayout">
-                  {visibleSocials.map((social, index) => (
-                    <motion.a
-                      key={social.label}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1 group"
-                      aria-label={social.label}
-                    >
-                      <social.icon className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-                    </motion.a>
-                  ))}
-                  {showAllSocials && (
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      onClick={() => setShowAllSocials(false)}
-                      className="flex items-center justify-center py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1 group cursor-pointer"
-                      aria-label="Show less socials"
-                    >
-                      <Minus className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-                    </motion.button>
+                {/* Toggle Button */}
+                <motion.button
+                  key="toggle"
+                  onClick={() => setShowAllSocials(!showAllSocials)}
+                  className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-900/80 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-all shadow-lg text-gray-400 hover:text-white"
+                >
+                  {showAllSocials ? (
+                    <Minus className="w-5 h-5" />
+                  ) : (
+                    <MoreHorizontal className="w-5 h-5" />
                   )}
-                  {!showAllSocials && (
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      onClick={() => setShowAllSocials(true)}
-                      className="flex items-center justify-center py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1 group cursor-pointer"
-                      aria-label="Show more socials"
-                    >
-                      <MoreHorizontal className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-                    </motion.button>
-                  )}
-                </AnimatePresence>
-              </div>
+                </motion.button>
+              </AnimatePresence>
             </div>
           </motion.div>
 
-          {/* Decorative Elements behind card */}
-          <div className="absolute top-10 -right-10 w-24 h-24 bg-neon-blue/30 rounded-full blur-2xl animate-pulse delay-700" />
-          <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-neon-blue/30 rounded-full blur-2xl animate-pulse" />
+          {/* Decorative Background Elements */}
+          <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-radial from-neon-blue/10 to-transparent blur-3xl opacity-50" />
         </motion.div>
       </div>
     </section>

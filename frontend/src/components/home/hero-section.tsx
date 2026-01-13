@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import {
   ArrowRight,
   Download,
@@ -9,23 +10,51 @@ import {
   Github,
   Linkedin,
   Mail,
+  Instagram,
+  Facebook,
+  Twitter,
+  MoreHorizontal,
+  Minus,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 export function HeroSection() {
+  const roles = ["Software Engineer", "QA Engineer", "Full Stack Developer"];
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [showAllSocials, setShowAllSocials] = useState(false);
+
+  const socialLinks = [
+    { icon: Github, href: "https://github.com", label: "Github" },
+    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+    { icon: Mail, href: "mailto:contact@example.com", label: "Email" },
+    { icon: Twitter, href: "https://twitter.com", label: "X" },
+    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+    { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
+  ];
+
+  const visibleSocials = showAllSocials ? socialLinks : socialLinks.slice(0, 3);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section
       id="home"
-      className="relative flex flex-col items-center justify-center min-h-screen py-20 overflow-hidden"
+      className="relative flex flex-col items-center justify-center min-h-screen pt-32 pb-20 -mt-20 overflow-hidden"
     >
       {/* Background Spotlights */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none z-0" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-blue/20 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-neon-purple/20 rounded-full blur-[120px] mix-blend-screen animate-pulse animation-delay-2000" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-neon-blue/20 rounded-full blur-[120px] mix-blend-screen animate-pulse animation-delay-2000" />
       </div>
 
-      <div className="grid md:grid-cols-[1.2fr_0.8fr] gap-12 items-center max-w-7xl w-full relative z-10 px-4">
+      <div className="grid md:grid-cols-[1.2fr_0.8fr] gap-12 items-start max-w-7xl w-full relative z-10 px-4">
         {/* Left Side - Text Content */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -52,10 +81,8 @@ export function HeroSection() {
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
               Hi, I'm{" "}
               <span className="relative inline-block">
-                <span className="absolute -inset-2 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 blur-xl rounded-full" />
-                <span className="relative bg-gradient-to-r from-neon-blue via-violet-400 to-neon-purple bg-clip-text text-transparent animate-gradient-x">
-                  Frédéric Armel
-                </span>
+                <span className="absolute -inset-2 bg-neon-blue/20 blur-xl rounded-full" />
+                <span className="relative text-neon-blue">Mansah</span>
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl">
@@ -72,10 +99,10 @@ export function HeroSection() {
           <div className="flex flex-wrap gap-4">
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-colors hover:bg-white/10 hover:border-neon-purple/30 group"
+              className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-colors hover:bg-white/10 hover:border-neon-blue/30 group"
             >
-              <div className="p-3 rounded-xl bg-neon-purple/10 group-hover:bg-neon-purple/20 transition-colors">
-                <Code className="w-6 h-6 text-neon-purple" />
+              <div className="p-3 rounded-xl bg-neon-blue/10 group-hover:bg-neon-blue/20 transition-colors">
+                <Code className="w-6 h-6 text-neon-blue" />
               </div>
               <div className="text-left">
                 <div className="text-3xl font-bold text-white leading-none mb-1">
@@ -111,7 +138,7 @@ export function HeroSection() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-bold text-lg shadow-[0_0_20px_rgba(14,165,233,0.3)] hover:shadow-[0_0_35px_rgba(14,165,233,0.5)] transition-all duration-300"
+                className="group relative flex items-center gap-3 px-8 py-4 rounded-full bg-neon-blue text-white font-bold text-lg shadow-[0_0_20px_rgba(14,165,233,0.3)] hover:shadow-[0_0_35px_rgba(14,165,233,0.5)] transition-all duration-300"
               >
                 Let's Talk - Book a Call
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
@@ -149,7 +176,7 @@ export function HeroSection() {
           >
             <div className="glass-card p-6 space-y-6 max-w-sm mx-auto backdrop-blur-xl bg-white/5 border-white/10 shadow-2xl shadow-black/50">
               {/* Profile Image with Ring */}
-              <div className="relative p-1 rounded-3xl bg-gradient-to-br from-neon-purple to-neon-blue">
+              <div className="relative p-1 rounded-3xl bg-neon-blue">
                 <div className="relative w-full aspect-3/4 rounded-[20px] overflow-hidden bg-gray-900 border-4 border-black/50">
                   <Image
                     src="/me-pro.png"
@@ -161,10 +188,26 @@ export function HeroSection() {
                 </div>
               </div>
 
+              {/* Rotating Role Text */}
+              <div className="h-6 overflow-hidden relative flex justify-center items-center">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentRoleIndex}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-base font-bold text-white tracking-wide whitespace-nowrap absolute"
+                  >
+                    {roles[currentRoleIndex].toUpperCase()}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
               {/* Role Badge and Status */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neon-blue/20 to-transparent border border-neon-blue/20 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-neon-blue/20 border border-neon-blue/20 flex items-center justify-center">
                     <Code className="w-6 h-6 text-neon-blue" />
                   </div>
                   <div className="text-left">
@@ -182,49 +225,56 @@ export function HeroSection() {
                 </div>
               </div>
 
-              {/* Tech Stack */}
-              <div className="space-y-3">
-                <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  Core Technologies
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {["React", "Next.js", "TypeScript", "Python", "Tailwind"].map(
-                    (tech) => (
-                      <span
-                        key={tech}
-                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-xs font-medium hover:bg-white/10 hover:border-white/20 transition-colors cursor-default"
-                      >
-                        {tech}
-                      </span>
-                    )
-                  )}
-                </div>
-              </div>
-
               {/* Social Links */}
-              <div className="flex gap-3 pt-2">
-                {[
-                  { icon: Github, href: "https://github.com" },
-                  { icon: Linkedin, href: "https://linkedin.com" },
-                  { icon: Mail, href: "mailto:contact@example.com" },
-                ].map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 group flex items-center justify-center py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1"
-                  >
-                    <social.icon className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-                  </a>
-                ))}
+              <div className="grid grid-cols-4 gap-3 pt-4">
+                <AnimatePresence mode="popLayout">
+                  {visibleSocials.map((social, index) => (
+                    <motion.a
+                      key={social.label}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1 group"
+                      aria-label={social.label}
+                    >
+                      <social.icon className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                    </motion.a>
+                  ))}
+                  {showAllSocials && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      onClick={() => setShowAllSocials(false)}
+                      className="flex items-center justify-center py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1 group cursor-pointer"
+                      aria-label="Show less socials"
+                    >
+                      <Minus className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                    </motion.button>
+                  )}
+                  {!showAllSocials && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      onClick={() => setShowAllSocials(true)}
+                      className="flex items-center justify-center py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all hover:-translate-y-1 group cursor-pointer"
+                      aria-label="Show more socials"
+                    >
+                      <MoreHorizontal className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                    </motion.button>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </motion.div>
 
           {/* Decorative Elements behind card */}
           <div className="absolute top-10 -right-10 w-24 h-24 bg-neon-blue/30 rounded-full blur-2xl animate-pulse delay-700" />
-          <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-neon-purple/30 rounded-full blur-2xl animate-pulse" />
+          <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-neon-blue/30 rounded-full blur-2xl animate-pulse" />
         </motion.div>
       </div>
     </section>

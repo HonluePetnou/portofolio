@@ -4,9 +4,9 @@ import { Mail, Linkedin, Github, Send } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact | Frédéric Armel Petnou",
+  title: "Contact | Honlue Petnou Frederic Armel",
   description:
-    "Get in touch for collaborations, opportunities, or technical discussions.",
+    "Get in touch with Honlue Petnou Frederic Armel for collaborations, opportunities, or technical discussions.",
 };
 
 export default function ContactPage() {

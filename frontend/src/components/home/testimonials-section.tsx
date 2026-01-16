@@ -54,7 +54,7 @@ export function TestimonialsSection() {
               viewport={{ once: true }}
             >
               <GlassCard className="p-6 h-full flex flex-col">
-                <Quote className="w-8 h-8 text-neon-blue mb-4 opacity-50" />
+                <Quote className="w-8 h-8 text-neon-purple mb-4 opacity-50" />
                 <p className="text-gray-300 mb-6 flex-grow italic">
                   "{testimonial.content}"
                 </p>

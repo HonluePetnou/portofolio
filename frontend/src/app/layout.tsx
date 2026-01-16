@@ -8,9 +8,9 @@ import { Footer } from "@/components/layout/footer";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Frédéric Armel Petnou | Senior Frontend Engineer",
+  title: "Honlue Petnou Frederic Armel | Senior Frontend Engineer",
   description:
-    "Senior Frontend Engineer & QA — Product-Oriented. Designing, testing, and shipping reliable digital products.",
+    "Honlue Petnou Frederic Armel - Senior Frontend Engineer & QA — Product-Oriented. Designing, testing, and shipping reliable digital products.",
 };
 
 export default function RootLayout({

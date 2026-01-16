@@ -12,6 +12,7 @@ const navItems = [
   { name: "About", href: "/#about" },
   { name: "Projects", href: "/#projects" },
   { name: "Experience", href: "/#experience" },
+  { name: "Blog", href: "/#blog" },
   { name: "Contact", href: "/#contact" },
 ];
 
@@ -33,7 +34,14 @@ export function Navbar() {
     if (pathname !== "/") return;
 
     const handleScroll = () => {
-      const sections = ["home", "about", "projects", "experience", "contact"];
+      const sections = [
+        "home",
+        "about",
+        "projects",
+        "experience",
+        "blog",
+        "contact",
+      ];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {

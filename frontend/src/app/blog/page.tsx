@@ -6,9 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog | Frédéric Armel Petnou",
+  title: "Blog | Honlue Petnou Frederic Armel",
   description:
-    "Insights on Quality Assurance, Frontend Engineering, and Product Mindset.",
+    "Insights on Quality Assurance, Frontend Engineering, and Product Mindset by Honlue Petnou Frederic Armel.",
 };
 
 const categories = [
@@ -109,7 +109,7 @@ export default function BlogPage() {
               <div className="flex justify-between items-start mb-4">
                 <Badge
                   variant="outline"
-                  className="text-xs text-gray-400 border-gray-700"
+                  className="text-xs text-neon-purple border-neon-purple/20 bg-neon-purple/5"
                 >
                   {article.category}
                 </Badge>

@@ -3,8 +3,7 @@ export function Footer() {
     <footer className="w-full py-6 mt-20 border-t border-white/5 bg-black/20 backdrop-blur-sm">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 md:flex-row md:px-8">
         <p className="text-center text-sm text-gray-400 md:text-left">
-          &copy; {new Date().getFullYear()} Frédéric Armel Petnou. Built with
-          Next.js & Gemini.
+          &copy; {new Date().getFullYear()} Honlue Petnou Frederic Armel.
         </p>
         <div className="flex gap-4">
           <a

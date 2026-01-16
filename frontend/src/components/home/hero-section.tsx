@@ -277,6 +277,18 @@ export function HeroSection() {
             </div>
           </motion.div>
 
+          {/* Name Display below card */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="mt-6 text-center"
+          >
+            <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+              Honlue Petnou Frederic Armel
+            </h2>
+          </motion.div>
+
           {/* Decorative Background Elements */}
           <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-neon-blue/5 blur-3xl opacity-50" />
         </motion.div>

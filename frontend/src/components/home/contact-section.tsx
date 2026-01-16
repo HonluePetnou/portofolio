@@ -6,7 +6,7 @@ import { Mail, Linkedin, Github, MapPin, Send } from "lucide-react";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="py-20">
+    <section id="contact" className="py-20 scroll-mt-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

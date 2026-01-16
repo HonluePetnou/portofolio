@@ -6,7 +6,7 @@ import { User, Briefcase, GraduationCap } from "lucide-react";
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-20">
+    <section id="about" className="py-20 scroll-mt-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

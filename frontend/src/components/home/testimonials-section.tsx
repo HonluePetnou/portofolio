@@ -38,7 +38,7 @@ export function TestimonialsSection() {
         viewport={{ once: true }}
       >
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-          What People <span className="text-neon-purple">Say</span>
+          What People <span className="text-neon-blue">Say</span>
         </h2>
         <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
           Feedback from colleagues and clients

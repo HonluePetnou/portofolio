@@ -66,7 +66,7 @@ export function ContactSection() {
               </div>
             </GlassCard>
 
-            <GlassCard className="p-6 text-center bg-gradient-to-br from-neon-purple/10 to-neon-blue/10">
+            <GlassCard className="p-6 text-center bg-neon-blue/5 border-neon-blue/10">
               <p className="text-sm text-gray-300">
                 <strong className="text-white">
                   Available for remote work worldwide
@@ -93,7 +93,7 @@ export function ContactSection() {
                 <input
                   type="text"
                   id="name"
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-neon-purple/50 focus:ring-1 focus:ring-neon-purple/50 transition-all placeholder:text-gray-600"
+                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-neon-blue/50 focus:ring-1 focus:ring-neon-blue/50 transition-all placeholder:text-gray-600"
                   placeholder="John Doe"
                 />
               </div>
@@ -107,7 +107,7 @@ export function ContactSection() {
                 <input
                   type="email"
                   id="email"
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-neon-purple/50 focus:ring-1 focus:ring-neon-purple/50 transition-all placeholder:text-gray-600"
+                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-neon-blue/50 focus:ring-1 focus:ring-neon-blue/50 transition-all placeholder:text-gray-600"
                   placeholder="john@example.com"
                 />
               </div>
@@ -121,13 +121,13 @@ export function ContactSection() {
                 <textarea
                   id="message"
                   rows={4}
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-neon-purple/50 focus:ring-1 focus:ring-neon-purple/50 transition-all placeholder:text-gray-600 resize-none"
+                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-neon-blue/50 focus:ring-1 focus:ring-neon-blue/50 transition-all placeholder:text-gray-600 resize-none"
                   placeholder="Tell me about your project..."
                 />
               </div>
               <button
                 type="button"
-                className="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                className="w-full bg-neon-blue text-white font-bold py-3 rounded-lg hover:bg-neon-blue/90 shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all flex items-center justify-center gap-2"
               >
                 Send Message <Send className="h-4 w-4" />
               </button>

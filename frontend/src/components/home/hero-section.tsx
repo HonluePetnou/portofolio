@@ -50,8 +50,8 @@ export function HeroSection() {
       {/* Background Spotlights */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none z-0" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-blue/20 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-neon-blue/20 rounded-full blur-[120px] mix-blend-screen animate-pulse animation-delay-2000" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-blue/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-neon-blue/10 rounded-full blur-[120px] mix-blend-screen animate-pulse animation-delay-2000" />
       </div>
 
       <div className="grid md:grid-cols-[1.2fr_0.8fr] gap-12 items-start max-w-7xl w-full relative z-10 px-4">
@@ -185,8 +185,8 @@ export function HeroSection() {
                 priority
               />
 
-              {/* Overlay Gradient for Text Readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent" />
+              {/* Overlay Gradient (keeping subtle readability) */}
+              <div className="absolute inset-0 bg-linear-to-t from-gray-900/90 via-gray-900/40 to-transparent" />
 
               {/* Bottom Glass Card Info */}
               <div className="absolute bottom-4 left-4 right-4 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 shadow-lg">
@@ -278,7 +278,7 @@ export function HeroSection() {
           </motion.div>
 
           {/* Decorative Background Elements */}
-          <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-radial from-neon-blue/10 to-transparent blur-3xl opacity-50" />
+          <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-neon-blue/5 blur-3xl opacity-50" />
         </motion.div>
       </div>
     </section>

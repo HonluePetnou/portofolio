@@ -57,7 +57,7 @@ export function Timeline() {
             className="relative"
           >
             {/* Timeline Dot */}
-            <span className="absolute -left-[45px] md:-left-[61px] top-6 h-6 w-6 rounded-full border-4 border-[#0a0a0a] bg-neon-purple shadow-[0_0_10px_rgba(217,70,239,0.5)]" />
+            <span className="absolute -left-[45px] md:-left-[61px] top-6 h-6 w-6 rounded-full border-4 border-[#0a0a0a] bg-neon-blue shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
 
             <GlassCard className="p-8">
               <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between mb-4">

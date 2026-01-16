@@ -71,8 +71,7 @@ body {
 }
 
 .glass-text {
-  @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(to right, var(--foreground), #9ca3af);
+  @apply text-white;
 }
 
 /* Fancy Background Blobs */

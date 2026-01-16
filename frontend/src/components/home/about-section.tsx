@@ -37,8 +37,8 @@ export function AboutSection() {
                   fill
                   className="object-cover object-center"
                 />
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-linear-to-t from-gray-900/60 via-transparent to-transparent" />
+                {/* Overlay Glow (Pure Blue) */}
+                <div className="absolute inset-0 bg-linear-to-t from-neon-blue/20 via-transparent to-transparent opacity-40" />
               </div>
             </GlassCard>
           </motion.div>
@@ -72,8 +72,8 @@ export function AboutSection() {
 
             <GlassCard className="p-6">
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-full bg-neon-purple/20">
-                  <GraduationCap className="w-6 h-6 text-neon-purple" />
+                <div className="p-3 rounded-full bg-neon-blue/20">
+                  <GraduationCap className="w-6 h-6 text-neon-blue" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white mb-2">
@@ -94,7 +94,7 @@ export function AboutSection() {
                 <div className="text-sm text-gray-400">Years Exp</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-neon-purple">10+</div>
+                <div className="text-3xl font-bold text-neon-blue">10+</div>
                 <div className="text-sm text-gray-400">Projects</div>
               </div>
               <div className="text-center">

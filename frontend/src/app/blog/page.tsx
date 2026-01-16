@@ -59,13 +59,13 @@ export default function BlogPage() {
       {/* Featured Article */}
       <div className="mb-20">
         <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-2">
-          <BookOpen className="h-6 w-6 text-neon-purple" />
+          <BookOpen className="h-6 w-6 text-neon-blue" />
           Featured
         </h2>
         <Link href={`/blog/${articles[0].slug}`} className="block group">
-          <GlassCard className="group-hover:bg-white/10 transition-colors p-8 md:p-12 border-neon-purple/30">
+          <GlassCard className="group-hover:bg-white/10 transition-colors p-8 md:p-12 border-neon-blue/20">
             <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between mb-4">
-              <Badge className="bg-neon-purple/20 text-neon-purple border-neon-purple/50 w-fit">
+              <Badge className="bg-neon-blue/10 text-neon-blue border-neon-blue/20 w-fit">
                 {articles[0].category}
               </Badge>
               <span className="text-sm text-gray-400">

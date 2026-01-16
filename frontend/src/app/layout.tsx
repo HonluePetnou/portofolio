@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} min-h-screen antialiased selection:bg-neon-purple/30 selection:text-white`}
+        className={`${inter.variable} min-h-screen antialiased selection:bg-neon-blue/30 selection:text-white`}
       >
         <ThemeProvider
           attribute="class"
@@ -30,8 +30,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {/* Background Blobs */}
-          <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 bg-blob animate-blob" />
-          <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-900/20 bg-blob animate-blob animation-delay-2000" />
+          <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-900/10 bg-blob animate-blob" />
+          <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-800/10 bg-blob animate-blob animation-delay-2000" />
 
           <Navbar />
           <main className="container mx-auto px-4 pt-20 min-h-[calc(100vh-100px)]">

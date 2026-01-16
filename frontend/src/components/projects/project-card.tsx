@@ -5,12 +5,14 @@ import { ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export interface ProjectData {
   title: string;
   description: string;
   image: string;
   stack: string[];
+  highlightedStack?: string;
   links?: {
     demo?: string;
     repo?: string;
@@ -51,7 +53,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <Badge
               key={tech}
               variant="outline"
-              className="bg-neon-blue/10 border-neon-blue/20 text-neon-blue text-[11px] font-medium px-2.5 py-0.5"
+              className={cn(
+                "text-[11px] font-medium px-2.5 py-0.5",
+                tech === project.highlightedStack
+                  ? "bg-neon-purple/10 border-neon-purple/20 text-neon-purple"
+                  : "bg-neon-blue/10 border-neon-blue/20 text-neon-blue"
+              )}
             >
               {tech}
             </Badge>

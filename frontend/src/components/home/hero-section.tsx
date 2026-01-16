@@ -45,7 +45,7 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative flex flex-col items-center justify-center min-h-screen pt-32 pb-20 scroll-mt-12 overflow-hidden"
+      className="relative flex flex-col items-center justify-center min-h-screen pt-16 pb-20 scroll-mt-12 overflow-hidden"
     >
       {/* Background Spotlights */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none z-0" />
@@ -118,11 +118,11 @@ export function HeroSection() {
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-colors hover:bg-white/10 hover:border-neon-blue/30 group"
             >
-              <div className="p-3 rounded-xl bg-neon-blue/10 group-hover:bg-neon-blue/20 transition-colors">
-                <Briefcase className="w-6 h-6 text-neon-blue" />
+              <div className="p-3 rounded-xl bg-neon-purple/10 group-hover:bg-neon-purple/20 transition-colors">
+                <Briefcase className="w-6 h-6 text-neon-purple" />
               </div>
               <div className="text-left">
-                <div className="text-3xl font-bold text-white leading-none mb-1">
+                <div className="text-3xl font-bold text-neon-purple leading-none mb-1">
                   4+
                 </div>
                 <div className="text-sm font-medium text-gray-400">

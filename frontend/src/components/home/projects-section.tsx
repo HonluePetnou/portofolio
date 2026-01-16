@@ -12,6 +12,7 @@ const featuredProjects: ProjectData[] = [
       "AI-integrated hackathon project optimizing resource management.",
     image: "/projects/onecontrol.png",
     stack: ["Gemini AI", "Next.js", "Python"],
+    highlightedStack: "Gemini AI",
   },
   {
     title: "Feedly",
@@ -19,12 +20,14 @@ const featuredProjects: ProjectData[] = [
       "Health analytics application for personalized nutrition tracking.",
     image: "/projects/feedly.png",
     stack: ["FastAPI", "Python", "React", "PostgreSQL"],
+    highlightedStack: "PostgreSQL",
   },
   {
     title: "Tech Portfolio Directory",
     description: "Aggregator for tech portfolios with advanced filtering.",
     image: "/projects/portfolio-directory.png",
     stack: ["Next.js", "Firebase", "Puppeteer", "Tailwind CSS"],
+    highlightedStack: "Firebase",
   },
 ];
 

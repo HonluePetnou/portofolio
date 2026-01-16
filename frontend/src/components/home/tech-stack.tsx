@@ -2,17 +2,19 @@
 
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
+import { cn } from "@/lib/utils";
 
 const technologies = [
-  { name: "React", category: "Frontend" },
-  { name: "Next.js", category: "Frontend" },
-  { name: "TypeScript", category: "Language" },
-  { name: "FastAPI", category: "Backend" },
-  { name: "Spring Boot", category: "Backend" },
-  { name: "Cucumber", category: "QA/Testing" },
-  { name: "Gemini AI", category: "AI Integration" },
-  { name: "Firebase", category: "Cloud" },
-  { name: "Jira / Confluence", category: "Management" },
+  { name: "React", category: "Frontend", color: "blue" },
+  { name: "Next.js", category: "Frontend", color: "blue" },
+  { name: "TypeScript", category: "Language", color: "blue" },
+  { name: "FastAPI", category: "Backend", color: "blue" },
+  { name: "Python", category: "Language", color: "purple" },
+  { name: "Spring Boot", category: "Backend", color: "blue" },
+  { name: "Cucumber", category: "QA/Testing", color: "purple" },
+  { name: "Gemini AI", category: "AI Integration", color: "purple" },
+  { name: "Firebase", category: "Cloud", color: "blue" },
+  { name: "Jira / Confluence", category: "Management", color: "blue" },
 ];
 
 export function TechStack() {
@@ -37,7 +39,14 @@ export function TechStack() {
             viewport={{ once: true }}
           >
             <GlassCard className="flex flex-col items-center justify-center py-6 text-center group cursor-default">
-              <span className="text-lg font-semibold text-white group-hover:text-neon-blue transition-colors">
+              <span
+                className={cn(
+                  "text-lg font-semibold text-white transition-colors",
+                  tech.color === "purple"
+                    ? "group-hover:text-neon-purple"
+                    : "group-hover:text-neon-blue"
+                )}
+              >
                 {tech.name}
               </span>
               <span className="mt-1 text-xs text-gray-500">

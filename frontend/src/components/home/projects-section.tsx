@@ -11,6 +11,7 @@ const featuredProjects: ProjectData[] = [
     description:
       "AI-integrated hackathon project optimizing resource management.",
     image: "/projects/onecontrol.png",
+    slug: "onecontrol",
     stack: ["Gemini AI", "Next.js", "Python"],
     highlightedStack: "Gemini AI",
   },
@@ -19,6 +20,7 @@ const featuredProjects: ProjectData[] = [
     description:
       "Health analytics application for personalized nutrition tracking.",
     image: "/projects/feedly.png",
+    slug: "feedly",
     stack: ["FastAPI", "Python", "React", "PostgreSQL"],
     highlightedStack: "PostgreSQL",
   },
@@ -26,6 +28,7 @@ const featuredProjects: ProjectData[] = [
     title: "Tech Portfolio Directory",
     description: "Aggregator for tech portfolios with advanced filtering.",
     image: "/projects/portfolio-directory.png",
+    slug: "tech-portfolio-directory",
     stack: ["Next.js", "Firebase", "Puppeteer", "Tailwind CSS"],
     highlightedStack: "Firebase",
   },

@@ -68,18 +68,22 @@ export function Navbar() {
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
-    if (href === "/") {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setActiveSection("home");
-    } else if (href.startsWith("/#")) {
-      e.preventDefault();
-      const id = href.substring(2);
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Only intercept and smooth scroll if we are already on the home page
+    if (pathname === "/") {
+      if (href === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setActiveSection("home");
+      } else if (href.startsWith("/#")) {
+        e.preventDefault();
+        const id = href.substring(2);
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       }
     }
+    // If on a sub-page, the default link behavior (<a>) will navigate to the home page and jump to the anchor
   };
 
   // Avoid hydration mismatch

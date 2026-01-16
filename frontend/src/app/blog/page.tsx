@@ -1,5 +1,6 @@
 import { GlassCard } from "@/components/ui/glass-card";
 import { SectionHeader } from "@/components/shared/section-header";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -50,7 +51,9 @@ const articles = [
 
 export default function BlogPage() {
   return (
-    <div className="py-10">
+    <div className="py-10 max-w-7xl mx-auto px-4 md:px-8">
+      <Breadcrumbs items={[{ label: "Blog", href: "/blog" }]} />
+
       <SectionHeader
         title="Engineering Insights"
         subtitle="Thoughts on technology, product, and quality."

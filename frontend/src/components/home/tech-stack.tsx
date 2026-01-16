@@ -21,10 +21,10 @@ export function TechStack() {
   return (
     <section className="py-20">
       <div className="mb-10 text-center">
-        <h2 className="text-3xl font-bold text-white md:text-4xl">
+        <h2 className="text-3xl font-bold text-foreground md:text-4xl">
           Tech Agnostic, Product Focused
         </h2>
-        <p className="mt-4 text-gray-400">
+        <p className="mt-4 text-muted">
           The right tools for reliable, scalable solutions.
         </p>
       </div>
@@ -41,7 +41,7 @@ export function TechStack() {
             <GlassCard className="flex flex-col items-center justify-center py-6 text-center group cursor-default">
               <span
                 className={cn(
-                  "text-lg font-semibold text-white transition-colors",
+                  "text-lg font-semibold text-foreground transition-colors",
                   tech.color === "purple"
                     ? "group-hover:text-neon-purple"
                     : "group-hover:text-neon-blue"
@@ -49,9 +49,7 @@ export function TechStack() {
               >
                 {tech.name}
               </span>
-              <span className="mt-1 text-xs text-gray-500">
-                {tech.category}
-              </span>
+              <span className="mt-1 text-xs text-muted">{tech.category}</span>
             </GlassCard>
           </motion.div>
         ))}

@@ -85,9 +85,9 @@ export function HeroSection() {
                 <span className="relative text-neon-blue">Mansah</span>
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl">
+            <p className="text-xl md:text-2xl text-muted leading-relaxed max-w-2xl">
               I have{" "}
-              <span className="text-white font-semibold">
+              <span className="text-foreground font-semibold">
                 4+ years of experience
               </span>{" "}
               building scalable applications and robust software solutions for
@@ -99,24 +99,22 @@ export function HeroSection() {
           <div className="flex flex-wrap gap-4">
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-colors hover:bg-white/10 hover:border-neon-blue/30 group"
+              className="glass-card flex items-center gap-4 px-6 py-4 transition-colors hover:border-neon-blue/30 group"
             >
               <div className="p-3 rounded-xl bg-neon-blue/10 group-hover:bg-neon-blue/20 transition-colors">
                 <Code className="w-6 h-6 text-neon-blue" />
               </div>
               <div className="text-left">
-                <div className="text-3xl font-bold text-white leading-none mb-1">
+                <div className="text-3xl font-bold text-foreground leading-none mb-1">
                   10+
                 </div>
-                <div className="text-sm font-medium text-gray-400">
-                  Projects
-                </div>
+                <div className="text-sm font-medium text-muted">Projects</div>
               </div>
             </motion.div>
 
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-colors hover:bg-white/10 hover:border-neon-blue/30 group"
+              className="glass-card flex items-center gap-4 px-6 py-4 transition-colors hover:border-neon-purple/30 group"
             >
               <div className="p-3 rounded-xl bg-neon-purple/10 group-hover:bg-neon-purple/20 transition-colors">
                 <Briefcase className="w-6 h-6 text-neon-purple" />
@@ -125,9 +123,7 @@ export function HeroSection() {
                 <div className="text-3xl font-bold text-neon-purple leading-none mb-1">
                   4+
                 </div>
-                <div className="text-sm font-medium text-gray-400">
-                  Years Exp
-                </div>
+                <div className="text-sm font-medium text-muted">Years Exp</div>
               </div>
             </motion.div>
           </div>
@@ -148,7 +144,7 @@ export function HeroSection() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-3 px-8 py-4 rounded-full border border-white/10 bg-white/5 text-white font-semibold hover:bg-white/10 transition-all hover:border-white/20"
+                className="flex items-center gap-3 px-8 py-4 rounded-full border border-glass-border bg-glass-bg text-foreground font-semibold hover:bg-glass-highlight transition-all hover:border-neon-blue/30"
               >
                 <Download className="w-5 h-5" />
                 Download CV
@@ -189,14 +185,14 @@ export function HeroSection() {
               <div className="absolute inset-0 bg-linear-to-t from-gray-900/90 via-gray-900/40 to-transparent" />
 
               {/* Bottom Glass Card Info */}
-              <div className="absolute bottom-4 left-4 right-4 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 shadow-lg">
+              <div className="absolute bottom-4 left-4 right-4 rounded-3xl bg-white/90 dark:bg-black/40 backdrop-blur-xl border border-glass-border p-5 shadow-xl">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-neon-blue/20">
+                    <div className="p-2.5 rounded-xl bg-neon-blue/10 dark:bg-neon-blue/20">
                       <Code className="w-5 h-5 text-neon-blue" />
                     </div>
                     <div>
-                      <h3 className="text-white font-bold text-lg leading-tight">
+                      <h3 className="text-foreground dark:text-white font-bold text-lg leading-tight">
                         Software Engineer
                       </h3>
                       {/* Rotating Role Text */}
@@ -208,7 +204,7 @@ export function HeroSection() {
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: -20, opacity: 0 }}
                             transition={{ duration: 0.3 }}
-                            className="text-xs font-medium text-gray-400 absolute w-full truncate"
+                            className="text-xs font-semibold text-gray-600 dark:text-gray-400 absolute w-full truncate"
                           >
                             {roles[currentRoleIndex]}
                           </motion.div>

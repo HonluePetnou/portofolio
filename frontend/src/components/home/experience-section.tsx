@@ -53,7 +53,7 @@ export function ExperienceSection() {
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
           Professional <span className="text-neon-blue">Experience</span>
         </h2>
-        <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-muted mb-12 max-w-2xl mx-auto">
           My journey in building reliable digital products
         </p>
 
@@ -73,25 +73,25 @@ export function ExperienceSection() {
                       <Briefcase className="w-6 h-6 text-neon-purple" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-white">
+                      <h3 className="text-xl font-bold text-foreground">
                         {exp.role}
                       </h3>
                       <p className="text-neon-blue font-medium">
                         {exp.company}
                       </p>
-                      <p className="text-gray-400 text-sm mt-2">
+                      <p className="text-muted text-sm mt-2">
                         {exp.description}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-400 bg-white/5 px-3 py-1.5 rounded-full w-fit">
+                  <div className="flex items-center gap-2 text-sm text-muted bg-glass-bg border border-glass-border px-3 py-1.5 rounded-full w-fit">
                     <Calendar className="w-4 h-4" />
                     {exp.period}
                   </div>
                 </div>
-                <ul className="list-disc list-inside space-y-1 text-gray-300 ml-16">
+                <ul className="list-disc list-inside space-y-2 text-muted dark:text-gray-300 ml-16 mt-4">
                   {exp.achievements.map((item, i) => (
-                    <li key={i} className="text-sm">
+                    <li key={i} className="text-sm leading-relaxed">
                       {item}
                     </li>
                   ))}

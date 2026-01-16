@@ -61,24 +61,24 @@ export default function BlogPage() {
 
       {/* Featured Article */}
       <div className="mb-20">
-        <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-foreground mb-8 flex items-center gap-2">
           <BookOpen className="h-6 w-6 text-neon-blue" />
           Featured
         </h2>
         <Link href={`/blog/${articles[0].slug}`} className="block group">
-          <GlassCard className="group-hover:bg-white/10 transition-colors p-8 md:p-12 border-neon-blue/20">
+          <GlassCard className="group-hover:bg-glass-highlight transition-colors p-8 md:p-12 border-neon-blue/20">
             <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between mb-4">
               <Badge className="bg-neon-blue/10 text-neon-blue border-neon-blue/20 w-fit">
                 {articles[0].category}
               </Badge>
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-muted">
                 {articles[0].date} • {articles[0].readTime}
               </span>
             </div>
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 group-hover:text-neon-blue transition-colors">
+            <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4 group-hover:text-neon-blue transition-colors">
               {articles[0].title}
             </h3>
-            <p className="text-lg text-gray-300 mb-6 max-w-3xl">
+            <p className="text-lg text-muted dark:text-gray-300 mb-6 max-w-3xl">
               {articles[0].excerpt}
             </p>
             <div className="flex items-center text-neon-blue font-semibold group-hover:translate-x-2 transition-transform">
@@ -93,7 +93,7 @@ export default function BlogPage() {
         {categories.map((cat) => (
           <button
             key={cat}
-            className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="px-4 py-2 rounded-full border border-glass-border bg-glass-bg text-sm text-muted hover:text-foreground hover:bg-glass-highlight transition-colors"
           >
             {cat}
           </button>
@@ -108,7 +108,7 @@ export default function BlogPage() {
             href={`/blog/${article.slug}`}
             className="block group h-full"
           >
-            <GlassCard className="h-full flex flex-col p-8 hover:border-white/30">
+            <GlassCard className="h-full flex flex-col p-8 hover:border-neon-blue/30">
               <div className="flex justify-between items-start mb-4">
                 <Badge
                   variant="outline"
@@ -116,13 +116,13 @@ export default function BlogPage() {
                 >
                   {article.category}
                 </Badge>
-                <span className="text-xs text-gray-500">{article.date}</span>
+                <span className="text-xs text-muted">{article.date}</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-neon-blue transition-colors">
+              <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-neon-blue transition-colors">
                 {article.title}
               </h3>
-              <p className="text-gray-400 text-sm grow">{article.excerpt}</p>
-              <div className="mt-6 pt-4 border-t border-white/5 flex items-center text-sm text-gray-300 group-hover:text-white">
+              <p className="text-muted text-sm grow">{article.excerpt}</p>
+              <div className="mt-6 pt-4 border-t border-glass-border flex items-center text-sm text-muted group-hover:text-foreground">
                 Read more <ArrowRight className="ml-2 h-3 w-3" />
               </div>
             </GlassCard>

@@ -17,7 +17,7 @@ export function AboutSection() {
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
           About <span className="text-neon-blue">Me</span>
         </h2>
-        <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-muted mb-12 max-w-2xl mx-auto">
           Get to know more about who I am and what I do
         </p>
 
@@ -30,7 +30,7 @@ export function AboutSection() {
             viewport={{ once: true }}
           >
             <GlassCard className="p-4 flex items-center justify-center">
-              <div className="relative w-72 h-72 rounded-[40px] overflow-hidden border-2 border-white/10 bg-gray-900 shadow-2xl">
+              <div className="relative w-72 h-72 rounded-[40px] overflow-hidden border border-glass-border bg-foreground dark:bg-gray-900 shadow-2xl">
                 <Image
                   src="/me.png"
                   alt="Mansah"
@@ -57,10 +57,10 @@ export function AboutSection() {
                   <Briefcase className="w-6 h-6 text-neon-blue" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-xl font-bold text-foreground mb-2">
                     Professional Focus
                   </h3>
-                  <p className="text-gray-300">
+                  <p className="text-muted dark:text-gray-300">
                     I'm a <strong>Senior Frontend Engineer & QA</strong> with a
                     strong product mindset. I don't just write code; I think
                     about the end-user, business value, and long-term
@@ -76,10 +76,10 @@ export function AboutSection() {
                   <GraduationCap className="w-6 h-6 text-neon-blue" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-xl font-bold text-foreground mb-2">
                     Education & Philosophy
                   </h3>
-                  <p className="text-gray-300">
+                  <p className="text-muted dark:text-gray-300">
                     Engineering student at <strong>ENSPD (2022–2027)</strong>. I
                     believe Quality Assurance is not a separate phase but a core
                     feature of the product development lifecycle.
@@ -91,15 +91,17 @@ export function AboutSection() {
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-neon-blue">4+</div>
-                <div className="text-sm text-gray-400">Years Exp</div>
+                <div className="text-sm text-muted">Years Exp</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-neon-purple">10+</div>
-                <div className="text-sm text-gray-400">Projects</div>
+                <div className="text-sm text-muted">Projects</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-400">100%</div>
-                <div className="text-sm text-gray-400">Satisfaction</div>
+                <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+                  100%
+                </div>
+                <div className="text-sm text-muted">Satisfaction</div>
               </div>
             </div>
           </motion.div>

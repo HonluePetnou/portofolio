@@ -16,8 +16,7 @@ export function GlassCard({
     <div
       className={cn(
         "glass-card p-6",
-        !hoverEffect &&
-          "hover:bg-white/5 hover:border-white/10 hover:shadow-lg hover:translate-y-0",
+        !hoverEffect && "hover:shadow-none hover:translate-y-0",
         className
       )}
     >

@@ -46,7 +46,7 @@ export function ProjectsSection() {
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
           Featured <span className="text-neon-blue">Projects</span>
         </h2>
-        <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-muted mb-12 max-w-2xl mx-auto">
           Case studies in reliability and impact
         </p>
 

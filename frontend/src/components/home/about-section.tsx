@@ -3,6 +3,7 @@
 import { GlassCard } from "@/components/ui/glass-card";
 import { motion } from "framer-motion";
 import { User, Briefcase, GraduationCap } from "lucide-react";
+import Image from "next/image";
 
 export function AboutSection() {
   return (
@@ -28,12 +29,16 @@ export function AboutSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <GlassCard className="p-8 flex items-center justify-center">
-              <div className="relative w-64 h-64 rounded-full overflow-hidden border-4 border-neon-purple/30 bg-gradient-to-br from-neon-purple/20 to-neon-blue/20">
-                {/* Placeholder for profile image */}
-                <div className="w-full h-full flex items-center justify-center">
-                  <User className="w-32 h-32 text-gray-400" />
-                </div>
+            <GlassCard className="p-4 flex items-center justify-center">
+              <div className="relative w-72 h-72 rounded-[40px] overflow-hidden border-2 border-white/10 bg-gray-900 shadow-2xl">
+                <Image
+                  src="/me.png"
+                  alt="Mansah"
+                  fill
+                  className="object-cover object-center"
+                />
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-linear-to-t from-gray-900/60 via-transparent to-transparent" />
               </div>
             </GlassCard>
           </motion.div>

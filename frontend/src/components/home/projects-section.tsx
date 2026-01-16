@@ -10,36 +10,21 @@ const featuredProjects: ProjectData[] = [
     title: "OneControl",
     description:
       "AI-integrated hackathon project optimizing resource management.",
-    problem:
-      "Inefficient manual tracking of resources led to waste and errors.",
-    solution:
-      "Integrated Gemini AI to predict usage patterns and automate reordering.",
+    image: "/projects/onecontrol.png",
     stack: ["Gemini AI", "Next.js", "Python"],
-    outcome:
-      "Secured 3rd place in Hackathon; demonstrated 20% potential efficiency gain.",
   },
   {
     title: "Feedly",
     description:
       "Health analytics application for personalized nutrition tracking.",
-    problem:
-      "Users struggled to correlate diet data with health metrics manually.",
-    solution:
-      "Built a FastAPI backend to process complex health data and serve real-time analytics.",
+    image: "/projects/feedly.png",
     stack: ["FastAPI", "Python", "React", "PostgreSQL"],
-    outcome:
-      "Successfully handled concurrent data streams for 500+ simulated users.",
   },
   {
     title: "Tech Portfolio Directory",
     description: "Aggregator for tech portfolios with advanced filtering.",
-    problem:
-      "Finding inspiration for portfolios was fragmented across many sites.",
-    solution:
-      "Developed a web scraper and a centralized directory with visual previews.",
+    image: "/projects/portfolio-directory.png",
     stack: ["Next.js", "Firebase", "Puppeteer", "Tailwind CSS"],
-    outcome:
-      "Indexed over 100+ top-tier portfolios with sub-second search latency.",
   },
 ];
 

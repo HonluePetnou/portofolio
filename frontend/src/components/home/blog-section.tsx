@@ -36,8 +36,8 @@ const recentPosts = [
 
 export function BlogSection() {
   return (
-    <section id="blog" className="py-24 scroll-mt-12">
-      <div className="container mx-auto px-4 md:px-8">
+    <section id="blog" className="py-24 scroll-mt-12 overflow-x-hidden">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
         <SectionHeader
           title="Engineering Insights"
           subtitle="Latest thoughts on technology, product, and quality."
@@ -63,11 +63,13 @@ export function BlogSection() {
                     </Badge>
                     <span className="text-xs text-gray-500">{post.date}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-neon-blue transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-neon-blue transition-colors">
                     {post.title}
                   </h3>
-                  <p className="text-gray-400 text-sm grow">{post.excerpt}</p>
-                  <div className="mt-6 pt-4 border-t border-white/5 flex items-center text-sm text-gray-300 group-hover:text-white">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm grow">
+                    {post.excerpt}
+                  </p>
+                  <div className="mt-6 pt-4 border-t border-black/5 dark:border-white/5 flex items-center text-sm text-gray-700 dark:text-gray-300 group-hover:text-neon-blue transition-colors">
                     Read more <ArrowRight className="ml-2 h-3 w-3" />
                   </div>
                 </GlassCard>

@@ -2,10 +2,11 @@
 
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { Menu, X } from "lucide-react";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -19,6 +20,7 @@ const navItems = [
 export function Navbar() {
   const pathname = usePathname();
   const [activeSection, setActiveSection] = useState("home");
+  const [isOpen, setIsOpen] = useState(false);
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -68,6 +70,7 @@ export function Navbar() {
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
+    setIsOpen(false);
     // Only intercept and smooth scroll if we are already on the home page
     if (pathname === "/") {
       if (href === "/") {
@@ -83,7 +86,6 @@ export function Navbar() {
         }
       }
     }
-    // If on a sub-page, the default link behavior (<a>) will navigate to the home page and jump to the anchor
   };
 
   // Avoid hydration mismatch
@@ -92,18 +94,27 @@ export function Navbar() {
   }
 
   return (
-    <header className="fixed top-6 left-0 right-0 z-50 px-4">
-      <div className="max-w-fit mx-auto">
+    <header className="fixed top-2 inset-x-0 z-50 px-4 pointer-events-none w-screen">
+      <div className="flex justify-center w-full">
         <nav
           className={cn(
-            "flex items-center justify-between gap-6 px-6 py-4 rounded-full backdrop-blur-xl transition-all duration-300",
+            "pointer-events-auto flex items-center justify-between gap-2 md:gap-6 px-4 md:px-6 py-3 md:py-4 rounded-full backdrop-blur-xl transition-all duration-300 max-w-full",
             isDark
               ? "bg-black/80 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
               : "bg-white/90 border border-gray-200/50 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_0_1px_rgba(0,0,0,0.05)]"
           )}
         >
-          {/* Nav Items */}
-          <div className="flex items-center gap-1">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+
+          {/* Desktop Nav Items */}
+          <div className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => {
               const sectionId =
                 item.href === "/" ? "home" : item.href.substring(2);
@@ -127,7 +138,6 @@ export function Navbar() {
                   {item.name}
                   {isActive && (
                     <>
-                      {/* Glow effect layer (behind) */}
                       {isDark && (
                         <motion.div
                           layoutId="navbar-glow"
@@ -140,7 +150,6 @@ export function Navbar() {
                           }}
                         />
                       )}
-                      {/* Main indicator */}
                       <motion.div
                         layoutId="navbar-indicator"
                         className={cn(
@@ -167,6 +176,59 @@ export function Navbar() {
           <ThemeToggle />
         </nav>
       </div>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[-1] lg:hidden"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              transition={{ duration: 0.2 }}
+              className={cn(
+                "absolute top-20 left-4 right-4 p-6 rounded-3xl border lg:hidden overflow-hidden",
+                isDark
+                  ? "bg-gray-900/90 border-white/10 shadow-2xl"
+                  : "bg-white/95 border-gray-200 shadow-xl text-black"
+              )}
+            >
+              <div className="flex flex-col gap-4">
+                {navItems.map((item) => {
+                  const sectionId =
+                    item.href === "/" ? "home" : item.href.substring(2);
+                  const isActive =
+                    pathname === "/" && activeSection === sectionId;
+                  return (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      onClick={(e) => handleClick(e, item.href)}
+                      className={cn(
+                        "text-lg font-medium py-2 transition-colors",
+                        isActive
+                          ? "text-neon-blue"
+                          : isDark
+                          ? "text-gray-400"
+                          : "text-gray-600"
+                      )}
+                    >
+                      {item.name}
+                    </a>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

@@ -185,7 +185,7 @@ export function HeroSection() {
                 />
 
                 {/* Overlay Gradient (keeping subtle readability) */}
-                <div className="absolute inset-0 bg-linear-to-t from-white/100 via-white/20 to-transparent dark:from-gray-900/90 dark:via-transparent dark:to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-white via-white/20 to-transparent dark:from-gray-900/90 dark:via-transparent dark:to-transparent" />
 
                 {/* Bottom Glass Card Info */}
                 <div className="absolute bottom-4 left-4 right-4 rounded-3xl bg-white/95 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 p-5 shadow-2xl">

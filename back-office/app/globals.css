@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  /* Light Mode - Clean & Professional */
+  --background: #fafbfc;
+  --foreground: #0a0d1f;
+  --card: #ffffff;
+  --card-foreground: #0a0d1f;
+  --popover: #ffffff;
+  --popover-foreground: #0a0d1f;
+  --primary: #0303F7;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f3f9;
+  --secondary-foreground: #0a0d1f;
+  --muted: #f1f3f9;
+  --muted-foreground: #64748b;
+  --accent: #FA5B07;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #0303F7;
+  --radius: 0.5rem;
+  --chart-1: #FA5B07;
+  --chart-2: #0303F7;
+  --chart-3: #10b981;
+  --chart-4: #f59e0b;
+  --chart-5: #8b5cf6;
+}
+
+.dark {
+  /* Dark Mode - Sophisticated & Modern */
+  --background: #0a0d1f;
+  --foreground: #f8fafc;
+  --card: #151827;
+  --card-foreground: #f8fafc;
+  --popover: #151827;
+  --popover-foreground: #f8fafc;
+  --primary: #FA5B07;
+  --primary-foreground: #ffffff;
+  --secondary: #1e2235;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e2235;
+  --muted-foreground: #94a3b8;
+  --accent: #4f7cff;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #2a2f45;
+  --input: #2a2f45;
+  --ring: #FA5B07;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: calc(var(--radius));
+  --radius-lg: calc(var(--radius) + 2px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -70,7 +70,7 @@ export function ExperienceSection() {
                 <GlassCard className="p-6">
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-full bg-neon-purple/20 flex-shrink-0">
+                      <div className="p-3 rounded-full bg-neon-purple/20 shrink-0">
                         <Briefcase className="w-6 h-6 text-neon-purple" />
                       </div>
                       <div>

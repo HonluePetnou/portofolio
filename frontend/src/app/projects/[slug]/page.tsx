@@ -78,7 +78,7 @@ export default function ProjectDetailsPage({
 
         <aside className="space-y-8">
           <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 backdrop-blur-md">
-            <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-widest text-[11px] text-gray-500">
+            <h3 className="font-bold mb-6 uppercase tracking-widest text-[11px] text-gray-500">
               Technology Stack
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -91,7 +91,7 @@ export default function ProjectDetailsPage({
                   >
                     {tech}
                   </Badge>
-                )
+                ),
               )}
             </div>
 

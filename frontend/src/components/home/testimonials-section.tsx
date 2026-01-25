@@ -56,7 +56,7 @@ export function TestimonialsSection() {
               >
                 <GlassCard className="p-6 h-full flex flex-col">
                   <Quote className="w-8 h-8 text-neon-purple mb-4 opacity-50" />
-                  <p className="text-gray-700 dark:text-gray-300 mb-6 flex-grow italic leading-relaxed">
+                  <p className="text-gray-700 dark:text-gray-300 mb-6 grow italic leading-relaxed">
                     "{testimonial.content}"
                   </p>
                   <div className="flex items-center gap-2 mb-2">

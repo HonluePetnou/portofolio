@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Save, User } from "lucide-react";
 import { apiRequest } from "@/lib/api";
+import { ImageUpload } from "@/components/shared/ImageUpload";
 
 export function ProfileIdentity() {
   const [isLoading, setIsLoading] = useState(true);
@@ -156,14 +157,12 @@ export function ProfileIdentity() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="profileImageUrl">Photo de profil (URL)</Label>
-                <Input
-                  id="profileImageUrl"
+                <ImageUpload
+                  label="Photo de profil"
                   value={profile.profileImageUrl || ""}
-                  onChange={(e) =>
-                    setProfile({ ...profile, profileImageUrl: e.target.value })
+                  onChange={(url) =>
+                    setProfile({ ...profile, profileImageUrl: url })
                   }
-                  placeholder="https://..."
                 />
               </div>
               <div className="grid gap-2">

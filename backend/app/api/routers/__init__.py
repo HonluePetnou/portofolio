@@ -1,1 +1,1 @@
-from . import auth, profile, projects, testimonials
+from . import auth, profile, projects, testimonials, media

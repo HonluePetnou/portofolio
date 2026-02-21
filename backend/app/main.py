@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.api.routers import auth, profile, projects, testimonials, media
+from fastapi.responses import FileResponse
+from app.api.routers import auth, profile, projects, testimonials, media, articles
 from app.models.database import init_db
 import os
 
@@ -11,14 +12,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Create uploads directory if it doesn't exist
-if not os.path.exists("uploads"):
-    os.makedirs("uploads")
-
-# Mount uploads directory to serve files
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-
-# CORS configuration
+# CORS configuration — must be registered BEFORE mounting static files
+# so that /uploads/* responses also carry CORS headers.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Adjust in production
@@ -26,6 +21,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Create uploads directory and subfolders
+for folder in ["uploads", "uploads/testimonials", "uploads/articles", "uploads/projects"]:
+    os.makedirs(folder, exist_ok=True)
+
+# Mount uploads directory to serve files (after middleware so CORS applies)
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 @app.on_event("startup")
 def on_startup():
@@ -36,6 +38,7 @@ app.include_router(profile.router)
 app.include_router(projects.router)
 app.include_router(testimonials.router)
 app.include_router(media.router)
+app.include_router(articles.router)
 
 @app.get("/")
 async def root():

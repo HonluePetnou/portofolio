@@ -52,3 +52,18 @@ class Testimonial(SQLModel, table=True):
     image_url: Optional[str] = None
     linkedin_url: Optional[str] = None
     user_id: Optional[int] = Field(default=None, foreign_key="user.id")
+
+class Article(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    title: str
+    slug: str = Field(index=True, unique=True)
+    excerpt: str
+    cover_image: Optional[str] = None
+    content: Dict[str, Any] = Field(default={}, sa_type=JSON) # intro, sections [{heading, body}]
+    cta: Dict[str, str] = Field(default={}, sa_type=JSON) # text, url
+    related_project_id: Optional[uuid.UUID] = Field(default=None, foreign_key="project.id")
+    tags: List[str] = Field(default=[], sa_type=JSON)
+    seo: Dict[str, Any] = Field(default={}, sa_type=JSON) # metaTitle, metaDescription, keywords
+    published: bool = Field(default=True)
+    reading_time: int = Field(default=5)
+    created_at: datetime = Field(default_factory=datetime.utcnow)

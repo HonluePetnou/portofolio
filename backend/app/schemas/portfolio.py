@@ -140,3 +140,49 @@ class TestimonialUpdate(SQLModel):
 
 class TestimonialRead(TestimonialBase):
     id: int
+
+# --- Article ---
+class ArticleBase(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
+    title: str
+    slug: str
+    excerpt: str
+    cover_image: Optional[str] = None
+    content: Dict[str, Any] = {} # intro, sections [{heading, body}]
+    cta: Dict[str, str] = {} # text, url
+    related_project_id: Optional[uuid.UUID] = None
+    tags: List[str] = []
+    seo: Dict[str, Any] = {} # metaTitle, metaDescription, keywords
+    published: bool = True
+    reading_time: int = 5
+
+class ArticleCreate(ArticleBase):
+    pass
+
+class ArticleUpdate(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
+    title: Optional[str] = None
+    slug: Optional[str] = None
+    excerpt: Optional[str] = None
+    cover_image: Optional[str] = None
+    content: Optional[Dict[str, Any]] = None
+    cta: Optional[Dict[str, str]] = None
+    related_project_id: Optional[uuid.UUID] = None
+    tags: Optional[List[str]] = None
+    seo: Optional[Dict[str, Any]] = None
+    published: Optional[bool] = None
+    reading_time: Optional[int] = None
+
+class ArticleRead(ArticleBase):
+    id: uuid.UUID
+    created_at: datetime

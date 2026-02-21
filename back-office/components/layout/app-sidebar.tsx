@@ -26,6 +26,7 @@ const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Testimonials", href: "/testimonials", icon: MessageSquare },
   { name: "Projects", href: "/projects", icon: Briefcase },
+  { name: "Articles", href: "/articles", icon: FileText },
   { name: "Inbox", href: "/inbox", icon: Mail },
   { name: "Identity & Settings", href: "/settings", icon: Settings },
 ];

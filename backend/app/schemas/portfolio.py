@@ -7,6 +7,12 @@ from pydantic.alias_generators import to_camel
 
 # --- Profile ---
 class ProfileBase(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
     name: str
     hero_title: str
     hero_subtitle: str
@@ -22,6 +28,12 @@ class ProfileCreate(ProfileBase):
     pass
 
 class ProfileUpdate(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
     name: Optional[str] = None
     hero_title: Optional[str] = None
     hero_subtitle: Optional[str] = None
@@ -55,7 +67,8 @@ class ProjectBase(SQLModel):
     timeline: Optional[str] = None
     project_url: Optional[str] = None
     github_url: Optional[str] = None
-    images: List[str] = []
+    main_image: Optional[str] = None
+    screenshots: List[str] = []
     interveners: List[Dict[str, str]] = [] # name, role, avatar
     is_featured: bool = False
 
@@ -80,7 +93,8 @@ class ProjectUpdate(SQLModel):
     timeline: Optional[str] = None
     project_url: Optional[str] = None
     github_url: Optional[str] = None
-    images: Optional[List[str]] = None
+    main_image: Optional[str] = None
+    screenshots: Optional[List[str]] = None
     interveners: Optional[List[Dict[str, str]]] = None
     is_featured: Optional[bool] = None
 
@@ -90,6 +104,12 @@ class ProjectRead(ProjectBase):
 
 # --- Testimonial ---
 class TestimonialBase(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
     name: str
     role: str
     company: Optional[str] = None
@@ -103,6 +123,12 @@ class TestimonialCreate(TestimonialBase):
     pass
 
 class TestimonialUpdate(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
     name: Optional[str] = None
     role: Optional[str] = None
     company: Optional[str] = None

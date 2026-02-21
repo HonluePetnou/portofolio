@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from typing import List
+import uuid
 
 from ...models.database import get_session
 from ...models.portfolio import Project
@@ -14,6 +15,13 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 def get_projects(session: Session = Depends(get_session)):
     return session.exec(select(Project)).all()
 
+@router.get("/{project_id}", response_model=ProjectRead)
+def get_project_by_id(project_id: uuid.UUID, session: Session = Depends(get_session)):
+    db_project = session.get(Project, project_id)
+    if not db_project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return db_project
+
 @router.post("", response_model=ProjectRead)
 def create_project(project: ProjectCreate, session: Session = Depends(get_session)):
     db_project = Project.model_validate(project)
@@ -23,7 +31,7 @@ def create_project(project: ProjectCreate, session: Session = Depends(get_sessio
     return db_project
 
 @router.patch("/{project_id}", response_model=ProjectRead)
-def update_project(project_id: int, project: ProjectUpdate, session: Session = Depends(get_session)):
+def update_project(project_id: uuid.UUID, project: ProjectUpdate, session: Session = Depends(get_session)):
     db_project = session.get(Project, project_id)
     if not db_project:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -38,7 +46,7 @@ def update_project(project_id: int, project: ProjectUpdate, session: Session = D
     return db_project
 
 @router.delete("/{project_id}")
-def delete_project(project_id: int, session: Session = Depends(get_session)):
+def delete_project(project_id: uuid.UUID, session: Session = Depends(get_session)):
     db_project = session.get(Project, project_id)
     if not db_project:
         raise HTTPException(status_code=404, detail="Project not found")

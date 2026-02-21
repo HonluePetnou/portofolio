@@ -27,7 +27,7 @@ const navItems = [
   { name: "Testimonials", href: "/testimonials", icon: MessageSquare },
   { name: "Projects", href: "/projects", icon: Briefcase },
   { name: "Inbox", href: "/inbox", icon: Mail },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Identity & Settings", href: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {

@@ -38,8 +38,8 @@ interface Testimonial {
   company: string;
   content: string;
   rating: number;
-  image_url?: string;
-  linkedin_url?: string;
+  imageUrl?: string;
+  linkedinUrl?: string;
 }
 
 export function ProfileTestimonials() {
@@ -55,8 +55,8 @@ export function ProfileTestimonials() {
     company: "",
     content: "",
     rating: 5,
-    image_url: "",
-    linkedin_url: "",
+    imageUrl: "",
+    linkedinUrl: "",
   });
 
   const fetchTestimonials = async () => {
@@ -108,8 +108,8 @@ export function ProfileTestimonials() {
       company: "",
       content: "",
       rating: 5,
-      image_url: "",
-      linkedin_url: "",
+      imageUrl: "",
+      linkedinUrl: "",
     });
   };
 
@@ -121,8 +121,8 @@ export function ProfileTestimonials() {
       company: t.company || "",
       content: t.content,
       rating: t.rating,
-      image_url: t.image_url || "",
-      linkedin_url: t.linkedin_url || "",
+      imageUrl: t.imageUrl || "",
+      linkedinUrl: t.linkedinUrl || "",
     });
     setIsDialogOpen(true);
   };
@@ -228,23 +228,23 @@ export function ProfileTestimonials() {
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="image_url">Photo (URL)</Label>
+                  <Label htmlFor="imageUrl">Photo (URL)</Label>
                   <Input
-                    id="image_url"
-                    value={formData.image_url}
+                    id="imageUrl"
+                    value={formData.imageUrl}
                     onChange={(e) =>
-                      setFormData({ ...formData, image_url: e.target.value })
+                      setFormData({ ...formData, imageUrl: e.target.value })
                     }
                     placeholder="https://..."
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="linkedin_url">Lien LinkedIn</Label>
+                  <Label htmlFor="linkedinUrl">Lien LinkedIn</Label>
                   <Input
-                    id="linkedin_url"
-                    value={formData.linkedin_url}
+                    id="linkedinUrl"
+                    value={formData.linkedinUrl}
                     onChange={(e) =>
-                      setFormData({ ...formData, linkedin_url: e.target.value })
+                      setFormData({ ...formData, linkedinUrl: e.target.value })
                     }
                     placeholder="https://linkedin.com/in/..."
                   />
@@ -300,9 +300,9 @@ export function ProfileTestimonials() {
             <Card key={t.id} className="group relative">
               <CardHeader className="flex flex-row items-start gap-4 pb-2">
                 <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-700 overflow-hidden shrink-0 border">
-                  {t.image_url ? (
+                  {t.imageUrl ? (
                     <img
-                      src={t.image_url}
+                      src={t.imageUrl}
                       alt={t.name}
                       className="h-full w-full object-cover"
                     />
@@ -315,9 +315,9 @@ export function ProfileTestimonials() {
                   <CardDescription className="truncate">
                     {t.role} {t.company ? `chez ${t.company}` : ""}
                   </CardDescription>
-                  {t.linkedin_url && (
+                  {t.linkedinUrl && (
                     <a
-                      href={t.linkedin_url}
+                      href={t.linkedinUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="text-xs text-indigo-600 hover:underline flex items-center mt-1"

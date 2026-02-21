@@ -36,7 +36,8 @@ class Project(SQLModel, table=True):
     timeline: Optional[str] = None
     project_url: Optional[str] = None
     github_url: Optional[str] = None
-    images: List[str] = Field(default=[], sa_type=JSON)
+    main_image: Optional[str] = None
+    screenshots: List[str] = Field(default=[], sa_type=JSON)
     interveners: List[Dict[str, str]] = Field(default=[], sa_type=JSON) # name, role, avatar
     is_featured: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)

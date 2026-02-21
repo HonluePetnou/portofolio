@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from .api.routers import general, inbox, blog, content
+from .api.routers import auth, profile, projects, testimonials
 from .models.database import init_db
 import os
 
@@ -31,10 +31,10 @@ app.add_middleware(
 def on_startup():
     init_db()
 
-app.include_router(general.router, tags=["General"])
-app.include_router(inbox.router, tags=["Inbox"])
-app.include_router(blog.router, tags=["Blog"])
-app.include_router(content.router, tags=["Content Studio"])
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(profile.router)
+app.include_router(projects.router)
+app.include_router(testimonials.router)
 
 @app.get("/")
 async def root():

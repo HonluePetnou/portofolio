@@ -1,5 +1,9 @@
 from typing import Optional, List, Dict, Any
 from sqlmodel import SQLModel
+import uuid
+from datetime import datetime
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
 
 # --- Profile ---
 class ProfileBase(SQLModel):
@@ -12,6 +16,7 @@ class ProfileBase(SQLModel):
     cv_url: Optional[str] = None
     social_links: List[Dict[str, Any]] = []
     tech_stack_summary: List[str] = []
+    user_id: Optional[int] = None
 
 class ProfileCreate(ProfileBase):
     pass
@@ -26,66 +31,73 @@ class ProfileUpdate(SQLModel):
     cv_url: Optional[str] = None
     social_links: Optional[List[Dict[str, Any]]] = None
     tech_stack_summary: Optional[List[str]] = None
+    user_id: Optional[int] = None
 
 class ProfileRead(ProfileBase):
     id: int
 
-# --- Experience ---
-class ExperienceBase(SQLModel):
-    role: str
-    company: str
-    period: str
-    description: str
-    achievements: List[str] = []
-    order_index: int = 0
-
-class ExperienceCreate(ExperienceBase):
-    pass
-
-class ExperienceUpdate(SQLModel):
-    role: Optional[str] = None
-    company: Optional[str] = None
-    period: Optional[str] = None
-    description: Optional[str] = None
-    achievements: Optional[List[str]] = None
-    order_index: Optional[int] = None
-
-class ExperienceRead(ExperienceBase):
-    id: int
-
 # --- Project ---
 class ProjectBase(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
     title: str
     slug: str
-    description: str
-    image_url: str
+    client_name: Optional[str] = None
+    industry: Optional[str] = None
+    services: List[str] = []
+    description: Dict[str, str] = {} # problem, objectives, solution
+    results: List[Dict[str, str]] = [] # label, value
     stack: List[str] = []
-    highlighted_stack: Optional[str] = None
-    demo_url: Optional[str] = None
-    repo_url: Optional[str] = None
+    timeline: Optional[str] = None
+    project_url: Optional[str] = None
+    github_url: Optional[str] = None
+    images: List[str] = []
+    interveners: List[Dict[str, str]] = [] # name, role, avatar
+    is_featured: bool = False
 
 class ProjectCreate(ProjectBase):
     pass
 
 class ProjectUpdate(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
     title: Optional[str] = None
     slug: Optional[str] = None
-    description: Optional[str] = None
-    image_url: Optional[str] = None
+    client_name: Optional[str] = None
+    industry: Optional[str] = None
+    services: Optional[List[str]] = None
+    description: Optional[Dict[str, str]] = None
+    results: Optional[List[Dict[str, str]]] = None
     stack: Optional[List[str]] = None
-    highlighted_stack: Optional[str] = None
-    demo_url: Optional[str] = None
-    repo_url: Optional[str] = None
+    timeline: Optional[str] = None
+    project_url: Optional[str] = None
+    github_url: Optional[str] = None
+    images: Optional[List[str]] = None
+    interveners: Optional[List[Dict[str, str]]] = None
+    is_featured: Optional[bool] = None
 
 class ProjectRead(ProjectBase):
-    id: int
+    id: uuid.UUID
+    created_at: datetime
 
 # --- Testimonial ---
 class TestimonialBase(SQLModel):
     name: str
     role: str
+    company: Optional[str] = None
     content: str
     rating: int
+    image_url: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    user_id: Optional[int] = None
 
 class TestimonialCreate(TestimonialBase):
     pass
@@ -93,97 +105,12 @@ class TestimonialCreate(TestimonialBase):
 class TestimonialUpdate(SQLModel):
     name: Optional[str] = None
     role: Optional[str] = None
+    company: Optional[str] = None
     content: Optional[str] = None
     rating: Optional[int] = None
+    image_url: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    user_id: Optional[int] = None
 
 class TestimonialRead(TestimonialBase):
     id: int
-
-# --- Inbox ---
-class MessageBase(SQLModel):
-    name: str
-    email: str
-    subject: str
-    message: str
-    category: str = "inquiry"
-
-class MessageCreate(MessageBase):
-    pass
-
-class MessageUpdate(SQLModel):
-    read: Optional[bool] = None
-    starred: Optional[bool] = None
-    category: Optional[str] = None
-
-class MessageRead(MessageBase):
-    id: int
-    read: bool
-    starred: bool
-    created_at: str
-
-# --- Blog ---
-class ArticleBase(SQLModel):
-    title: str
-    slug: str
-    content: str
-    status: str = "draft"
-    excerpt: Optional[str] = None
-    tags: List[str] = []
-    published_date: Optional[str] = None
-
-class ArticleCreate(ArticleBase):
-    pass
-
-class ArticleUpdate(SQLModel):
-    title: Optional[str] = None
-    slug: Optional[str] = None
-    content: Optional[str] = None
-    status: Optional[str] = None
-    excerpt: Optional[str] = None
-    tags: Optional[List[str]] = None
-    published_date: Optional[str] = None
-
-class ArticleRead(ArticleBase):
-    id: int
-
-class BlogIdeaBase(SQLModel):
-    title: str
-    description: str
-
-class BlogIdeaCreate(BlogIdeaBase):
-    pass
-
-class BlogIdeaRead(BlogIdeaBase):
-    id: int
-
-# --- Content Studio ---
-class ContentTopicBase(SQLModel):
-    title: str
-    status: str = "idea"
-
-class ContentTopicCreate(ContentTopicBase):
-    pass
-
-class ContentTopicUpdate(SQLModel):
-    title: Optional[str] = None
-    status: Optional[str] = None
-
-class ContentPostBase(SQLModel):
-    platform: str
-    content: str
-    status: str = "draft"
-    topic_id: int
-
-class ContentPostCreate(ContentPostBase):
-    pass
-
-class ContentPostUpdate(SQLModel):
-    content: Optional[str] = None
-    status: Optional[str] = None
-
-class ContentPostRead(ContentPostBase):
-    id: int
-
-class ContentTopicRead(ContentTopicBase):
-    id: int
-    posts: List[ContentPostRead] = []

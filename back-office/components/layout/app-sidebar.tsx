@@ -18,15 +18,14 @@ import {
   ChevronRight,
   LogOut,
   Mail,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { name: "My Profile", href: "/profile", icon: User },
+  { name: "Testimonials", href: "/testimonials", icon: MessageSquare },
   { name: "Projects", href: "/projects", icon: Briefcase },
-  { name: "Content Studio", href: "/content", icon: PenTool },
-  { name: "Blog", href: "/blog", icon: FileText },
   { name: "Inbox", href: "/inbox", icon: Mail },
   { name: "Settings", href: "/settings", icon: Settings },
 ];

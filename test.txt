@@ -1,0 +1,7 @@
+🔐 Test Credentials Table
+Username | Password	            | Role	
+_______________________________________
+Dieuba	 | Dieuba@2026!Secure	| Admin	
+Lontsie	 | Lontsie#2026?Board	| Admin	
+Petnou	 | Petnou$2026*Auth 	| Admin	
+Abogo	 | Abogo^2026%Admin	    | Admin

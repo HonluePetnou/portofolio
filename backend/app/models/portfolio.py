@@ -1,5 +1,14 @@
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from sqlmodel import SQLModel, Field, JSON
+import uuid
+from datetime import datetime
+
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    username: str = Field(index=True, unique=True)
+    hashed_password: str
+    full_name: Optional[str] = None
+    role: str = Field(default="admin")
 
 class Profile(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -12,71 +21,33 @@ class Profile(SQLModel, table=True):
     cv_url: Optional[str] = None
     social_links: List[dict] = Field(default=[], sa_type=JSON)
     tech_stack_summary: List[str] = Field(default=[], sa_type=JSON)
-
-class Experience(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    role: str
-    company: str
-    period: str
-    description: str
-    achievements: List[str] = Field(default=[], sa_type=JSON)
-    order_index: int = 0
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id")
 
 class Project(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str
     slug: str = Field(index=True, unique=True)
-    description: str
-    image_url: str
+    client_name: Optional[str] = Field(default=None)
+    industry: Optional[str] = None
+    services: List[str] = Field(default=[], sa_type=JSON)
+    description: Dict[str, str] = Field(default={}, sa_type=JSON)  # problem, objectives, solution
+    results: List[Dict[str, str]] = Field(default=[], sa_type=JSON) # label, value
     stack: List[str] = Field(default=[], sa_type=JSON)
-    highlighted_stack: Optional[str] = None
-    demo_url: Optional[str] = None
-    repo_url: Optional[str] = None
+    timeline: Optional[str] = None
+    project_url: Optional[str] = None
+    github_url: Optional[str] = None
+    images: List[str] = Field(default=[], sa_type=JSON)
+    interveners: List[Dict[str, str]] = Field(default=[], sa_type=JSON) # name, role, avatar
+    is_featured: bool = Field(default=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class Testimonial(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     role: str
+    company: Optional[str] = None
     content: str
     rating: int = Field(default=5, ge=1, le=5)
-
-# --- Inbox Models ---
-class Message(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-    email: str
-    subject: str
-    message: str
-    read: bool = Field(default=False)
-    starred: bool = Field(default=False)
-    category: str = Field(default="inquiry")
-    created_at: str = Field(default="Just now") # For simplicity in mock, real app would use datetime
-
-# --- Blog Models ---
-class Article(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    title: str
-    slug: str = Field(index=True, unique=True)
-    content: str
-    status: str = Field(default="draft") # draft, published
-    excerpt: Optional[str] = None
-    tags: List[str] = Field(default=[], sa_type=JSON)
-    published_date: Optional[str] = None
-
-class BlogIdea(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    title: str
-    description: str
-
-# --- Content Studio Models ---
-class ContentTopic(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    title: str
-    status: str = Field(default="idea") # idea, writing, ready, published
-
-class ContentPost(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    topic_id: int = Field(foreign_key="contenttopic.id")
-    platform: str # twitter, linkedin, facebook
-    content: str
-    status: str = Field(default="draft") # draft, ready, published
+    image_url: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id")

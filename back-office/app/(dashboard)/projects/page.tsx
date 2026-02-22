@@ -41,8 +41,13 @@ import {
   UserCircle,
   ShieldCheck,
   Briefcase,
+  ChevronUp,
+  ChevronDown,
+  Search,
+  Filter,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api";
+import { cn } from "@/lib/utils";
 import { AvatarUpload } from "@/components/shared/AvatarUpload";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -116,21 +121,19 @@ function ScreenshotUploader({
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hIdx, setHIdx] = useState<number | null>(null);
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      setError("Max 5 Mo par image.");
+      setError("Asset exceeds 5MB limit.");
       return;
     }
     setError(null);
     setIsUploading(true);
     try {
-      const token =
-        typeof window !== "undefined"
-          ? localStorage.getItem("auth_token")
-          : null;
+      const token = localStorage.getItem("auth_token");
       const body = new FormData();
       body.append("file", file);
       body.append("folder", "projects");
@@ -139,14 +142,11 @@ function ScreenshotUploader({
         headers: { Authorization: `Bearer ${token}` },
         body,
       });
-      if (!res.ok)
-        throw new Error(
-          (await res.json().catch(() => ({}))).detail || "Upload échoué",
-        );
+      if (!res.ok) throw new Error("Narrative disruption: Upload failed.");
       const data = await res.json();
       onChange([...value, `${apiUrl}${data.url}`]);
     } catch (err: any) {
-      setError(err.message || "Erreur upload");
+      setError(err.message || "Strategic capture error");
     } finally {
       setIsUploading(false);
       e.target.value = "";
@@ -162,72 +162,87 @@ function ScreenshotUploader({
   };
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap gap-3">
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-4">
         {value.map((url, idx) => (
           <div
             key={idx}
-            className="relative group h-24 w-36 rounded-lg overflow-hidden border bg-muted shrink-0"
+            className="relative group/shot h-28 w-44 rounded-2xl overflow-hidden border border-white/5 bg-slate-900 shadow-xl shrink-0 transition-transform duration-500 hover:scale-[1.02]"
+            onMouseEnter={() => setHIdx(idx)}
+            onMouseLeave={() => setHIdx(null)}
           >
             <img
               src={url}
-              alt={`Screenshot ${idx + 1}`}
-              className="h-full w-full object-cover"
+              alt={`Capture ${idx + 1}`}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover/shot:scale-110"
             />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+            {/* Control Overlay */}
+            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] opacity-0 group-hover/shot:opacity-100 transition-opacity flex items-center justify-center gap-2">
               {idx > 0 && (
                 <button
                   type="button"
                   onClick={() => move(idx, idx - 1)}
-                  className="bg-white/20 hover:bg-white/30 text-white rounded p-1 text-xs"
+                  className="bg-white/10 hover:bg-white/20 text-white rounded-xl p-2 transition-all"
                 >
-                  ←
+                  <ChevronUp className="h-3.5 w-3.5 -rotate-90" />
                 </button>
               )}
               {idx < value.length - 1 && (
                 <button
                   type="button"
                   onClick={() => move(idx, idx + 1)}
-                  className="bg-white/20 hover:bg-white/30 text-white rounded p-1 text-xs"
+                  className="bg-white/10 hover:bg-white/20 text-white rounded-xl p-2 transition-all"
                 >
-                  →
+                  <ChevronDown className="h-3.5 w-3.5 -rotate-90" />
                 </button>
               )}
               <button
                 type="button"
                 onClick={() => remove(idx)}
-                className="bg-destructive/80 hover:bg-destructive text-white rounded p-1"
+                className="bg-rose-500/20 hover:bg-rose-500 text-white rounded-xl p-2 transition-all"
               >
-                <X className="h-3 w-3" />
+                <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>
-            <span className="absolute top-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded">
-              #{idx + 1}
+            {/* Index Badge */}
+            <span className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-md text-[9px] font-black text-white/50 px-2 py-0.5 rounded-lg border border-white/5 uppercase tracking-tighter">
+              ASET-{idx + 1}
             </span>
           </div>
         ))}
 
         {value.length < 5 && (
           <label
-            className={`h-24 w-36 rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-1.5
-              cursor-pointer shrink-0 transition-colors
-              ${isUploading ? "opacity-50 cursor-not-allowed" : "hover:border-primary/50 hover:bg-muted/20"}`}
+            className={cn(
+              "h-28 w-44 rounded-[2rem] border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer shrink-0 transition-all duration-500 relative overflow-hidden group/add",
+              isUploading
+                ? "opacity-50 cursor-not-allowed"
+                : "border-white/10 bg-white/[0.02] hover:border-primary/50 hover:bg-primary/5",
+            )}
           >
+            {/* Glow Background */}
+            <div className="absolute inset-0 bg-primary/20 blur-3xl opacity-0 group-hover/add:opacity-40 transition-opacity duration-1000" />
+
             {isUploading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-6 w-6 animate-spin text-primary relative z-10" />
             ) : (
               <>
-                <ImageIcon className="h-5 w-5 text-muted-foreground/60" />
-                <span className="text-[10px] text-muted-foreground text-center leading-tight">
-                  Ajouter
-                  <br />
-                  une capture
-                </span>
+                <div className="p-3 bg-white/5 rounded-2xl group-hover/add:bg-primary group-hover/add:text-white transition-all transform group-hover/add:scale-110 group-hover/add:rotate-3 relative z-10">
+                  <ImageIcon className="h-5 w-5 text-white/40 group-hover/add:text-white" />
+                </div>
+                <div className="text-center space-y-0.5 relative z-10">
+                  <span className="block text-[10px] font-black text-white/20 group-hover/add:text-white/60 uppercase tracking-widest leading-none">
+                    Capture
+                  </span>
+                  <span className="block text-[9px] font-bold text-white/5 uppercase tracking-tighter">
+                    New Asset
+                  </span>
+                </div>
               </>
             )}
             <input
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept="image/*"
               className="hidden"
               disabled={isUploading}
               onChange={handleFile}
@@ -235,20 +250,34 @@ function ScreenshotUploader({
           </label>
         )}
       </div>
-      {error && <p className="text-xs text-destructive">{error}</p>}
-      <div className="flex items-center justify-between">
-        <p className="text-[10px] text-muted-foreground">
-          {value.length < 3
-            ? `Besoin d'encore ${3 - value.length} capture(s) (Minimum: 3)`
-            : value.length === 5
-              ? "Limite atteinte (Maximum: 5)"
-              : `${value.length} capture(s) (Idéal: 3-5)`}
+
+      {error && (
+        <p className="text-[10px] text-rose-500 font-bold uppercase tracking-widest">
+          {error}
         </p>
-        {value.length > 0 && (
-          <p className="text-[9px] text-muted-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity">
-            Glissez/déposez pour réorganiser (Bientôt dispo)
+      )}
+
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "h-1 w-3 rounded-full transition-all duration-500",
+                  i < value.length ? "bg-primary" : "bg-white/5",
+                )}
+              />
+            ))}
+          </div>
+          <p className="text-[9px] font-black text-white/20 uppercase tracking-widest">
+            {value.length < 3
+              ? `Need ${3 - value.length} more pieces of proof`
+              : value.length === 5
+                ? "Evidence limit reached"
+                : `${value.length} Visual Artifacts committed`}
           </p>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -297,24 +326,39 @@ export default function ProjectsPage() {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewProject, setViewProject] = useState<Project | null>(null);
 
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("");
+  const [featuredFilter, setFeaturedFilter] = useState<"all" | "featured" | "not-featured">("all");
+
   // ── Data ──────────────────────────────────────────────────────────────────
 
   const fetchMine = useCallback(async () => {
     setIsLoadingMine(true);
     try {
-      const data = await apiRequest("/projects/me");
+      const params = new URLSearchParams();
+      if (searchQuery) params.append("search", searchQuery);
+      if (industryFilter) params.append("industry", industryFilter);
+      if (featuredFilter !== "all") params.append("is_featured", featuredFilter === "featured" ? "true" : "false");
+      
+      const data = await apiRequest(`/projects/me?${params.toString()}`);
       setMyProjects(data);
     } catch (err) {
       console.error("Failed to fetch my projects:", err);
     } finally {
       setIsLoadingMine(false);
     }
-  }, []);
+  }, [searchQuery, industryFilter, featuredFilter]);
 
   const fetchAll = useCallback(async () => {
     setIsLoadingAll(true);
     try {
-      const data = await apiRequest("/projects/all");
+      const params = new URLSearchParams();
+      if (searchQuery) params.append("search", searchQuery);
+      if (industryFilter) params.append("industry", industryFilter);
+      if (featuredFilter !== "all") params.append("is_featured", featuredFilter === "featured" ? "true" : "false");
+      
+      const data = await apiRequest(`/projects/all?${params.toString()}`);
       setAllProjects(data);
       setIsAdmin(true);
     } catch (err: any) {
@@ -324,7 +368,7 @@ export default function ProjectsPage() {
     } finally {
       setIsLoadingAll(false);
     }
-  }, []);
+  }, [searchQuery, industryFilter, featuredFilter]);
 
   useEffect(() => {
     fetchMine();
@@ -1413,6 +1457,87 @@ export default function ProjectsPage() {
             </form>
           </DialogContent>
         </Dialog>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-6 shadow-2xl backdrop-blur-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-primary/10 rounded-2xl">
+              <Filter className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-foreground">Project Filters</h3>
+              <p className="text-sm text-muted-foreground">Find your perfect project showcase</p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSearchQuery("");
+              setIndustryFilter("");
+              setFeaturedFilter("all");
+            }}
+            className="text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <X className="h-4 w-4 mr-1" />
+            Clear All
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Search */}
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
+            <Input
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg focus:ring-2 focus:ring-primary/20 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          
+          {/* Industry Filter */}
+          <div className="relative group">
+            <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
+            <Input
+              placeholder="Industry..."
+              value={industryFilter}
+              onChange={(e) => setIndustryFilter(e.target.value)}
+              className="pl-12 h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg focus:ring-2 focus:ring-primary/20 transition-all"
+            />
+            {industryFilter && (
+              <button
+                onClick={() => setIndustryFilter("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          
+          {/* Featured Filter */}
+          <div className="relative">
+            <select 
+              value={featuredFilter} 
+              onChange={(e) => setFeaturedFilter(e.target.value as "all" | "featured" | "not-featured")}
+              className="w-full h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg px-4 pr-10 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/20 transition-all"
+            >
+              <option value="all">🌟 All Projects</option>
+              <option value="featured">⭐ Featured Only</option>
+              <option value="not-featured">📁 Standard Projects</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}

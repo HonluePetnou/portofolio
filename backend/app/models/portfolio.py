@@ -65,6 +65,7 @@ class Article(SQLModel, table=True):
     related_project_id: Optional[uuid.UUID] = Field(default=None, foreign_key="project.id")
     tags: List[str] = Field(default=[], sa_type=JSON)
     seo: Dict[str, Any] = Field(default={}, sa_type=JSON) # metaTitle, metaDescription, keywords
-    published: bool = Field(default=True)
+    published: bool = Field(default=False)
+    archived: bool = Field(default=False)
     reading_time: int = Field(default=5)
     created_at: datetime = Field(default_factory=datetime.utcnow)

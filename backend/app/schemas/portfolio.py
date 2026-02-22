@@ -160,7 +160,8 @@ class ArticleBase(SQLModel):
     related_project_id: Optional[uuid.UUID] = None
     tags: List[str] = []
     seo: Dict[str, Any] = {} # metaTitle, metaDescription, keywords
-    published: bool = True
+    published: bool = False
+    archived: bool = False
     reading_time: int = 5
 
 class ArticleCreate(ArticleBase):
@@ -183,6 +184,7 @@ class ArticleUpdate(SQLModel):
     tags: Optional[List[str]] = None
     seo: Optional[Dict[str, Any]] = None
     published: Optional[bool] = None
+    archived: Optional[bool] = None
     reading_time: Optional[int] = None
 
 class ArticleRead(ArticleBase):

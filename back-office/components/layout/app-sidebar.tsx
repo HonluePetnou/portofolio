@@ -19,6 +19,7 @@ import {
   LogOut,
   Mail,
   MessageSquare,
+  Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -27,6 +28,7 @@ const navItems = [
   { name: "Testimonials", href: "/testimonials", icon: MessageSquare },
   { name: "Projects", href: "/projects", icon: Briefcase },
   { name: "Articles", href: "/articles", icon: FileText },
+  { name: "Social Media", href: "/social-media", icon: Share2 },
   { name: "Inbox", href: "/inbox", icon: Mail },
   { name: "Identity & Settings", href: "/settings", icon: Settings },
 ];

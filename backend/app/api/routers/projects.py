@@ -19,20 +19,52 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 def get_my_projects(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    industry: Optional[str] = Query(None),
+    is_featured: Optional[bool] = Query(None),
+    search: Optional[str] = Query(None),
 ):
-    """Récupère uniquement les projets de l'utilisateur connecté."""
-    return session.exec(
-        select(Project).where(Project.user_id == current_user.id)
-    ).all()
+    """Récupère uniquement les projets de l'utilisateur connecté avec filtres."""
+    query = select(Project).where(Project.user_id == current_user.id)
+    
+    # Apply filters
+    if industry:
+        query = query.where(Project.industry.ilike(f"%{industry}%"))
+    if is_featured is not None:
+        query = query.where(Project.is_featured == is_featured)
+    if search:
+        query = query.where(
+            (Project.title.ilike(f"%{search}%")) |
+            (Project.client_name.ilike(f"%{search}%")) |
+            (Project.description["problem"].astext.ilike(f"%{search}%"))
+        )
+    
+    return session.exec(query).all()
 
 
 @router.get("/all", response_model=List[ProjectRead])
 def get_all_projects_admin(
     session: Session = Depends(get_session),
     current_admin: User = Depends(get_current_admin),
+    industry: Optional[str] = Query(None),
+    is_featured: Optional[bool] = Query(None),
+    search: Optional[str] = Query(None),
 ):
-    """Admin : Récupère tous les projets de tous les utilisateurs."""
-    return session.exec(select(Project)).all()
+    """Admin : Récupère tous les projets de tous les utilisateurs avec filtres."""
+    query = select(Project)
+    
+    # Apply filters
+    if industry:
+        query = query.where(Project.industry.ilike(f"%{industry}%"))
+    if is_featured is not None:
+        query = query.where(Project.is_featured == is_featured)
+    if search:
+        query = query.where(
+            (Project.title.ilike(f"%{search}%")) |
+            (Project.client_name.ilike(f"%{search}%")) |
+            (Project.description["problem"].astext.ilike(f"%{search}%"))
+        )
+    
+    return session.exec(query).all()
 
 
 @router.get("/check-slug/{slug}")

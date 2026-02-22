@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from typing import List, Optional
 
@@ -40,11 +40,24 @@ def get_testimonials(
 def get_my_testimonials(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    search: Optional[str] = Query(None),
+    rating: Optional[int] = Query(None),
 ):
-    """Returns only the testimonials belonging to the currently authenticated user."""
-    return session.exec(
-        select(Testimonial).where(Testimonial.user_id == current_user.id)
-    ).all()
+    """Returns only the testimonials belonging to the currently authenticated user with search."""
+    query = select(Testimonial).where(Testimonial.user_id == current_user.id)
+    
+    # Apply filters
+    if search:
+        query = query.where(
+            (Testimonial.name.ilike(f"%{search}%")) |
+            (Testimonial.company.ilike(f"%{search}%")) |
+            (Testimonial.content.ilike(f"%{search}%")) |
+            (Testimonial.role.ilike(f"%{search}%"))
+        )
+    if rating is not None:
+        query = query.where(Testimonial.rating == rating)
+    
+    return session.exec(query).all()
 
 
 # ─── Admin-only ─────────────────────────────────────────────────────────────────
@@ -53,12 +66,26 @@ def get_my_testimonials(
 def get_all_testimonials(
     session: Session = Depends(get_session),
     _: User = Depends(get_current_admin),
+    search: Optional[str] = Query(None),
+    rating: Optional[int] = Query(None),
 ):
     """
-    Admin-only endpoint.
-    Returns every testimonial in the database across all users.
+    Admin-only: returns all testimonials from all users with search.
     """
-    return session.exec(select(Testimonial)).all()
+    query = select(Testimonial)
+    
+    # Apply filters
+    if search:
+        query = query.where(
+            (Testimonial.name.ilike(f"%{search}%")) |
+            (Testimonial.company.ilike(f"%{search}%")) |
+            (Testimonial.content.ilike(f"%{search}%")) |
+            (Testimonial.role.ilike(f"%{search}%"))
+        )
+    if rating is not None:
+        query = query.where(Testimonial.rating == rating)
+    
+    return session.exec(query).all()
 
 
 @router.get("/user/{user_id}", response_model=List[TestimonialRead])

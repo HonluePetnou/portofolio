@@ -6,11 +6,13 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -20,7 +22,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -33,6 +34,9 @@ import {
   Users,
   UserCircle,
   ShieldCheck,
+  Search,
+  X,
+  ChevronDown,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api";
 
@@ -77,24 +81,36 @@ export function ProfileTestimonials() {
   // Tracks whether the current edit was started from the admin 'all' tab
   const [editingAsAdmin, setEditingAsAdmin] = useState(false);
 
+  // Search states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [ratingFilter, setRatingFilter] = useState<number | "">("");
+
   // ── Fetch: current user's own testimonials ──────────────────────────────────
   const fetchMine = useCallback(async () => {
     setIsLoadingMine(true);
     try {
-      const data = await apiRequest("/testimonials/me");
+      const params = new URLSearchParams();
+      if (searchQuery) params.append("search", searchQuery);
+      if (ratingFilter) params.append("rating", ratingFilter.toString());
+      
+      const data = await apiRequest(`/testimonials/me?${params.toString()}`);
       setMyTestimonials(data);
     } catch (err) {
       console.error("Failed to fetch my testimonials:", err);
     } finally {
       setIsLoadingMine(false);
     }
-  }, []);
+  }, [searchQuery, ratingFilter]);
 
   // ── Fetch: all testimonials (admin) ─────────────────────────────────────────
   const fetchAll = useCallback(async () => {
     setIsLoadingAll(true);
     try {
-      const data = await apiRequest("/testimonials/all");
+      const params = new URLSearchParams();
+      if (searchQuery) params.append("search", searchQuery);
+      if (ratingFilter) params.append("rating", ratingFilter.toString());
+      
+      const data = await apiRequest(`/testimonials/all?${params.toString()}`);
       setAllTestimonials(data);
       setIsAdmin(true);
     } catch (err: any) {
@@ -107,7 +123,7 @@ export function ProfileTestimonials() {
     } finally {
       setIsLoadingAll(false);
     }
-  }, []);
+  }, [searchQuery, ratingFilter]);
 
   // On mount: load mine + probe admin access in parallel
   useEffect(() => {
@@ -461,6 +477,70 @@ export function ProfileTestimonials() {
             </form>
           </DialogContent>
         </Dialog>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-6 shadow-2xl backdrop-blur-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-primary/10 rounded-2xl">
+              <Search className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-foreground">Search Testimonials</h3>
+              <p className="text-sm text-muted-foreground">Find client feedback and recommendations</p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSearchQuery("");
+              setRatingFilter("");
+            }}
+            className="text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <X className="h-4 w-4 mr-1" />
+            Clear All
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Search */}
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
+            <Input
+              placeholder="Search by name, company, content..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg focus:ring-2 focus:ring-primary/20 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          
+          {/* Rating Filter */}
+          <div className="relative">
+            <select 
+              value={ratingFilter} 
+              onChange={(e) => setRatingFilter(e.target.value ? parseInt(e.target.value) : "")}
+              className="w-full h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg px-4 pr-10 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/20 transition-all"
+            >
+              <option value="">⭐ All Ratings</option>
+              <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
+              <option value="4">⭐⭐⭐⭐ 4 Stars</option>
+              <option value="3">⭐⭐⭐ 3 Stars</option>
+              <option value="2">⭐⭐ 2 Stars</option>
+              <option value="1">⭐ 1 Star</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </div>
+        </div>
       </div>
 
       {/* Tabs — only show "Tous" tab when admin access is confirmed */}

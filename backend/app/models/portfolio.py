@@ -38,8 +38,9 @@ class Project(SQLModel, table=True):
     github_url: Optional[str] = None
     main_image: Optional[str] = None
     screenshots: List[str] = Field(default=[], sa_type=JSON)
-    interveners: List[Dict[str, str]] = Field(default=[], sa_type=JSON) # name, role, avatar
+    interveners: List[Dict[str, Any]] = Field(default=[], sa_type=JSON) # name, role, avatar
     is_featured: bool = Field(default=False)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id")
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class Testimonial(SQLModel, table=True):

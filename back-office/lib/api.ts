@@ -17,16 +17,20 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     headers,
   });
 
-  if (response.status === 401) {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("auth_token");
-      window.location.href = "/login";
-    }
+  if (response.status === 401 && typeof window !== "undefined") {
+    localStorage.removeItem("auth_token");
+    window.location.href = "/login";
   }
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: "An error occurred" }));
-    throw new Error(error.detail || "Request failed");
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch {
+      errorData = { detail: `HTTP ${response.status}: ${response.statusText}` };
+    }
+    const errorMessage = errorData.detail || errorData.message || "Request failed";
+    throw new Error(errorMessage);
   }
 
   return response.json();

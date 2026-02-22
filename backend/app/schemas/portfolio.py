@@ -69,8 +69,9 @@ class ProjectBase(SQLModel):
     github_url: Optional[str] = None
     main_image: Optional[str] = None
     screenshots: List[str] = []
-    interveners: List[Dict[str, str]] = [] # name, role, avatar
+    interveners: List[Dict[str, Any]] = [] # name, role, avatar
     is_featured: bool = False
+    user_id: Optional[int] = None
 
 class ProjectCreate(ProjectBase):
     pass
@@ -95,8 +96,9 @@ class ProjectUpdate(SQLModel):
     github_url: Optional[str] = None
     main_image: Optional[str] = None
     screenshots: Optional[List[str]] = None
-    interveners: Optional[List[Dict[str, str]]] = None
+    interveners: Optional[List[Dict[str, Any]]] = None
     is_featured: Optional[bool] = None
+    user_id: Optional[int] = None
 
 class ProjectRead(ProjectBase):
     id: uuid.UUID

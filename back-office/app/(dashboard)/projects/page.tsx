@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectItem } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import {
   Plus,
   Pencil,
@@ -293,6 +294,9 @@ export default function ProjectsPage() {
 
   const [formData, setFormData] = useState(initialForm);
 
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [viewProject, setViewProject] = useState<Project | null>(null);
+
   // ── Data ──────────────────────────────────────────────────────────────────
 
   const fetchMine = useCallback(async () => {
@@ -506,154 +510,427 @@ export default function ProjectsPage() {
     return (
       <Card
         key={p.id}
-        className="relative flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300"
+        className="group/card relative flex flex-col overflow-hidden bg-slate-900 shadow-2xl transition-all duration-700 cursor-pointer border-none hover:-translate-y-2"
+        onClick={() => {
+          setViewProject(p);
+          setIsViewOpen(true);
+        }}
       >
-        <div className="h-44 w-full overflow-hidden bg-muted relative">
-          {p.mainImage && !imgError ? (
-            <img
-              src={p.mainImage}
-              alt={p.title}
-              className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div className="h-full w-full bg-linear-to-br from-indigo-50 to-primary/5 flex items-center justify-center">
-              <ImageIcon className="h-10 w-10 text-muted-foreground/20" />
-            </div>
-          )}
-          {p.screenshots?.length > 0 && (
-            <span className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">
-              <ImageIcon className="h-2.5 w-2.5" />+{p.screenshots.length}
-            </span>
-          )}
-        </div>
+        {/* Animated Border Glow (only visible on hover) */}
+        <div className="absolute inset-0 p-[2px] rounded-xl transition-all duration-700 opacity-0 group-hover/card:opacity-100 bg-linear-to-br from-primary via-indigo-500 to-rose-500" />
 
-        <CardHeader className="pb-3 px-5 pt-4">
-          <div className="flex justify-between items-start mb-1.5">
-            <div className="flex gap-1.5">
+        <div className="relative flex flex-col h-full w-full bg-slate-950 rounded-[10px] overflow-hidden z-10 transition-all duration-700">
+          {/* Image Showcase with Overlays */}
+          <div className="h-56 w-full overflow-hidden relative">
+            {p.mainImage && !imgError ? (
+              <img
+                src={p.mainImage}
+                alt={p.title}
+                className="h-full w-full object-cover transition-transform duration-1000 group-hover/card:scale-110 group-hover/card:rotate-1"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="h-full w-full bg-linear-to-br from-slate-900 to-indigo-950 flex items-center justify-center">
+                <ImageIcon className="h-16 w-16 text-white/5" />
+              </div>
+            )}
+
+            {/* Gradient Overlays for depth */}
+            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent" />
+            <div className="absolute inset-0 bg-slate-950/10 group-hover/card:bg-transparent transition-colors duration-700" />
+
+            {/* Floating Badges */}
+            <div className="absolute top-5 left-5 flex gap-2 z-20">
               <Badge
-                variant={p.isFeatured ? "default" : "secondary"}
-                className={`text-[10px] ${p.isFeatured ? "bg-primary" : ""}`}
+                className={`${
+                  p.isFeatured
+                    ? "bg-amber-400 text-amber-950 shadow-[0_0_20px_rgba(251,191,36,0.5)]"
+                    : "bg-slate-950/40 text-white border-white/10 backdrop-blur-xl"
+                } text-[10px] font-black tracking-[0.1em] px-3 py-1 border-none transition-transform duration-500 group-hover/card:translate-x-1`}
               >
-                {p.isFeatured ? (
-                  <>
-                    <Star className="h-2.5 w-2.5 mr-1 fill-current" /> Featured
-                  </>
-                ) : (
-                  "Standard"
-                )}
+                {p.isFeatured ? "PREMIUM CASE" : "PROJECT"}
               </Badge>
-              {asAdmin && p.userId && (
-                <Badge
-                  variant="outline"
-                  className="text-[9px] h-4.5 px-1.5 opacity-60"
-                >
-                  uid:{p.userId}
-                </Badge>
-              )}
             </div>
+
             {p.timeline && (
-              <span className="text-[10px] font-medium text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">
-                {p.timeline}
-              </span>
+              <div className="absolute top-5 right-5 z-20">
+                <span className="text-[10px] font-black text-white/90 bg-slate-950/40 backdrop-blur-xl px-3 py-1 rounded-sm border border-white/10 tracking-widest transition-transform duration-500 group-hover/card:-translate-x-1">
+                  {p.timeline.toUpperCase()}
+                </span>
+              </div>
             )}
-          </div>
-          <CardTitle className="line-clamp-1 text-base hover:text-primary transition-colors">
-            {p.title}
-          </CardTitle>
-          {(p.clientName || p.industry) && (
-            <CardDescription className="text-xs">
-              {p.clientName}
-              {p.clientName && p.industry && (
-                <span className="text-muted-foreground/30"> · </span>
-              )}
-              {p.industry}
-            </CardDescription>
-          )}
-        </CardHeader>
 
-        <CardContent className="flex-1 space-y-3 px-5 pb-4">
-          <p className="text-xs text-muted-foreground line-clamp-2 italic">
-            "{p.description?.objectives || "No objectives defined."}"
-          </p>
-
-          <div className="flex flex-wrap gap-1">
-            {p.stack?.slice(0, 4).map((s, idx) => (
-              <Badge
-                key={idx}
-                variant="outline"
-                className="text-[9px] text-indigo-700 border-indigo-100"
-              >
-                {s}
-              </Badge>
-            ))}
-            {p.stack?.length > 4 && (
-              <Badge variant="outline" className="text-[9px]">
-                +{p.stack.length - 4}
-              </Badge>
-            )}
-          </div>
-
-          {p.results?.length > 0 && (
-            <div className="bg-indigo-50/30 p-2.5 rounded-lg border border-indigo-100/30 text-xs space-y-1">
-              {p.results.slice(0, 2).map((r, idx) => (
-                <div key={idx} className="flex justify-between items-center">
-                  <span className="text-muted-foreground text-[10px] uppercase font-semibold tracking-wider">
-                    {r.label}
-                  </span>
-                  <span className="font-bold text-indigo-700">{r.value}</span>
-                </div>
-              ))}
+            {/* Title anchored over image with transition */}
+            <div className="absolute bottom-6 left-6 right-6 z-20 transform transition-transform duration-700 group-hover/card:-translate-y-2">
+              <CardTitle className="text-2xl font-black tracking-tighter text-white leading-none mb-2 drop-shadow-2xl">
+                {p.title}
+              </CardTitle>
+              <div className="flex items-center gap-3 text-[11px] font-bold text-white/50 uppercase tracking-[0.2em]">
+                <span className="text-primary/80">
+                  {p.clientName || "Direct Client"}
+                </span>
+                {p.industry && (
+                  <>
+                    <span className="h-px w-6 bg-white/20" />
+                    <span className="italic">{p.industry}</span>
+                  </>
+                )}
+              </div>
             </div>
-          )}
+          </div>
 
-          <div className="flex items-center justify-between pt-1.5">
-            <div className="flex -space-x-2">
-              {p.interveners?.slice(0, 4).map((int, idx) => (
-                <div
+          <CardContent className="flex-1 flex flex-col justify-between px-6 pb-6 pt-2 space-y-6">
+            <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed italic border-l-2 border-primary/40 pl-4 py-1">
+              {p.description?.objectives ||
+                "Evolutionary architecture & design objectives."}
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {p.stack?.slice(0, 3).map((s: string, idx: number) => (
+                <span
                   key={idx}
-                  className="h-7 w-7 rounded-full border-2 border-background overflow-hidden bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-700 shadow-sm"
-                  title={`${int.name} (${int.role})`}
+                  className="text-[10px] font-black text-slate-300 bg-white/5 border border-white/10 px-3 py-1 rounded-sm uppercase tracking-wider hover:bg-primary/20 hover:border-primary/40 transition-colors"
                 >
-                  {int.avatar ? (
-                    <img
-                      src={int.avatar}
-                      alt={int.name}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    int.name.charAt(0).toUpperCase()
+                  {s}
+                </span>
+              ))}
+              {p.stack && p.stack.length > 3 && (
+                <span className="text-[10px] font-black text-white/20 px-1 py-1 uppercase tracking-wider">
+                  +{p.stack.length - 3} OTHER
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+              <div className="flex -space-x-3">
+                {p.interveners
+                  ?.slice(0, 4)
+                  .map((int: Intervener, idx: number) => (
+                    <div
+                      key={idx}
+                      className="h-10 w-10 rounded-2xl border-2 border-slate-950 overflow-hidden bg-slate-900 flex items-center justify-center text-xs font-black text-primary shadow-2xl relative group/avatar transition-all duration-500 group-hover/card:translate-y-[-4px]"
+                      style={{ transitionDelay: `${idx * 100}ms` }}
+                      title={`${int.name} (${int.role})`}
+                    >
+                      {int.avatar ? (
+                        <img
+                          src={int.avatar}
+                          alt={int.name}
+                          className="h-full w-full object-cover grayscale group-hover/avatar:grayscale-0 transition-all"
+                        />
+                      ) : (
+                        <span>{int.name.charAt(0).toUpperCase()}</span>
+                      )}
+                      <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
+                    </div>
+                  ))}
+              </div>
+
+              {/* Action Tray that pops up on hover */}
+              <div className="flex gap-2 transform translate-y-4 opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500 ease-out">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 rounded-2xl bg-slate-900 border-white/5 text-white/60 hover:bg-primary/20 hover:text-primary hover:border-primary/40 shadow-2xl"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(p, asAdmin);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 rounded-2xl bg-slate-900 border-white/5 text-rose-500/60 hover:bg-rose-500/20 hover:text-rose-500 hover:border-rose-500/40 shadow-2xl"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(p.id, asAdmin);
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </div>
+      </Card>
+    );
+  };
+
+  // ── Project Detail View ──────────────────────────────────────────────────
+
+  const ProjectDetailDialog = () => {
+    if (!viewProject) return null;
+    const p: Project = viewProject;
+
+    return (
+      <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
+        <DialogContent className="max-w-6xl w-[95vw] max-h-[95vh] overflow-y-auto overflow-x-hidden p-0 gap-0 border-none shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] bg-slate-950 text-slate-50 rounded-2xl">
+          {/* Header Banner with parallax-like effect */}
+          <div className="relative h-64 md:h-[400px] w-full overflow-hidden">
+            {p.mainImage ? (
+              <img
+                src={p.mainImage}
+                alt={p.title}
+                className="h-full w-full object-cover scale-105"
+              />
+            ) : (
+              <div className="h-full w-full bg-linear-to-br from-indigo-900 via-slate-900 to-primary/20 flex items-center justify-center">
+                <ImageIcon className="h-24 w-24 text-white/10" />
+              </div>
+            )}
+
+            {/* Multi-layered overlays for depth */}
+            <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-950/20 to-slate-950" />
+            <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/40 to-transparent" />
+
+            {/* Content anchored to bottom-left */}
+            <div className="absolute bottom-10 left-10 right-10 z-10 space-y-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge className="bg-primary/20 hover:bg-primary/30 text-primary-foreground border-primary/30 backdrop-blur-md px-3 py-1 text-[10px] uppercase font-black tracking-[0.2em]">
+                  {p.industry || "Project"}
+                </Badge>
+                {p.isFeatured && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-amber-400 text-amber-950 border-none px-3 py-1 text-[10px] font-black tracking-wider flex items-center gap-1"
+                  >
+                    <Star className="h-3 w-3 fill-current" /> FEATURED WORK
+                  </Badge>
+                )}
+                {p.timeline && (
+                  <span className="text-xs font-bold text-white/60 bg-white/5 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10">
+                    {p.timeline}
+                  </span>
+                )}
+              </div>
+
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter drop-shadow-2xl max-w-3xl leading-[0.9]">
+                {p.title}
+              </h2>
+
+              {p.clientName && (
+                <p className="text-xl md:text-2xl font-medium text-white/70 italic tracking-tight font-serif">
+                  — {p.clientName}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-[1fr_320px] gap-0 relative">
+            <div className="p-10 space-y-16">
+              {/* Screenshots Gallery Section (Grid instead of horizontal scroll) */}
+              {p.screenshots && p.screenshots.length > 0 && (
+                <section className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] flex items-center gap-3">
+                      <span className="h-px w-8 bg-white/20" /> Visual Showcase
+                    </h4>
+                    <span className="text-[10px] text-white/20 font-mono">
+                      {p.screenshots.length} CAPTURES
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {p.screenshots?.map((src: string, i: number) => (
+                      <div
+                        key={i}
+                        className={`relative aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/5 group/img ${
+                          i === 0 && p.screenshots.length % 2 !== 0
+                            ? "md:col-span-2"
+                            : ""
+                        }`}
+                      >
+                        <img
+                          src={src}
+                          className="h-full w-full object-cover transition-all duration-700 group-hover/img:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity" />
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Core Content Grid */}
+              <div className="space-y-20">
+                {/* Case Study Section */}
+                <section className="relative">
+                  <div className="absolute -left-10 top-0 bottom-0 w-1 bg-linear-to-b from-primary/50 to-transparent rounded-full opacity-50" />
+
+                  <h4 className="text-2xl font-black tracking-tight mb-8 flex items-center gap-3 italic">
+                    <Trophy className="h-6 w-6 text-primary" /> The Narrative
+                  </h4>
+
+                  <div className="space-y-12 max-w-2xl">
+                    <div className="space-y-4">
+                      <h5 className="text-xs uppercase font-black text-primary/60 tracking-widest">
+                        Challenge & Objectives
+                      </h5>
+                      <p className="text-lg text-slate-300 leading-relaxed font-light">
+                        {p.description?.objectives || "Not specified."}
+                      </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-12">
+                      <div className="space-y-3">
+                        <h5 className="text-[10px] uppercase font-black text-rose-500 tracking-widest flex items-center gap-2">
+                          Core Problem{" "}
+                          <span className="h-px flex-1 bg-rose-500/20" />
+                        </h5>
+                        <p className="text-slate-400 leading-relaxed text-sm italic border-l-2 border-rose-500/30 pl-4 py-1">
+                          {p.description?.problem || "Not specified."}
+                        </p>
+                      </div>
+                      <div className="space-y-3">
+                        <h5 className="text-[10px] uppercase font-black text-emerald-500 tracking-widest flex items-center gap-2">
+                          Engineering Solution{" "}
+                          <span className="h-px flex-1 bg-emerald-500/20" />
+                        </h5>
+                        <p className="text-slate-400 leading-relaxed text-sm italic border-l-2 border-emerald-500/30 pl-4 py-1">
+                          {p.description?.solution || "Not specified."}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Impact / Results Section */}
+                {p.results && p.results.length > 0 && (
+                  <section className="space-y-8">
+                    <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] flex items-center gap-3">
+                      <span className="h-px w-8 bg-white/20" /> Performance
+                      Metrics
+                    </h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {p.results?.map(
+                        (r: { label: string; value: string }, i: number) => (
+                          <div
+                            key={i}
+                            className="bg-white/5 border border-white/10 p-6 rounded-3xl hover:bg-white/10 transition-colors group/res"
+                          >
+                            <p className="text-[9px] text-white/40 font-black uppercase tracking-widest mb-2 group-hover/res:text-primary transition-colors">
+                              {r.label}
+                            </p>
+                            <p className="text-3xl font-black tracking-tighter text-white">
+                              {r.value}
+                            </p>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </section>
+                )}
+              </div>
+            </div>
+
+            {/* Sticky Sidebar (Right) */}
+            <aside className="border-l border-white/5 bg-slate-900/50 backdrop-blur-2xl p-8 space-y-12">
+              {/* Stack & Tech */}
+              <div className="space-y-10">
+                <div className="space-y-4">
+                  <h5 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">
+                    Stack
+                  </h5>
+                  <div className="flex flex-wrap gap-2">
+                    {p.stack?.map((s: string, i: number) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 bg-indigo-500/10 text-indigo-400 rounded-full text-[10px] font-black border border-indigo-500/20"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h5 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">
+                    Services
+                  </h5>
+                  <div className="flex flex-wrap gap-2">
+                    {p.services?.map((s: string, i: number) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 bg-white/5 text-white/60 rounded-full text-[10px] font-bold border border-white/5"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator className="bg-white/5" />
+
+                {/* External Actions */}
+                <div className="space-y-4">
+                  {p.projectUrl && (
+                    <a
+                      href={p.projectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between gap-2 h-12 w-full px-5 rounded-2xl bg-primary text-primary-foreground text-sm font-black shadow-[0_10px_30px_-10px_rgba(var(--primary-rgb),0.5)] hover:translate-y-[-2px] transition-all"
+                    >
+                      <span>LIVE PREVIEW</span>
+                      <ExternalLink className="h-4 w-4 opacity-70 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </a>
+                  )}
+                  {p.githubUrl && (
+                    <a
+                      href={p.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between gap-2 h-12 w-full px-5 rounded-2xl bg-white/5 text-white text-sm font-black border border-white/10 hover:bg-white/10 transition-all"
+                    >
+                      <span>SOURCE CODE</span>
+                      <Github className="h-4 w-4 opacity-50 transition-opacity group-hover:opacity-100" />
+                    </a>
                   )}
                 </div>
-              ))}
-              {p.interveners?.length > 4 && (
-                <div className="h-7 w-7 rounded-full border-2 border-background bg-secondary flex items-center justify-center text-[10px] font-bold">
-                  +{p.interveners.length - 4}
+              </div>
+
+              {/* Strategic Team */}
+              {p.interveners && p.interveners.length > 0 && (
+                <div className="space-y-6 pt-6 border-t border-white/5">
+                  <h5 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">
+                    Strategists
+                  </h5>
+                  <div className="space-y-4">
+                    {p.interveners?.map((int: Intervener, i: number) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-4 group/user"
+                      >
+                        <div className="h-11 w-11 rounded-2xl bg-linear-to-br from-primary/20 to-indigo-900/40 border border-white/10 overflow-hidden flex items-center justify-center text-xs font-black group-hover/user:scale-105 transition-transform">
+                          {int.avatar ? (
+                            <img
+                              src={int.avatar}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-primary">
+                              {int.name.charAt(0)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="space-y-0.5">
+                          <p className="text-sm font-black text-white/90 tracking-tight">
+                            {int.name}
+                          </p>
+                          <p className="text-xs font-medium text-white/40 tracking-tight">
+                            {int.role}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
-
-            <div className="flex gap-1.5">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full hover:bg-primary/5 hover:text-primary"
-                onClick={() => handleEdit(p, asAdmin)}
-              >
-                <Pencil className="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full text-red-400 hover:bg-red-50 hover:text-red-500 border-red-100"
-                onClick={() => handleDelete(p.id, asAdmin)}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
-            </div>
+            </aside>
           </div>
-        </CardContent>
-      </Card>
+        </DialogContent>
+      </Dialog>
     );
   };
 
@@ -661,6 +938,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="space-y-6">
+      <ProjectDetailDialog />
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Projets</h2>

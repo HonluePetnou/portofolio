@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from app.api.routers import auth, profile, projects, testimonials, media, articles, ai
+from app.api.routers import auth, profile, projects, testimonials, media, articles, ai, contact, social, settings
 from app.models.database import init_db
 import os
 
@@ -40,6 +40,9 @@ app.include_router(testimonials.router)
 app.include_router(media.router)
 app.include_router(articles.router)
 app.include_router(ai.router)
+app.include_router(contact.router)
+app.include_router(social.router)
+app.include_router(settings.router)
 
 @app.get("/")
 async def root():

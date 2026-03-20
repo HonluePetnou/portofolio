@@ -98,56 +98,25 @@ export default function SocialMediaPage() {
     }
   }, [activeView, fetchArchivedArticles]);
 
-  const generateSocialContent = (article: Article): SocialContent => {
-    const baseUrl = "https://yourportfolio.com"; // Replace with your actual domain
-    const articleUrl = `${baseUrl}/blog/${article.slug}`;
-    
-    // LinkedIn content (professional, detailed)
-    const linkedinContent = `🚀 Just published a new article: "${article.title}"
-
-${article.excerpt}
-
-In this article, I explore:
-${article.tags.map(tag => `• ${tag}`).join('\n')}
-
-📖 Read the full article here: ${articleUrl}
-
-#webdevelopment #tech #blogging ${article.tags.map(tag => `#${tag.replace(/\s+/g, '')}`).join(' ')}`;
-
-    // Twitter content (concise, engaging)
-    const twitterContent = `🚀 New Article Alert!
-
-"${article.title}"
-
-${article.excerpt.substring(0, 100)}...
-
-🔗 Read more: ${articleUrl}
-
-${article.tags.map(tag => `#${tag.replace(/\s+/g, '')}`).join(' ')} #tech #webdev`;
-
-    // Facebook content (friendly, conversational)
-    const facebookContent = `🎉 Excited to share my latest article with you all!
-
-"${article.title}"
-
-${article.excerpt}
-
-Whether you're a developer, designer, or tech enthusiast, there's something in this for you. I'd love to hear your thoughts!
-
-👉 Read the full article here: ${articleUrl}
-
-#NewArticle #TechBlog #WebDevelopment ${article.tags.map(tag => `#${tag.replace(/\s+/g, '')}`).join(' ')}`;
-
-    return {
-      linkedin: linkedinContent,
-      twitter: twitterContent,
-      facebook: facebookContent
-    };
-  };
-
-  const handleArticleClick = (article: Article) => {
+  const handleArticleClick = async (article: Article) => {
     setSelectedArticle(article);
-    setSocialContent(generateSocialContent(article));
+    setSocialContent(null);
+    try {
+      const data = await apiRequest(`/social/generate/${article.id}`, {
+        method: "POST",
+      });
+      const combinedLinkedin = `${data.linkedin.storytelling}\n\n---\n\n${data.linkedin.value_driven}`;
+      const combinedTwitter = `${data.twitter.short}\n\n---\n\n${data.twitter.thread_combined}`;
+      const facebook = data.facebook.post as string;
+
+      setSocialContent({
+        linkedin: combinedLinkedin,
+        twitter: combinedTwitter,
+        facebook,
+      });
+    } catch (err) {
+      console.error("Failed to generate social content:", err);
+    }
   };
 
   const copyToClipboard = async (content: string, platform: string) => {

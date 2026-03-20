@@ -1,7 +1,10 @@
 from typing import Optional, List, Dict, Any
-from sqlmodel import SQLModel, Field, JSON
+from sqlmodel import SQLModel, Field, JSON, Relationship
 import uuid
 from datetime import datetime
+from enum import Enum
+from .member import Member
+from .blog import BlogStatus
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -41,7 +44,11 @@ class Project(SQLModel, table=True):
     interveners: List[Dict[str, Any]] = Field(default=[], sa_type=JSON) # name, role, avatar
     is_featured: bool = Field(default=False)
     user_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    member_id: Optional[uuid.UUID] = Field(default=None, foreign_key="member.id", index=True)
+    agency_visible: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    member: Optional[Member] = Relationship()
 
 class Testimonial(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -68,4 +75,82 @@ class Article(SQLModel, table=True):
     published: bool = Field(default=False)
     archived: bool = Field(default=False)
     reading_time: int = Field(default=5)
+    # Agency visibility / assignment
+    member_id: Optional[uuid.UUID] = Field(default=None, foreign_key="member.id", index=True)
+    agency_visible: bool = Field(default=False)
+
+    # New publication workflow
+    published_at: Optional[datetime] = None
+
+    status: BlogStatus = Field(default=BlogStatus.draft)
+    ai_generated: bool = Field(default=False)
+    ai_mode: Optional[str] = None
+
+    member: Optional[Member] = Relationship()
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+# --- Contact / Inbox ---
+
+class ContactStatus(str, Enum):
+    NEW = "NEW"
+    READ = "READ"
+    REPLIED = "REPLIED"
+    ARCHIVED = "ARCHIVED"
+
+
+class PriorityLevel(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+
+
+class ContactMessage(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, index=True)
+    name: str
+    email: str
+    phone: Optional[str] = None
+    company: Optional[str] = None
+    subject: str
+    message: str
+    service: Optional[str] = None
+    budget: Optional[int] = None
+    status: ContactStatus = Field(default=ContactStatus.NEW)
+    priority: PriorityLevel = Field(default=PriorityLevel.LOW)
+    internal_notes: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+# --- Social Posts ---
+
+class SocialPlatform(str, Enum):
+    LINKEDIN = "LINKEDIN"
+    TWITTER = "TWITTER"
+    INSTAGRAM = "INSTAGRAM"
+    FACEBOOK = "FACEBOOK"
+
+
+class SocialStatus(str, Enum):
+    DRAFT = "DRAFT"
+    READY = "READY"
+
+
+class SocialPost(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, index=True)
+    blog_id: uuid.UUID = Field(foreign_key="article.id")
+    platform: SocialPlatform
+    content: str
+    status: SocialStatus = Field(default=SocialStatus.DRAFT)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+# --- Settings ---
+
+class Setting(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, index=True)
+    key: str = Field(index=True, unique=True)
+    value: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+

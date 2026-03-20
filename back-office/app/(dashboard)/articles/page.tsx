@@ -135,17 +135,28 @@ export default function ArticlesPage() {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewProject, setViewProject] = useState<Project | null>(null);
 
-  const [publishedFilter, setPublishedFilter] = useState<"all" | "published" | "draft">("all");
+  const [publishedFilter, setPublishedFilter] = useState<
+    "all" | "published" | "draft"
+  >("all");
   const [tagFilter, setTagFilter] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
-      if (publishedFilter !== "all") params.append("published_filter", publishedFilter === "published" ? "true" : "false");
+      if (publishedFilter !== "all")
+        params.append(
+          "published_filter",
+          publishedFilter === "published" ? "true" : "false",
+        );
       if (tagFilter) params.append("tag", tagFilter);
-      
+
       const [articlesData, projectsData] = await Promise.all([
         apiRequest(`/articles?${params.toString()}`),
         apiRequest("/projects/me"),
@@ -166,16 +177,16 @@ export default function ArticlesPage() {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const dropdown = document.getElementById('published-dropdown');
+      const dropdown = document.getElementById("published-dropdown");
       const button = event.target as HTMLElement;
-      
-      if (dropdown && !dropdown.contains(button) && !button.closest('button')) {
-        dropdown.classList.add('hidden');
+
+      if (dropdown && !dropdown.contains(button) && !button.closest("button")) {
+        dropdown.classList.add("hidden");
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -385,7 +396,7 @@ export default function ArticlesPage() {
             onError={(e) => {
               // Fallback to icon if image fails to load
               const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
+              target.style.display = "none";
               const parent = target.parentElement;
               if (parent) {
                 parent.innerHTML = `<div class="absolute inset-0 flex items-center justify-center"><svg class="h-6 w-6 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>`;
@@ -418,9 +429,11 @@ export default function ArticlesPage() {
                   {article.tags.length > 1 && `+${article.tags.length - 1}`}
                 </div>
               )}
-              <div className={`flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest ${
-                article.published ? "text-emerald-500" : "text-amber-500"
-              }`}>
+              <div
+                className={`flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest ${
+                  article.published ? "text-emerald-500" : "text-amber-500"
+                }`}
+              >
                 {article.published ? (
                   <>
                     <CheckCircle2 className="h-3 w-3" />
@@ -1065,8 +1078,12 @@ export default function ArticlesPage() {
                 <Filter className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-foreground">Advanced Filters</h3>
-                <p className="text-sm text-muted-foreground">Refine your content discovery</p>
+                <h3 className="text-lg font-bold text-foreground">
+                  Advanced Filters
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Refine your content discovery
+                </p>
               </div>
             </div>
             <Button
@@ -1102,30 +1119,48 @@ export default function ArticlesPage() {
                 </button>
               )}
             </div>
-            
+
             {/* Published Filter */}
             <div className="relative">
               <button
                 onClick={() => {
-                  const dropdown = document.getElementById('published-dropdown');
+                  const dropdown =
+                    document.getElementById("published-dropdown");
                   if (dropdown) {
-                    dropdown.classList.toggle('hidden');
+                    dropdown.classList.toggle("hidden");
                   }
                 }}
                 className="w-full h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg px-4 pr-10 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
               >
                 <span className="flex items-center gap-2">
-                  {publishedFilter === "all" && <><Layers className="h-4 w-4" /> All Articles</>}
-                  {publishedFilter === "published" && <><Eye className="h-4 w-4" /> Published Only</>}
-                  {publishedFilter === "draft" && <><FileEdit className="h-4 w-4" /> Drafts Only</>}
+                  {publishedFilter === "all" && (
+                    <>
+                      <Layers className="h-4 w-4" /> All Articles
+                    </>
+                  )}
+                  {publishedFilter === "published" && (
+                    <>
+                      <Eye className="h-4 w-4" /> Published Only
+                    </>
+                  )}
+                  {publishedFilter === "draft" && (
+                    <>
+                      <FileEdit className="h-4 w-4" /> Drafts Only
+                    </>
+                  )}
                 </span>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </button>
-              <div id="published-dropdown" className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 hidden z-50">
+              <div
+                id="published-dropdown"
+                className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 hidden z-50"
+              >
                 <button
                   onClick={() => {
                     setPublishedFilter("all");
-                    document.getElementById('published-dropdown')?.classList.add('hidden');
+                    document
+                      .getElementById("published-dropdown")
+                      ?.classList.add("hidden");
                   }}
                   className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 rounded-t-2xl flex items-center gap-2 transition-colors"
                 >
@@ -1134,7 +1169,9 @@ export default function ArticlesPage() {
                 <button
                   onClick={() => {
                     setPublishedFilter("published");
-                    document.getElementById('published-dropdown')?.classList.add('hidden');
+                    document
+                      .getElementById("published-dropdown")
+                      ?.classList.add("hidden");
                   }}
                   className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors"
                 >
@@ -1143,7 +1180,9 @@ export default function ArticlesPage() {
                 <button
                   onClick={() => {
                     setPublishedFilter("draft");
-                    document.getElementById('published-dropdown')?.classList.add('hidden');
+                    document
+                      .getElementById("published-dropdown")
+                      ?.classList.add("hidden");
                   }}
                   className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 rounded-b-2xl flex items-center gap-2 transition-colors"
                 >
@@ -1151,7 +1190,7 @@ export default function ArticlesPage() {
                 </button>
               </div>
             </div>
-            
+
             {/* Tag Filter */}
             <div className="relative group">
               <Tag className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
@@ -1192,15 +1231,13 @@ export default function ArticlesPage() {
               value="published"
               className="rounded-[2rem] px-14 h-full data-[state=active]:bg-primary data-[state=active]:text-white transition-all font-black uppercase text-xs tracking-widest gap-4"
             >
-              <Eye className="h-5 w-5" /> Published (
-              {publishedArticles.length})
+              <Eye className="h-5 w-5" /> Published ({publishedArticles.length})
             </TabsTrigger>
             <TabsTrigger
               value="drafts"
               className="rounded-[2rem] px-14 h-full data-[state=active]:bg-slate-900 dark:data-[state=active]:bg-white data-[state=active]:text-white dark:data-[state=active]:text-slate-950 transition-all font-black uppercase text-xs tracking-widest gap-4"
             >
-              <FileEdit className="h-5 w-5" /> Drafts (
-              {draftArticles.length})
+              <FileEdit className="h-5 w-5" /> Drafts ({draftArticles.length})
             </TabsTrigger>
           </TabsList>
 

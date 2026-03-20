@@ -8,3 +8,7 @@ python-jose[cryptography]
 passlib[bcrypt]
 alembic
 python-dotenv
+httpx
+cryptography
+pydantic[email]
+email-validator

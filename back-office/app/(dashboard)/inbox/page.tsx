@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,73 +14,67 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Mail,
-  MailOpen,
-  Star,
-  Archive,
-  Trash2,
-  Reply,
-  ArrowLeft,
-  Clock,
-} from "lucide-react";
+import { Star, Trash2, Reply, ArrowLeft, Clock } from "lucide-react";
+import { apiRequest } from "@/lib/api";
 
-const mockMessages = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    email: "sarah.j@example.com",
-    subject: "Interested in your services",
-    message:
-      "Hi, I came across your portfolio and I'm really impressed with your work. I'd love to discuss a potential project with you.",
-    date: "2 hours ago",
-    read: false,
-    starred: false,
-    category: "inquiry",
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    email: "m.chen@techcorp.com",
-    subject: "Collaboration Opportunity",
-    message:
-      "We're looking for a talented developer to join our team on a contract basis. Your experience with Next.js caught our attention.",
-    date: "5 hours ago",
-    read: false,
-    starred: true,
-    category: "opportunity",
-  },
-  {
-    id: 3,
-    name: "Emma Davis",
-    email: "emma@startup.io",
-    subject: "Quick Question",
-    message:
-      "I saw your blog post about React Server Components. Could you clarify something about the implementation?",
-    date: "1 day ago",
-    read: true,
-    starred: false,
-    category: "inquiry",
-  },
-  {
-    id: 4,
-    name: "David Wilson",
-    email: "david.w@agency.com",
-    subject: "Project Proposal",
-    message:
-      "We have an exciting e-commerce project and would love to get a quote from you. The timeline is flexible.",
-    date: "2 days ago",
-    read: true,
-    starred: false,
-    category: "inquiry",
-  },
-];
+type ContactStatus = "NEW" | "READ" | "REPLIED" | "ARCHIVED";
+type PriorityLevel = "LOW" | "MEDIUM" | "HIGH";
+
+interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  company?: string | null;
+  subject: string;
+  message: string;
+  service?: string | null;
+  budget?: number | null;
+  status: ContactStatus;
+  priority: PriorityLevel;
+  internalNotes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  starred?: boolean;
+}
+
+function formatRelativeDate(iso: string): string {
+  const created = new Date(iso);
+  const diffMs = Date.now() - created.getTime();
+  const diffMinutes = Math.floor(diffMs / 60000);
+  if (diffMinutes < 60) return `${diffMinutes || 1} min ago`;
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+  return created.toLocaleDateString();
+}
 
 export default function InboxPage() {
-  const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
-  const [messages, setMessages] = useState(mockMessages);
+  const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const toggleStar = (id: number) => {
+  useEffect(() => {
+    const load = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const data: ContactMessage[] = await apiRequest("/admin/contact");
+        setMessages(data);
+      } catch (e: any) {
+        console.error(e);
+        setError(e?.message ?? "Failed to load inbox.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void load();
+  }, []);
+
+  const toggleStar = (id: string) => {
     setMessages(
       messages.map((msg) =>
         msg.id === id ? { ...msg, starred: !msg.starred } : msg,
@@ -88,20 +82,44 @@ export default function InboxPage() {
     );
   };
 
-  const markAsRead = (id: number) => {
-    setMessages(
-      messages.map((msg) => (msg.id === id ? { ...msg, read: true } : msg)),
-    );
+  const markAsRead = async (id: string) => {
+    const target = messages.find((m) => m.id === id);
+    if (!target || target.status === "READ") {
+      setSelectedMessage(id);
+      return;
+    }
+
+    try {
+      const updated: ContactMessage = await apiRequest(
+        `/admin/contact/${id}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ status: "READ" as ContactStatus }),
+        },
+      );
+      setMessages((prev) =>
+        prev.map((m) => (m.id === id ? { ...m, status: updated.status } : m)),
+      );
+    } catch (e) {
+      console.error(e);
+    }
+
+    setSelectedMessage(id);
   };
 
-  const deleteMessage = (id: number) => {
-    setMessages(messages.filter((msg) => msg.id !== id));
-    if (selectedMessage === id) {
-      setSelectedMessage(null);
+  const deleteMessage = async (id: string) => {
+    try {
+      await apiRequest(`/admin/contact/${id}`, { method: "DELETE" });
+      setMessages((prev) => prev.filter((msg) => msg.id !== id));
+      if (selectedMessage === id) {
+        setSelectedMessage(null);
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
-  const unreadCount = messages.filter((m) => !m.read).length;
+  const unreadCount = messages.filter((m) => m.status === "NEW").length;
   const selectedMsg = messages.find((m) => m.id === selectedMessage);
 
   if (selectedMessage && selectedMsg) {
@@ -166,7 +184,7 @@ export default function InboxPage() {
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Clock className="h-4 w-4" />
-                {selectedMsg.date}
+                {formatRelativeDate(selectedMsg.createdAt)}
               </div>
             </div>
           </CardHeader>
@@ -212,6 +230,13 @@ export default function InboxPage() {
         </Badge>
       </div>
 
+      {isLoading && (
+        <p className="text-muted-foreground text-sm">Loading inbox...</p>
+      )}
+      {error && !isLoading && (
+        <p className="text-sm text-destructive">{error}</p>
+      )}
+
       <Tabs defaultValue="all" className="w-full">
         <TabsList>
           <TabsTrigger value="all">All ({messages.length})</TabsTrigger>
@@ -226,10 +251,9 @@ export default function InboxPage() {
             {messages.map((msg) => (
               <Card
                 key={msg.id}
-                className={`cursor-pointer transition-all hover:shadow-md ${!msg.read ? "border-l-4 border-l-indigo-500 bg-accent/30" : ""}`}
+                className={`cursor-pointer transition-all hover:shadow-md ${msg.status === "NEW" ? "border-l-4 border-l-indigo-500 bg-accent/30" : ""}`}
                 onClick={() => {
-                  setSelectedMessage(msg.id);
-                  markAsRead(msg.id);
+                  void markAsRead(msg.id);
                 }}
               >
                 <CardContent className="p-4">
@@ -256,7 +280,7 @@ export default function InboxPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-muted-foreground">
-                            {msg.date}
+                            {formatRelativeDate(msg.createdAt)}
                           </span>
                           <Button
                             variant="ghost"
@@ -273,11 +297,7 @@ export default function InboxPage() {
                           </Button>
                         </div>
                       </div>
-                      <p
-                        className={`text-sm mb-1 ${!msg.read ? "font-medium" : "text-muted-foreground"}`}
-                      >
-                        {msg.subject}
-                      </p>
+                      <p className="text-sm mb-1">{msg.subject}</p>
                       <p className="text-sm text-muted-foreground line-clamp-1">
                         {msg.message}
                       </p>
@@ -292,7 +312,7 @@ export default function InboxPage() {
         <TabsContent value="unread" className="space-y-4 mt-6">
           <div className="space-y-2">
             {messages
-              .filter((m) => !m.read)
+              .filter((m) => m.status === "NEW")
               .map((msg) => (
                 <Card
                   key={msg.id}
@@ -319,7 +339,7 @@ export default function InboxPage() {
                             </Badge>
                           </div>
                           <span className="text-xs text-muted-foreground">
-                            {msg.date}
+                            {formatRelativeDate(msg.createdAt)}
                           </span>
                         </div>
                         <p className="text-sm font-medium mb-1">
@@ -362,7 +382,7 @@ export default function InboxPage() {
                           <h3 className="font-semibold">{msg.name}</h3>
                           <div className="flex items-center gap-2">
                             <span className="text-xs text-muted-foreground">
-                              {msg.date}
+                              {formatRelativeDate(msg.createdAt)}
                             </span>
                             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                           </div>

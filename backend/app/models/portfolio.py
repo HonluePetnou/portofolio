@@ -3,7 +3,6 @@ from sqlmodel import SQLModel, Field, JSON, Relationship
 import uuid
 from datetime import datetime
 from enum import Enum
-from .member import Member
 from .blog import BlogStatus
 
 class User(SQLModel, table=True):
@@ -44,11 +43,8 @@ class Project(SQLModel, table=True):
     interveners: List[Dict[str, Any]] = Field(default=[], sa_type=JSON) # name, role, avatar
     is_featured: bool = Field(default=False)
     user_id: Optional[int] = Field(default=None, foreign_key="user.id")
-    member_id: Optional[uuid.UUID] = Field(default=None, foreign_key="member.id", index=True)
     agency_visible: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
-
-    member: Optional[Member] = Relationship()
 
 class Testimonial(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -76,7 +72,6 @@ class Article(SQLModel, table=True):
     archived: bool = Field(default=False)
     reading_time: int = Field(default=5)
     # Agency visibility / assignment
-    member_id: Optional[uuid.UUID] = Field(default=None, foreign_key="member.id", index=True)
     agency_visible: bool = Field(default=False)
 
     # New publication workflow
@@ -86,7 +81,6 @@ class Article(SQLModel, table=True):
     ai_generated: bool = Field(default=False)
     ai_mode: Optional[str] = None
 
-    member: Optional[Member] = Relationship()
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 

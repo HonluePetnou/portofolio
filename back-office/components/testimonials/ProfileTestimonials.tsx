@@ -480,7 +480,7 @@ export function ProfileTestimonials() {
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-6 shadow-2xl backdrop-blur-sm">
+      <div className="bg-linear-to-r from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-6 shadow-2xl backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-primary/10 rounded-2xl">

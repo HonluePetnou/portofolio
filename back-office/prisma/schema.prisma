@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BlogStatus {
+  draft
+  scheduled
+  published
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+enum PriorityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  username       String   @unique
+  hashed_password String
+  full_name      String?
+  role           String   @default("admin")
+
+  profile      Profile?
+  projects     Project[]
+  testimonials Testimonial[]
+  articles     Article[]
+
+  @@map("user")
+}
+
+model Profile {
+  id                  Int     @id @default(autoincrement())
+  name                String
+  hero_title          String
+  hero_subtitle       String
+  bio_summary         String
+  about_text          String
+  profile_image_url   String?
+  cv_url              String?
+  social_links        Json    @default("[]")
+  tech_stack_summary  Json    @default("[]")
+  user_id             Int?    @unique
+  user                User?   @relation(fields: [user_id], references: [id])
+
+  @@map("profile")
+}
+
+model Project {
+  id             String   @id @default(uuid())
+  title          String
+  slug           String   @unique
+  client_name    String?
+  industry       String?
+  services       Json     @default("[]")
+  description    Json     @default("{}")
+  results        Json     @default("[]")
+  stack          Json     @default("[]")
+  timeline       String?
+  project_url    String?
+  github_url     String?
+  main_image     String?
+  screenshots    Json     @default("[]")
+  interveners    Json     @default("[]")
+  is_featured    Boolean  @default(false)
+  user_id        Int?
+  user           User?    @relation(fields: [user_id], references: [id])
+  agency_visible Boolean  @default(false)
+  created_at     DateTime @default(now())
+
+  related_articles Article[]
+
+  @@map("project")
+}
+
+model Testimonial {
+  id           Int     @id @default(autoincrement())
+  name         String
+  role         String
+  company      String?
+  content      String
+  rating       Int     @default(5)
+  image_url    String?
+  linkedin_url String?
+  user_id      Int?
+  user         User?   @relation(fields: [user_id], references: [id])
+
+  @@map("testimonial")
+}
+
+model Article {
+  id                  String      @id @default(uuid())
+  title               String
+  slug                String      @unique
+  excerpt             String
+  cover_image         String?
+  content             Json        @default("{}")
+  cta                 Json        @default("{}")
+  related_project_id  String?
+  related_project     Project?    @relation(fields: [related_project_id], references: [id])
+  tags                Json        @default("[]")
+  seo                 Json        @default("{}")
+  published           Boolean     @default(false)
+  archived            Boolean     @default(false)
+  reading_time        Int         @default(5)
+  agency_visible      Boolean     @default(false)
+  published_at        DateTime?
+  status              BlogStatus  @default(draft)
+  ai_generated        Boolean     @default(false)
+  ai_mode             String?
+  created_at          DateTime    @default(now())
+
+  @@map("article")
+}
+
+model Contact {
+  id             Int            @id @default(autoincrement())
+  name           String
+  email          String
+  phone          String?
+  company        String?
+  subject        String
+  message        String
+  service        String?
+  budget         Int?
+  status         ContactStatus  @default(NEW)
+  priority       PriorityLevel  @default(MEDIUM)
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
+
+  @@map("contact")
+}

@@ -15,7 +15,7 @@ export default function DashboardLayout({
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("auth_token");
+    const token = localStorage.getItem("access_token") || localStorage.getItem("auth_token");
     const username = localStorage.getItem("username");
 
     if (!token || !username) {

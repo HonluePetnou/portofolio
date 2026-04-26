@@ -64,15 +64,15 @@ export function ImageUpload({
   };
 
   return (
-    <div className={cn("space-y-4 w-full group/upload", className)}>
+    <div className={cn("space-y-2 w-full group/upload", className)}>
       {label && (
-        <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 ml-1">
+        <label className="text-xs font-semibold text-white/50">
           {label}
         </label>
       )}
 
       <div
-        className="relative w-full aspect-video sm:aspect-auto sm:h-48 rounded-[2rem] overflow-hidden transition-all duration-500"
+        className="relative w-full h-full min-h-[160px] rounded-2xl overflow-hidden transition-all duration-300"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -81,32 +81,32 @@ export function ImageUpload({
             <img
               src={value}
               alt="Uploaded workspace"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover/image:scale-110"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover/image:scale-105"
             />
 
             {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d1f]/80 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300" />
 
-            {/* Remove Button - Premium Design */}
+            {/* Remove Button */}
             <button
               onClick={(e) => {
                 e.preventDefault();
                 onChange("");
                 if (onRemove) onRemove();
               }}
-              className="absolute top-4 right-4 bg-white/10 backdrop-blur-xl text-white p-3 rounded-2xl shadow-2xl hover:bg-rose-500 hover:text-white transition-all duration-300 transform group-hover/image:translate-y-0 translate-y-[-10px] opacity-0 group-hover/image:opacity-100 border border-white/10"
+              className="absolute top-3 right-3 bg-white/10 backdrop-blur-md text-white p-2 rounded-xl hover:bg-rose-500/20 hover:text-rose-400 transition-all duration-200 opacity-0 group-hover/image:opacity-100 border border-white/10 z-10"
             >
               <X className="h-4 w-4" />
             </button>
 
             {/* Change Overlay */}
-            <label className="absolute inset-0 flex items-center justify-center bg-primary/20 backdrop-blur-sm opacity-0 group-hover/image:opacity-100 transition-all duration-500 cursor-pointer">
-              <div className="flex flex-col items-center gap-2 transform translate-y-4 group-hover/image:translate-y-0 transition-transform duration-500">
-                <div className="p-3 bg-white text-primary rounded-2xl shadow-xl">
-                  <CloudUpload className="h-6 w-6" />
+            <label className="absolute inset-0 flex items-center justify-center bg-[#0a0d1f]/40 backdrop-blur-sm opacity-0 group-hover/image:opacity-100 transition-all duration-300 cursor-pointer">
+              <div className="flex flex-col items-center gap-2 transform translate-y-2 group-hover/image:translate-y-0 transition-transform duration-300">
+                <div className="p-2.5 bg-white/10 border border-white/10 text-white rounded-xl">
+                  <CloudUpload className="h-5 w-5" />
                 </div>
-                <span className="text-[10px] font-black text-white uppercase tracking-widest">
-                  Replace Masterpiece
+                <span className="text-xs font-semibold text-white">
+                  Replace Image
                 </span>
               </div>
               <input
@@ -121,77 +121,41 @@ export function ImageUpload({
         ) : (
           <div
             className={cn(
-              "h-full w-full flex flex-col items-center justify-center gap-4 transition-all duration-700 relative border-2 border-dashed",
+              "h-full w-full flex flex-col items-center justify-center gap-3 transition-all duration-300 relative border border-dashed rounded-2xl",
               isHovered
                 ? "border-primary/50 bg-primary/5"
-                : "border-white/10 bg-white/[0.02]",
+                : "border-white/20 bg-white/5"
             )}
           >
-            {/* Animated Glow Effect Background */}
-            <div
-              className={cn(
-                "absolute inset-0 bg-primary/20 blur-[100px] transition-opacity duration-1000 pointer-events-none",
-                isHovered ? "opacity-30" : "opacity-0",
-              )}
-            />
-
             {isUploading ? (
-              <div className="flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-500">
-                <div className="relative">
-                  <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                  <div className="absolute inset-0 blur-xl bg-primary/40 animate-pulse" />
-                </div>
+              <div className="flex flex-col items-center gap-4 animate-in fade-in duration-300">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <div className="space-y-1 text-center">
-                  <p className="text-[10px] font-black text-white uppercase tracking-[0.2em]">
-                    Uploading Assets
-                  </p>
-                  <p className="text-[9px] text-white/40 font-bold uppercase tracking-widest italic">
-                    Optimizing performance...
+                  <p className="text-xs font-semibold text-white">
+                    Uploading...
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-6 relative z-10 p-8 text-center">
+              <div className="flex flex-col items-center gap-3 relative z-10 p-6 text-center">
                 <div
                   className={cn(
-                    "p-5 rounded-[2rem] transition-all duration-500 transform",
+                    "p-3 rounded-xl transition-all duration-300",
                     isHovered
-                      ? "bg-primary text-white scale-110 rotate-3 shadow-[0_0_40px_rgba(var(--primary),0.5)]"
-                      : "bg-white/5 text-white/20 border border-white/5",
+                      ? "bg-primary/20 text-primary scale-110"
+                      : "bg-white/5 text-white/40 border border-white/10"
                   )}
                 >
-                  {isHovered ? (
-                    <Sparkles className="h-8 w-8" />
-                  ) : (
-                    <CloudUpload className="h-8 w-8" />
-                  )}
+                  <ImageIcon className="h-5 w-5" />
                 </div>
 
-                <div className="space-y-2">
-                  <p
-                    className={cn(
-                      "text-xs font-black uppercase tracking-[0.2em] transition-colors duration-500",
-                      isHovered ? "text-white" : "text-white/40",
-                    )}
-                  >
-                    {isHovered
-                      ? "Release to Craft"
-                      : "Drop your visual masterwork"}
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-white/90">
+                    Click or drag image
                   </p>
-                  <p className="text-[10px] text-white/20 font-bold tracking-widest">
-                    PNG, JPG, WebP (Max 5MB)
+                  <p className="text-xs text-white/40">
+                    SVG, PNG, JPG or GIF (max. 5MB)
                   </p>
-                </div>
-
-                <div
-                  className={cn(
-                    "px-6 py-2.5 rounded-xl border font-black text-[10px] uppercase tracking-widest transition-all duration-500",
-                    isHovered
-                      ? "bg-white text-primary border-white"
-                      : "bg-transparent border-white/10 text-white/40",
-                  )}
-                >
-                  Browse Files
                 </div>
               </div>
             )}

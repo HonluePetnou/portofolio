@@ -9,6 +9,7 @@ from ...schemas.portfolio import (
     ProjectRead, ProjectCreate, ProjectUpdate
 )
 from .auth import get_current_user, get_current_admin
+from ...services.revalidation_service import trigger_revalidation
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
@@ -91,11 +92,15 @@ def check_slug(
 @router.get("", response_model=List[ProjectRead])
 def get_projects(
     featured: Optional[bool] = Query(None, description="Filter by featured status"),
+    agency_visible: Optional[bool] = Query(False, description="Filter by agency visibility"),
     session: Session = Depends(get_session),
 ):
     query = select(Project)
     if featured is not None:
         query = query.where(Project.is_featured == featured)
+    if agency_visible:
+        query = query.where(Project.agency_visible == True)
+        query = query.order_by(Project.created_at.desc())
     return session.exec(query).all()
 
 
@@ -120,7 +125,7 @@ def get_project_by_id(project_id: uuid.UUID, session: Session = Depends(get_sess
 # ── 3. Écritures (Authentifiées) ────────────────────────────────────────────────
 
 @router.post("", response_model=ProjectRead)
-def create_project(
+async def create_project(
     project: ProjectCreate,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
@@ -135,11 +140,15 @@ def create_project(
     session.add(db_project)
     session.commit()
     session.refresh(db_project)
+    
+    # Trigger revalidation
+    await trigger_revalidation(["/", "/projects", f"/projects/{db_project.slug}"])
+    
     return db_project
 
 
 @router.patch("/{project_id}", response_model=ProjectRead)
-def update_project(
+async def update_project(
     project_id: uuid.UUID,
     project: ProjectUpdate,
     session: Session = Depends(get_session),
@@ -166,11 +175,15 @@ def update_project(
     session.add(db_project)
     session.commit()
     session.refresh(db_project)
+    
+    # Trigger revalidation
+    await trigger_revalidation(["/", "/projects", f"/projects/{db_project.slug}"])
+    
     return db_project
 
 
 @router.delete("/{project_id}")
-def delete_project(
+async def delete_project(
     project_id: uuid.UUID,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
@@ -178,8 +191,13 @@ def delete_project(
     db_project = session.get(Project, project_id)
     if not db_project or db_project.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Project not found")
+    slug = db_project.slug
     session.delete(db_project)
     session.commit()
+    
+    # Trigger revalidation
+    await trigger_revalidation(["/", "/projects", f"/projects/{slug}"])
+    
     return {"ok": True}
 
 

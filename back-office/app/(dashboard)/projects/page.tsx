@@ -2,13 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -44,7 +37,6 @@ import {
   ChevronUp,
   ChevronDown,
   Search,
-  Filter,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -93,13 +85,6 @@ interface Project {
 type Tab = "mine" | "all";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-
-const TEAM_MEMBERS = [
-  { name: "Dieuba", role: "Developer" },
-  { name: "Lontsie", role: "Backend Engineer" },
-  { name: "Petnou", role: "Fullstack Developer" },
-  { name: "Abogo", role: "Strategy & Creative" },
-];
 
 const slugify = (str: string) =>
   str
@@ -167,46 +152,46 @@ function ScreenshotUploader({
         {value.map((url, idx) => (
           <div
             key={idx}
-            className="relative group/shot h-28 w-44 rounded-2xl overflow-hidden border border-white/5 bg-slate-900 shadow-xl shrink-0 transition-transform duration-500 hover:scale-[1.02]"
+            className="relative group/shot h-28 w-44 rounded-xl overflow-hidden border border-white/10 bg-white/5 transition-transform duration-300 hover:scale-105"
             onMouseEnter={() => setHIdx(idx)}
             onMouseLeave={() => setHIdx(null)}
           >
             <img
               src={url}
               alt={`Capture ${idx + 1}`}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover/shot:scale-110"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover/shot:scale-110"
             />
             {/* Control Overlay */}
-            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] opacity-0 group-hover/shot:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <div className="absolute inset-0 bg-[#0a0d1f]/60 backdrop-blur-sm opacity-0 group-hover/shot:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
               {idx > 0 && (
                 <button
                   type="button"
                   onClick={() => move(idx, idx - 1)}
-                  className="bg-white/10 hover:bg-white/20 text-white rounded-xl p-2 transition-all"
+                  className="bg-white/10 hover:bg-white/20 text-white rounded-lg p-2 transition-all"
                 >
-                  <ChevronUp className="h-3.5 w-3.5 -rotate-90" />
+                  <ChevronUp className="h-4 w-4 -rotate-90" />
                 </button>
               )}
               {idx < value.length - 1 && (
                 <button
                   type="button"
                   onClick={() => move(idx, idx + 1)}
-                  className="bg-white/10 hover:bg-white/20 text-white rounded-xl p-2 transition-all"
+                  className="bg-white/10 hover:bg-white/20 text-white rounded-lg p-2 transition-all"
                 >
-                  <ChevronDown className="h-3.5 w-3.5 -rotate-90" />
+                  <ChevronDown className="h-4 w-4 -rotate-90" />
                 </button>
               )}
               <button
                 type="button"
                 onClick={() => remove(idx)}
-                className="bg-rose-500/20 hover:bg-rose-500 text-white rounded-xl p-2 transition-all"
+                className="bg-rose-500/20 hover:bg-rose-500 text-white rounded-lg p-2 transition-all"
               >
-                <Trash2 className="h-3.5 w-3.5" />
+                <Trash2 className="h-4 w-4" />
               </button>
             </div>
             {/* Index Badge */}
-            <span className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-md text-[9px] font-black text-white/50 px-2 py-0.5 rounded-lg border border-white/5 uppercase tracking-tighter">
-              ASET-{idx + 1}
+            <span className="absolute top-2 left-2 bg-[#0a0d1f]/80 backdrop-blur-md text-[10px] font-semibold text-white px-2 py-0.5 rounded-md border border-white/10">
+              {idx + 1}
             </span>
           </div>
         ))}
@@ -214,28 +199,22 @@ function ScreenshotUploader({
         {value.length < 5 && (
           <label
             className={cn(
-              "h-28 w-44 rounded-[2rem] border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer shrink-0 transition-all duration-500 relative overflow-hidden group/add",
+              "h-28 w-44 rounded-xl border border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer shrink-0 transition-all duration-300",
               isUploading
-                ? "opacity-50 cursor-not-allowed"
-                : "border-white/10 bg-white/[0.02] hover:border-primary/50 hover:bg-primary/5",
+                ? "opacity-50 cursor-not-allowed border-white/10 bg-white/5"
+                : "border-white/20 bg-white/5 hover:border-primary/50 hover:bg-primary/5"
             )}
           >
-            {/* Glow Background */}
-            <div className="absolute inset-0 bg-primary/20 blur-3xl opacity-0 group-hover/add:opacity-40 transition-opacity duration-1000" />
-
             {isUploading ? (
-              <Loader2 className="h-6 w-6 animate-spin text-primary relative z-10" />
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
             ) : (
               <>
-                <div className="p-3 bg-white/5 rounded-2xl group-hover/add:bg-primary group-hover/add:text-white transition-all transform group-hover/add:scale-110 group-hover/add:rotate-3 relative z-10">
-                  <ImageIcon className="h-5 w-5 text-white/40 group-hover/add:text-white" />
+                <div className="p-2 bg-white/5 rounded-lg text-white/40 transition-colors">
+                  <ImageIcon className="h-4 w-4" />
                 </div>
-                <div className="text-center space-y-0.5 relative z-10">
-                  <span className="block text-[10px] font-black text-white/20 group-hover/add:text-white/60 uppercase tracking-widest leading-none">
-                    Capture
-                  </span>
-                  <span className="block text-[9px] font-bold text-white/5 uppercase tracking-tighter">
-                    New Asset
+                <div className="text-center">
+                  <span className="block text-xs font-semibold text-white/60">
+                    Add Asset
                   </span>
                 </div>
               </>
@@ -252,7 +231,7 @@ function ScreenshotUploader({
       </div>
 
       {error && (
-        <p className="text-[10px] text-rose-500 font-bold uppercase tracking-widest">
+        <p className="text-xs text-rose-500 font-semibold">
           {error}
         </p>
       )}
@@ -265,17 +244,17 @@ function ScreenshotUploader({
                 key={i}
                 className={cn(
                   "h-1 w-3 rounded-full transition-all duration-500",
-                  i < value.length ? "bg-primary" : "bg-white/5",
+                  i < value.length ? "bg-primary" : "bg-white/10",
                 )}
               />
             ))}
           </div>
-          <p className="text-[9px] font-black text-white/20 uppercase tracking-widest">
+          <p className="text-xs font-semibold text-white/40">
             {value.length < 3
-              ? `Need ${3 - value.length} more pieces of proof`
+              ? `${3 - value.length} more image${3 - value.length === 1 ? '' : 's'} needed`
               : value.length === 5
-                ? "Evidence limit reached"
-                : `${value.length} Visual Artifacts committed`}
+                ? "Maximum 5 screenshots"
+                : `${value.length} / 5 screenshots`}
           </p>
         </div>
       </div>
@@ -329,7 +308,9 @@ export default function ProjectsPage() {
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [industryFilter, setIndustryFilter] = useState("");
-  const [featuredFilter, setFeaturedFilter] = useState<"all" | "featured" | "not-featured">("all");
+  const [featuredFilter, setFeaturedFilter] = useState<
+    "all" | "featured" | "not-featured"
+  >("all");
 
   // ── Data ──────────────────────────────────────────────────────────────────
 
@@ -339,8 +320,12 @@ export default function ProjectsPage() {
       const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
       if (industryFilter) params.append("industry", industryFilter);
-      if (featuredFilter !== "all") params.append("is_featured", featuredFilter === "featured" ? "true" : "false");
-      
+      if (featuredFilter !== "all")
+        params.append(
+          "is_featured",
+          featuredFilter === "featured" ? "true" : "false",
+        );
+
       const data = await apiRequest(`/projects/me?${params.toString()}`);
       setMyProjects(data);
     } catch (err) {
@@ -356,8 +341,12 @@ export default function ProjectsPage() {
       const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
       if (industryFilter) params.append("industry", industryFilter);
-      if (featuredFilter !== "all") params.append("is_featured", featuredFilter === "featured" ? "true" : "false");
-      
+      if (featuredFilter !== "all")
+        params.append(
+          "is_featured",
+          featuredFilter === "featured" ? "true" : "false",
+        );
+
       const data = await apiRequest(`/projects/all?${params.toString()}`);
       setAllProjects(data);
       setIsAdmin(true);
@@ -537,9 +526,6 @@ export default function ProjectsPage() {
       interveners: formData.interveners.filter((_, idx) => idx !== i),
     });
 
-  const isMemberAdded = (name: string) =>
-    formData.interveners.some((i) => i.name === name);
-
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
   const ProjectCard = ({
@@ -552,153 +538,138 @@ export default function ProjectsPage() {
     const [imgError, setImgError] = useState(false);
 
     return (
-      <Card
+      <div
         key={p.id}
-        className="group/card relative flex flex-col overflow-hidden bg-slate-900 shadow-2xl transition-all duration-700 cursor-pointer border-none hover:-translate-y-2"
+        className="group/card relative flex flex-col overflow-hidden bg-white/5 border border-white/10 rounded-2xl cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:shadow-2xl hover:shadow-primary/10"
         onClick={() => {
           setViewProject(p);
           setIsViewOpen(true);
         }}
       >
-        {/* Animated Border Glow (only visible on hover) */}
-        <div className="absolute inset-0 p-[2px] rounded-xl transition-all duration-700 opacity-0 group-hover/card:opacity-100 bg-linear-to-br from-primary via-indigo-500 to-rose-500" />
+        {/* Image */}
+        <div className="h-52 w-full overflow-hidden relative">
+          {p.mainImage && !imgError ? (
+            <img
+              src={p.mainImage}
+              alt={p.title}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-105"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-[#0a0d1f] to-indigo-950/60 flex items-center justify-center">
+              <ImageIcon className="h-10 w-10 text-white/10" />
+            </div>
+          )}
 
-        <div className="relative flex flex-col h-full w-full bg-slate-950 rounded-[10px] overflow-hidden z-10 transition-all duration-700">
-          {/* Image Showcase with Overlays */}
-          <div className="h-56 w-full overflow-hidden relative">
-            {p.mainImage && !imgError ? (
-              <img
-                src={p.mainImage}
-                alt={p.title}
-                className="h-full w-full object-cover transition-transform duration-1000 group-hover/card:scale-110 group-hover/card:rotate-1"
-                onError={() => setImgError(true)}
-              />
+          {/* Gradient overlay */}
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#0a0d1f] via-[#0a0d1f]/40 to-transparent" />
+
+          {/* Top badges */}
+          <div className="absolute top-3 left-3 flex gap-2 z-20">
+            {p.isFeatured ? (
+              <span className="bg-amber-400 text-amber-950 text-[10px] font-bold px-2.5 py-1 rounded-full">
+                Featured
+              </span>
             ) : (
-              <div className="h-full w-full bg-linear-to-br from-slate-900 to-indigo-950 flex items-center justify-center">
-                <ImageIcon className="h-16 w-16 text-white/5" />
-              </div>
+              <span className="bg-white/10 backdrop-blur-md text-white/60 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-white/10">
+                Project
+              </span>
             )}
-
-            {/* Gradient Overlays for depth */}
-            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent" />
-            <div className="absolute inset-0 bg-slate-950/10 group-hover/card:bg-transparent transition-colors duration-700" />
-
-            {/* Floating Badges */}
-            <div className="absolute top-5 left-5 flex gap-2 z-20">
-              <Badge
-                className={`${
-                  p.isFeatured
-                    ? "bg-amber-400 text-amber-950 shadow-[0_0_20px_rgba(251,191,36,0.5)]"
-                    : "bg-slate-950/40 text-white border-white/10 backdrop-blur-xl"
-                } text-[10px] font-black tracking-[0.1em] px-3 py-1 border-none transition-transform duration-500 group-hover/card:translate-x-1`}
-              >
-                {p.isFeatured ? "PREMIUM CASE" : "PROJECT"}
-              </Badge>
-            </div>
-
-            {p.timeline && (
-              <div className="absolute top-5 right-5 z-20">
-                <span className="text-[10px] font-black text-white/90 bg-slate-950/40 backdrop-blur-xl px-3 py-1 rounded-sm border border-white/10 tracking-widest transition-transform duration-500 group-hover/card:-translate-x-1">
-                  {p.timeline.toUpperCase()}
-                </span>
-              </div>
-            )}
-
-            {/* Title anchored over image with transition */}
-            <div className="absolute bottom-6 left-6 right-6 z-20 transform transition-transform duration-700 group-hover/card:-translate-y-2">
-              <CardTitle className="text-2xl font-black tracking-tighter text-white leading-none mb-2 drop-shadow-2xl">
-                {p.title}
-              </CardTitle>
-              <div className="flex items-center gap-3 text-[11px] font-bold text-white/50 uppercase tracking-[0.2em]">
-                <span className="text-primary/80">
-                  {p.clientName || "Direct Client"}
-                </span>
-                {p.industry && (
-                  <>
-                    <span className="h-px w-6 bg-white/20" />
-                    <span className="italic">{p.industry}</span>
-                  </>
-                )}
-              </div>
-            </div>
           </div>
 
-          <CardContent className="flex-1 flex flex-col justify-between px-6 pb-6 pt-2 space-y-6">
-            <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed italic border-l-2 border-primary/40 pl-4 py-1">
-              {p.description?.objectives ||
-                "Evolutionary architecture & design objectives."}
-            </p>
+          {p.timeline && (
+            <div className="absolute top-3 right-3 z-20">
+              <span className="text-[10px] font-semibold text-white/60 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
+                {p.timeline}
+              </span>
+            </div>
+          )}
 
-            <div className="flex flex-wrap gap-2">
-              {p.stack?.slice(0, 3).map((s: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="text-[10px] font-black text-slate-300 bg-white/5 border border-white/10 px-3 py-1 rounded-sm uppercase tracking-wider hover:bg-primary/20 hover:border-primary/40 transition-colors"
-                >
-                  {s}
-                </span>
+          {/* Title anchored over image */}
+          <div className="absolute bottom-4 left-4 right-4 z-20">
+            <h3 className="text-xl font-bold text-white leading-tight mb-1 drop-shadow-xl">
+              {p.title}
+            </h3>
+            <div className="flex items-center gap-2 text-[11px] text-white/50">
+              <span className="text-primary/80 font-semibold">{p.clientName || "Personal"}</span>
+              {p.industry && (
+                <>
+                  <span className="h-px w-4 bg-white/20" />
+                  <span>{p.industry}</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 flex flex-col justify-between px-5 pb-5 pt-3 space-y-4">
+          <p className="text-xs text-white/40 line-clamp-2 leading-relaxed border-l border-primary/30 pl-3">
+            {p.description?.objectives || "No objectives defined."}
+          </p>
+
+          <div className="flex flex-wrap gap-1.5">
+            {p.stack?.slice(0, 3).map((s: string, idx: number) => (
+              <span
+                key={idx}
+                className="text-[10px] font-semibold text-white/60 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full"
+              >
+                {s}
+              </span>
+            ))}
+            {p.stack && p.stack.length > 3 && (
+              <span className="text-[10px] font-semibold text-white/30 px-2 py-1">
+                +{p.stack.length - 3}
+              </span>
+            )}
+          </div>
+
+          <div className="pt-3 border-t border-white/5 flex items-end justify-between gap-2">
+            {/* Intervenants list */}
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+              {p.interveners?.slice(0, 2).map((int: Intervener, idx: number) => (
+                <div key={idx} className="flex items-center gap-2">
+                  {/* Avatar */}
+                  <div className="h-6 w-6 rounded-full border border-white/10 bg-white/10 flex items-center justify-center text-[10px] font-bold text-primary shrink-0 overflow-hidden">
+                    {int.avatar ? (
+                      <img src={int.avatar} alt={int.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <span>{int.name.charAt(0).toUpperCase()}</span>
+                    )}
+                  </div>
+                  {/* Name + Role */}
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-[11px] font-semibold text-white/70 truncate">{int.name}</span>
+                    <span className="text-white/20 text-[10px]">·</span>
+                    <span className="text-[10px] text-white/35 truncate">{int.role}</span>
+                  </div>
+                </div>
               ))}
-              {p.stack && p.stack.length > 3 && (
-                <span className="text-[10px] font-black text-white/20 px-1 py-1 uppercase tracking-wider">
-                  +{p.stack.length - 3} OTHER
+              {p.interveners && p.interveners.length > 2 && (
+                <span className="text-[10px] text-white/25 font-medium pl-8">
+                  +{p.interveners.length - 2} more
                 </span>
               )}
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-white/5">
-              <div className="flex -space-x-3">
-                {p.interveners
-                  ?.slice(0, 4)
-                  .map((int: Intervener, idx: number) => (
-                    <div
-                      key={idx}
-                      className="h-10 w-10 rounded-2xl border-2 border-slate-950 overflow-hidden bg-slate-900 flex items-center justify-center text-xs font-black text-primary shadow-2xl relative group/avatar transition-all duration-500 group-hover/card:translate-y-[-4px]"
-                      style={{ transitionDelay: `${idx * 100}ms` }}
-                      title={`${int.name} (${int.role})`}
-                    >
-                      {int.avatar ? (
-                        <img
-                          src={int.avatar}
-                          alt={int.name}
-                          className="h-full w-full object-cover grayscale group-hover/avatar:grayscale-0 transition-all"
-                        />
-                      ) : (
-                        <span>{int.name.charAt(0).toUpperCase()}</span>
-                      )}
-                      <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
-                    </div>
-                  ))}
-              </div>
-
-              {/* Action Tray that pops up on hover */}
-              <div className="flex gap-2 transform translate-y-4 opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500 ease-out">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 rounded-2xl bg-slate-900 border-white/5 text-white/60 hover:bg-primary/20 hover:text-primary hover:border-primary/40 shadow-2xl"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEdit(p, asAdmin);
-                  }}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 rounded-2xl bg-slate-900 border-white/5 text-rose-500/60 hover:bg-rose-500/20 hover:text-rose-500 hover:border-rose-500/40 shadow-2xl"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(p.id, asAdmin);
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+            {/* Action buttons — appear on hover */}
+            <div className="flex gap-2 opacity-0 group-hover/card:opacity-100 translate-y-2 group-hover/card:translate-y-0 transition-all duration-300 shrink-0">
+              <button
+                className="h-7 w-7 rounded-lg bg-white/5 border border-white/10 text-white/40 hover:text-primary hover:border-primary/40 hover:bg-primary/10 transition-all flex items-center justify-center"
+                onClick={(e) => { e.stopPropagation(); handleEdit(p, asAdmin); }}
+              >
+                <Pencil className="h-3 w-3" />
+              </button>
+              <button
+                className="h-7 w-7 rounded-lg bg-white/5 border border-white/10 text-white/40 hover:text-rose-400 hover:border-rose-400/40 hover:bg-rose-500/10 transition-all flex items-center justify-center"
+                onClick={(e) => { e.stopPropagation(); handleDelete(p.id, asAdmin); }}
+              >
+                <Trash2 className="h-3 w-3" />
+              </button>
             </div>
-          </CardContent>
+          </div>
         </div>
-      </Card>
+      </div>
     );
   };
 
@@ -710,7 +681,7 @@ export default function ProjectsPage() {
 
     return (
       <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
-        <DialogContent className="max-w-6xl w-[95vw] max-h-[95vh] overflow-y-auto overflow-x-hidden p-0 gap-0 border-none shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] bg-slate-950 text-slate-50 rounded-2xl">
+        <DialogContent className="max-w-6xl w-[95vw] max-h-[95vh] overflow-y-auto overflow-x-hidden p-0 gap-0 border-none shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] bg-card text-card-foreground rounded-2xl">
           {/* Header Banner with parallax-like effect */}
           <div className="relative h-64 md:h-[400px] w-full overflow-hidden">
             {p.mainImage ? (
@@ -812,7 +783,7 @@ export default function ProjectsPage() {
                       <h5 className="text-xs uppercase font-black text-primary/60 tracking-widest">
                         Challenge & Objectives
                       </h5>
-                      <p className="text-lg text-slate-300 leading-relaxed font-light">
+                      <p className="text-lg text-muted-foreground leading-relaxed font-light">
                         {p.description?.objectives || "Not specified."}
                       </p>
                     </div>
@@ -823,7 +794,7 @@ export default function ProjectsPage() {
                           Core Problem{" "}
                           <span className="h-px flex-1 bg-rose-500/20" />
                         </h5>
-                        <p className="text-slate-400 leading-relaxed text-sm italic border-l-2 border-rose-500/30 pl-4 py-1">
+                        <p className="text-muted-foreground leading-relaxed text-sm italic border-l-2 border-rose-500/30 pl-4 py-1">
                           {p.description?.problem || "Not specified."}
                         </p>
                       </div>
@@ -832,7 +803,7 @@ export default function ProjectsPage() {
                           Engineering Solution{" "}
                           <span className="h-px flex-1 bg-emerald-500/20" />
                         </h5>
-                        <p className="text-slate-400 leading-relaxed text-sm italic border-l-2 border-emerald-500/30 pl-4 py-1">
+                        <p className="text-muted-foreground leading-relaxed text-sm italic border-l-2 border-emerald-500/30 pl-4 py-1">
                           {p.description?.solution || "Not specified."}
                         </p>
                       </div>
@@ -870,7 +841,7 @@ export default function ProjectsPage() {
             </div>
 
             {/* Sticky Sidebar (Right) */}
-            <aside className="border-l border-white/5 bg-slate-900/50 backdrop-blur-2xl p-8 space-y-12">
+            <aside className="border-l border-border bg-muted/50 backdrop-blur-2xl p-8 space-y-12">
               {/* Stack & Tech */}
               <div className="space-y-10">
                 <div className="space-y-4">
@@ -985,9 +956,9 @@ export default function ProjectsPage() {
       <ProjectDetailDialog />
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Projets</h2>
-          <p className="text-sm text-muted-foreground">
-            Gérez vos projets portfolio et collaborations d'équipe.
+          <h2 className="text-2xl font-bold tracking-tight text-white">Projects</h2>
+          <p className="text-sm text-white/40">
+            Manage your portfolio projects and team collaborations.
           </p>
         </div>
 
@@ -999,581 +970,461 @@ export default function ProjectsPage() {
           }}
         >
           <DialogTrigger asChild>
-            <Button onClick={resetForm}>
-              <Plus className="mr-2 h-4 w-4" /> Nouveau projet
+            <Button
+              onClick={resetForm}
+              className="rounded-xl font-semibold px-5 h-10 gap-2 shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95 border-0 text-white"
+            >
+              <Plus className="h-4 w-4" /> New Project
             </Button>
           </DialogTrigger>
 
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
-                {formData.id ? "Modifier le projet" : "Créer un projet"}
-              </DialogTitle>
-              <DialogDescription>
-                Idéalement 3 à 5 captures d'écran haute qualité.
-              </DialogDescription>
-            </DialogHeader>
-
-            <form onSubmit={handleSubmit} className="space-y-8 py-4">
-              {/* ── 1. Informations de base ── */}
-              <section className="space-y-4">
-                <h4 className="font-semibold text-primary border-l-4 border-primary pl-2">
-                  Informations de base
-                </h4>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="title">Titre du projet</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => {
-                        setFormData({ ...formData, title: e.target.value });
-                        updateSlug(e.target.value);
-                      }}
-                      placeholder="Portfolio v2"
-                      required
-                    />
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border border-white/10 bg-[#0a0d1f]/95 backdrop-blur-2xl text-white rounded-2xl shadow-2xl">
+            <form onSubmit={handleSubmit} className="flex flex-col h-full">
+              {/* Editor Header */}
+              <div className="bg-[#0a0d1f]/80 backdrop-blur-2xl border-b border-white/5 p-6 sticky top-0 z-50 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                    <Briefcase className="h-5 w-5 text-primary" />
                   </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="slug">
-                      Slug (URL)
-                      {slugStatus === "checking" && (
-                        <span className="ml-2 text-muted-foreground text-[10px] italic">
-                          Vérification...
-                        </span>
-                      )}
-                      {slugStatus === "ok" && (
-                        <span className="ml-2 text-green-500 text-[10px] font-bold">
-                          ✓ OK
-                        </span>
-                      )}
-                      {slugStatus.includes("taken") && (
-                        <span className="ml-2 text-destructive text-[10px] font-bold">
-                          ✗ Prix
-                        </span>
-                      )}
-                    </Label>
-                    <Input
-                      id="slug"
-                      value={formData.slug}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          slug: e.target.value,
-                          slugManual: true,
-                        })
-                      }
-                      placeholder="portfolio-v2"
-                      className={
-                        slugStatus.includes("taken")
-                          ? "border-destructive text-destructive"
-                          : ""
-                      }
-                      required
-                    />
+                  <div>
+                    <h2 className="text-lg font-bold">{formData.id ? "Edit Project" : "New Project"}</h2>
+                    <p className="text-xs text-white/40">
+                      {formData.title || "Untitled project"}
+                    </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="clientName">Nom du client</Label>
-                    <Input
-                      id="clientName"
-                      value={formData.clientName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, clientName: e.target.value })
-                      }
-                      placeholder="Soluty Studio"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="industry">Secteur</Label>
-                    <Input
-                      id="industry"
-                      value={formData.industry}
-                      onChange={(e) =>
-                        setFormData({ ...formData, industry: e.target.value })
-                      }
-                      placeholder="Digital / Design"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="services">Services (virgules)</Label>
-                    <Input
-                      id="services"
-                      value={formData.services}
-                      onChange={(e) =>
-                        setFormData({ ...formData, services: e.target.value })
-                      }
-                      placeholder="UI Design, React"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="timeline">Durée du projet</Label>
-                    <div className="flex gap-2">
-                      <Select
-                        value={
-                          [
-                            "1 semaine",
-                            "2 semaines",
-                            "1 mois",
-                            "3 mois",
-                            "6 mois",
-                            "1 an",
-                          ].includes(formData.timeline || "")
-                            ? formData.timeline
-                            : formData.timeline
-                              ? "custom"
-                              : ""
-                        }
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === "custom") {
-                            setFormData({ ...formData, timeline: "" });
-                          } else {
-                            setFormData({ ...formData, timeline: val });
-                          }
-                        }}
-                        className="w-[180px]"
-                      >
-                        <option value="" disabled>
-                          Choisir...
-                        </option>
-                        <SelectItem value="1 semaine">1 semaine</SelectItem>
-                        <SelectItem value="2 semaines">2 semaines</SelectItem>
-                        <SelectItem value="1 mois">1 mois</SelectItem>
-                        <SelectItem value="3 mois">3 mois</SelectItem>
-                        <SelectItem value="6 mois">6 mois</SelectItem>
-                        <SelectItem value="1 an">1 an</SelectItem>
-                        <SelectItem value="custom">Personnalisé...</SelectItem>
-                      </Select>
-
-                      {(![
-                        "1 semaine",
-                        "2 semaines",
-                        "1 mois",
-                        "3 mois",
-                        "6 mois",
-                        "1 an",
-                      ].includes(formData.timeline || "") ||
-                        formData.timeline === "") && (
-                        <Input
-                          value={formData.timeline}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              timeline: e.target.value,
-                            })
-                          }
-                          placeholder="Ex: 5 jours, 2 ans..."
-                          className="flex-1"
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* ── 2. Media ── */}
-              <section className="space-y-4">
-                <h4 className="font-semibold text-primary border-l-4 border-primary pl-2 flex items-center gap-2">
-                  <ImageIcon className="h-4 w-4" /> Media & Visuels
-                </h4>
-
-                <div className="grid gap-2">
-                  <Label>Image principale (Bandeau)</Label>
-                  <AvatarUpload
-                    value={formData.mainImage}
-                    onChange={(url) =>
-                      setFormData({ ...formData, mainImage: url })
-                    }
-                    folder="projects"
-                    variant="banner"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label
-                    className={
-                      formData.screenshots.length < 3 ? "text-destructive" : ""
-                    }
-                  >
-                    Captures d'écran (3 min.)
-                  </Label>
-                  <ScreenshotUploader
-                    value={formData.screenshots}
-                    onChange={(urls) =>
-                      setFormData({ ...formData, screenshots: urls })
-                    }
-                  />
-                </div>
-              </section>
-
-              {/* ── 3. Étude de cas ── */}
-              <section className="space-y-4">
-                <h4 className="font-semibold text-primary border-l-4 border-primary pl-2 flex items-center gap-2">
-                  <Trophy className="h-4 w-4" /> Étude de cas
-                </h4>
-                <div className="space-y-4 border p-4 rounded-lg bg-muted/30">
-                  <div className="grid gap-2">
-                    <Label>Objectifs</Label>
-                    <Textarea
-                      value={formData.description.objectives}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: {
-                            ...formData.description,
-                            objectives: e.target.value,
-                          },
-                        })
-                      }
-                      placeholder="Buts du projet..."
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label>Problème</Label>
-                      <Textarea
-                        value={formData.description.problem}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            description: {
-                              ...formData.description,
-                              problem: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="Points de douleur..."
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label>Solution</Label>
-                      <Textarea
-                        value={formData.description.solution}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            description: {
-                              ...formData.description,
-                              solution: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="Comment on a fait..."
-                      />
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* ── 4. Technique ── */}
-              <section className="space-y-4">
-                <h4 className="font-semibold text-primary border-l-4 border-primary pl-2 flex items-center gap-2">
-                  <Github className="h-4 w-4" /> Technique & Liens
-                </h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label>URL Live</Label>
-                    <Input
-                      value={formData.projectUrl}
-                      onChange={(e) =>
-                        setFormData({ ...formData, projectUrl: e.target.value })
-                      }
-                      placeholder="https://..."
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>GitHub</Label>
-                    <Input
-                      value={formData.githubUrl}
-                      onChange={(e) =>
-                        setFormData({ ...formData, githubUrl: e.target.value })
-                      }
-                      placeholder="https://github.com/..."
-                    />
-                  </div>
-                </div>
-                <div className="grid gap-2">
-                  <Label>Stack (virgules)</Label>
-                  <Input
-                    value={formData.stack}
-                    onChange={(e) =>
-                      setFormData({ ...formData, stack: e.target.value })
-                    }
-                    placeholder="Next.js, FastAPI"
-                  />
-                </div>
-              </section>
-
-              {/* ── 5. Équipe ── */}
-              <section className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h4 className="font-semibold text-primary border-l-4 border-primary pl-2 flex items-center gap-2">
-                    <Users className="h-4 w-4" /> Équipe & Intervenants
-                  </h4>
+                <div className="flex items-center gap-4">
                   <Button
+                    variant="ghost"
                     type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => addIntervener()}
+                    className="h-8 px-4 rounded-lg font-semibold text-xs transition-all text-white/40 hover:text-white"
+                    onClick={() => setIsDialogOpen(false)}
                   >
-                    <Plus className="h-3 w-3 mr-1" /> Manuel
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || slugStatus.includes("taken") || formData.screenshots.length < 3}
+                    className="rounded-lg font-semibold px-6 h-10 shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95 border-0 text-white"
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : formData.screenshots.length < 3 ? (
+                      "Needs 3 Images"
+                    ) : formData.id ? (
+                      "Update Project"
+                    ) : (
+                      "Create Project"
+                    )}
                   </Button>
                 </div>
-
-                <div className="flex flex-wrap gap-2 p-3 bg-muted/20 rounded-lg border">
-                  <p className="w-full text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1 px-1">
-                    Équipe cœur
-                  </p>
-                  {TEAM_MEMBERS.map((m) => (
-                    <Button
-                      key={m.name}
-                      type="button"
-                      variant={isMemberAdded(m.name) ? "secondary" : "outline"}
-                      size="sm"
-                      className="text-xs h-8 px-3 rounded-full"
-                      disabled={isMemberAdded(m.name)}
-                      onClick={() => addIntervener(m)}
-                    >
-                      {isMemberAdded(m.name) ? (
-                        <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
-                      ) : (
-                        <Plus className="h-3 w-3 mr-1" />
-                      )}
-                      {m.name}
-                    </Button>
-                  ))}
-                </div>
-
-                <div className="grid gap-3">
-                  {formData.interveners.map((int, i) => (
-                    <div
-                      key={i}
-                      className="flex gap-4 items-center bg-muted/10 p-4 rounded-xl border group"
-                    >
-                      <AvatarUpload
-                        value={int.avatar ?? ""}
-                        onChange={(url) => {
-                          const arr = [...formData.interveners];
-                          arr[i].avatar = url || null;
-                          setFormData({ ...formData, interveners: arr });
-                        }}
-                        folder="projects"
-                        variant="avatar"
-                      />
-                      <div className="flex-1 grid grid-cols-2 gap-3">
-                        <div className="space-y-1">
-                          <Label className="text-[10px] text-muted-foreground px-1">
-                            Nom
-                          </Label>
-                          <Input
-                            value={int.name}
-                            onChange={(e) => {
-                              const arr = [...formData.interveners];
-                              arr[i].name = e.target.value;
-                              setFormData({ ...formData, interveners: arr });
-                            }}
-                            className="bg-background"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-[10px] text-muted-foreground px-1">
-                            Rôle
-                          </Label>
-                          <Input
-                            value={int.role}
-                            onChange={(e) => {
-                              const arr = [...formData.interveners];
-                              arr[i].role = e.target.value;
-                              setFormData({ ...formData, interveners: arr });
-                            }}
-                            className="bg-background"
-                          />
-                        </div>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:text-destructive self-end mb-1"
-                        onClick={() => removeIntervener(i)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <div className="flex items-center space-x-2 border p-3 rounded-lg bg-primary/5">
-                <Switch
-                  id="isFeatured"
-                  checked={formData.isFeatured}
-                  onCheckedChange={(checked) =>
-                    setFormData({ ...formData, isFeatured: checked })
-                  }
-                />
-                <Label
-                  htmlFor="isFeatured"
-                  className="font-semibold text-primary cursor-pointer"
-                >
-                  Mettre en avant sur le portfolio
-                </Label>
               </div>
 
-              <DialogFooter className="sticky bottom-0 bg-background pt-4 border-t">
-                <Button
-                  variant="ghost"
-                  type="button"
-                  onClick={() => setIsDialogOpen(false)}
-                >
-                  Annuler
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={
-                    isSubmitting ||
-                    slugStatus.includes("taken") ||
-                    formData.screenshots.length < 3
-                  }
-                >
-                  {isSubmitting && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  {formData.screenshots.length < 3
-                    ? "Besoin de 3 captures"
-                    : formData.id
-                      ? "Mettre à jour"
-                      : "Créer le projet"}
-                </Button>
-              </DialogFooter>
+              <div className="p-8 space-y-10">
+                {/* 1. Basic Info */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 border-b border-white/5 pb-2">
+                    <h4 className="text-sm font-semibold text-white">Basic Information</h4>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="title" className="text-xs font-semibold text-white/50">Project Title</Label>
+                      <Input
+                        id="title"
+                        value={formData.title}
+                        onChange={(e) => {
+                          setFormData({ ...formData, title: e.target.value });
+                          updateSlug(e.target.value);
+                        }}
+                        placeholder="Portfolio v2"
+                        className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="slug" className="text-xs font-semibold text-white/50 flex items-center gap-2">
+                        Slug (URL)
+                        {slugStatus === "checking" && <Loader2 className="h-3 w-3 animate-spin text-white/40" />}
+                        {slugStatus === "ok" && <CheckCircle2 className="h-3 w-3 text-emerald-500" />}
+                        {slugStatus.includes("taken") && <X className="h-3 w-3 text-rose-500" />}
+                      </Label>
+                      <Input
+                        id="slug"
+                        value={formData.slug}
+                        onChange={(e) => setFormData({ ...formData, slug: e.target.value, slugManual: true })}
+                        placeholder="portfolio-v2"
+                        className={cn(
+                          "bg-white/5 border-white/10 rounded-xl px-4 h-12 font-mono text-sm transition-all placeholder:text-white/20",
+                          slugStatus.includes("taken") && "border-rose-500/50 text-rose-500 focus-visible:ring-rose-500"
+                        )}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="clientName" className="text-xs font-semibold text-white/50">Client Name</Label>
+                      <Input
+                        id="clientName"
+                        value={formData.clientName}
+                        onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
+                        placeholder="Soluty Studio"
+                        className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="industry" className="text-xs font-semibold text-white/50">Industry</Label>
+                      <Input
+                        id="industry"
+                        value={formData.industry}
+                        onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                        placeholder="Digital / Design"
+                        className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="services" className="text-xs font-semibold text-white/50">Services (comma separated)</Label>
+                      <Input
+                        id="services"
+                        value={formData.services}
+                        onChange={(e) => setFormData({ ...formData, services: e.target.value })}
+                        placeholder="UI Design, React"
+                        className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="timeline" className="text-xs font-semibold text-white/50">Project Duration</Label>
+                      <div className="flex gap-2">
+                        <Select
+                          value={
+                            ["1 semaine", "2 semaines", "1 mois", "3 mois", "6 mois", "1 an"].includes(formData.timeline || "")
+                              ? formData.timeline
+                              : formData.timeline ? "custom" : ""
+                          }
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === "custom") {
+                              setFormData({ ...formData, timeline: "" });
+                            } else {
+                              setFormData({ ...formData, timeline: val });
+                            }
+                          }}
+                          className="bg-white/5 border-white/10 rounded-xl h-12 focus-visible:ring-primary transition-all w-48 text-sm"
+                        >
+                          <SelectItem value="" disabled>Select...</SelectItem>
+                          <SelectItem value="1 semaine">1 week</SelectItem>
+                          <SelectItem value="2 semaines">2 weeks</SelectItem>
+                          <SelectItem value="1 mois">1 month</SelectItem>
+                          <SelectItem value="3 mois">3 months</SelectItem>
+                          <SelectItem value="6 mois">6 months</SelectItem>
+                          <SelectItem value="1 an">1 year</SelectItem>
+                          <SelectItem value="custom">Custom...</SelectItem>
+                        </Select>
+
+                        {(!["1 semaine", "2 semaines", "1 mois", "3 mois", "6 mois", "1 an"].includes(formData.timeline || "") || formData.timeline === "") && (
+                          <Input
+                            value={formData.timeline}
+                            onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
+                            placeholder="e.g. 5 days"
+                            className="bg-white/5 border-white/10 rounded-xl h-12 focus-visible:ring-primary transition-all flex-1"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 2. Media */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 border-b border-white/5 pb-2">
+                    <ImageIcon className="h-4 w-4 text-primary" />
+                    <h4 className="text-sm font-semibold text-white">Media & Visuals</h4>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold text-white/50">Banner Image</Label>
+                    <AvatarUpload
+                      value={formData.mainImage}
+                      onChange={(url) => setFormData({ ...formData, mainImage: url })}
+                      folder="projects"
+                      variant="banner"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className={cn("text-xs font-semibold", formData.screenshots.length < 3 ? "text-rose-500" : "text-white/50")}>
+                      Screenshots (Min. 3)
+                    </Label>
+                    <ScreenshotUploader
+                      value={formData.screenshots}
+                      onChange={(urls) => setFormData({ ...formData, screenshots: urls })}
+                    />
+                  </div>
+                </section>
+
+                {/* 3. Case Study */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 border-b border-white/5 pb-2">
+                    <Trophy className="h-4 w-4 text-primary" />
+                    <h4 className="text-sm font-semibold text-white">Case Study</h4>
+                  </div>
+                  <div className="space-y-6 bg-white/5 border border-white/10 p-6 rounded-2xl">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold text-white/50">Objectives</Label>
+                      <Textarea
+                        value={formData.description.objectives}
+                        onChange={(e) => setFormData({ ...formData, description: { ...formData.description, objectives: e.target.value } })}
+                        placeholder="Project goals..."
+                        className="bg-white/5 border-white/10 rounded-xl p-4 min-h-[100px] text-sm focus:border-white/20 transition-all placeholder:text-white/20 resize-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-xs font-semibold text-white/50">Problem</Label>
+                        <Textarea
+                          value={formData.description.problem}
+                          onChange={(e) => setFormData({ ...formData, description: { ...formData.description, problem: e.target.value } })}
+                          placeholder="Pain points..."
+                          className="bg-white/5 border-white/10 rounded-xl p-4 min-h-[120px] text-sm focus:border-white/20 transition-all placeholder:text-white/20 resize-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-semibold text-white/50">Solution</Label>
+                        <Textarea
+                          value={formData.description.solution}
+                          onChange={(e) => setFormData({ ...formData, description: { ...formData.description, solution: e.target.value } })}
+                          placeholder="How we solved it..."
+                          className="bg-white/5 border-white/10 rounded-xl p-4 min-h-[120px] text-sm focus:border-white/20 transition-all placeholder:text-white/20 resize-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 4. Tech */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 border-b border-white/5 pb-2">
+                    <Github className="h-4 w-4 text-primary" />
+                    <h4 className="text-sm font-semibold text-white">Tech & Links</h4>
+                  </div>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold text-white/50">Live URL</Label>
+                      <Input
+                        value={formData.projectUrl}
+                        onChange={(e) => setFormData({ ...formData, projectUrl: e.target.value })}
+                        placeholder="https://..."
+                        className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold text-white/50">GitHub URL</Label>
+                      <Input
+                        value={formData.githubUrl}
+                        onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+                        placeholder="https://github.com/..."
+                        className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold text-white/50">Stack (comma separated)</Label>
+                    <Input
+                      value={formData.stack}
+                      onChange={(e) => setFormData({ ...formData, stack: e.target.value })}
+                      placeholder="Next.js, FastAPI"
+                      className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
+                    />
+                  </div>
+                </section>
+
+                {/* 5. Team */}
+                <section className="space-y-6">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-primary" />
+                      <h4 className="text-sm font-semibold text-white">Team & Members</h4>
+                    </div>
+                    <Button
+                      type="button"
+                      onClick={() => addIntervener()}
+                      className="rounded-lg h-8 px-3 gap-1 bg-white/5 hover:bg-white/10 border border-white/10 font-semibold text-xs transition-colors"
+                    >
+                      <Plus className="h-3 w-3" /> Add Member
+                    </Button>
+                  </div>
+
+                  <div className="grid gap-4">
+                    {formData.interveners.map((int, i) => (
+                      <div key={i} className="flex gap-6 items-center bg-white/5 p-4 rounded-2xl border border-white/10 group">
+                        <AvatarUpload
+                          value={int.avatar ?? ""}
+                          onChange={(url) => {
+                            const arr = [...formData.interveners];
+                            arr[i].avatar = url || null;
+                            setFormData({ ...formData, interveners: arr });
+                          }}
+                          folder="projects"
+                          variant="avatar"
+                        />
+                        <div className="flex-1 grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-xs font-semibold text-white/50">Name</Label>
+                            <Input
+                              value={int.name}
+                              onChange={(e) => {
+                                const arr = [...formData.interveners];
+                                arr[i].name = e.target.value;
+                                setFormData({ ...formData, interveners: arr });
+                              }}
+                              className="bg-white/5 border-white/10 rounded-xl px-4 h-10 focus-visible:ring-primary transition-all"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-xs font-semibold text-white/50">Role</Label>
+                            <Input
+                              value={int.role}
+                              onChange={(e) => {
+                                const arr = [...formData.interveners];
+                                arr[i].role = e.target.value;
+                                setFormData({ ...formData, interveners: arr });
+                              }}
+                              className="bg-white/5 border-white/10 rounded-xl px-4 h-10 focus-visible:ring-primary transition-all"
+                            />
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="text-white/40 hover:text-rose-400 hover:bg-rose-500/10 transition-all self-end mb-1"
+                          onClick={() => removeIntervener(i)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <div className="flex items-center space-x-3 border border-white/10 p-4 rounded-2xl bg-white/5">
+                  <Switch
+                    id="isFeatured"
+                    checked={formData.isFeatured}
+                    onCheckedChange={(checked) => setFormData({ ...formData, isFeatured: checked })}
+                  />
+                  <Label htmlFor="isFeatured" className="text-sm font-semibold text-white cursor-pointer">
+                    Feature on Portfolio
+                  </Label>
+                </div>
+              </div>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
       {/* Filters */}
-      <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-6 shadow-2xl backdrop-blur-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-primary/10 rounded-2xl">
-              <Filter className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-foreground">Project Filters</h3>
-              <p className="text-sm text-muted-foreground">Find your perfect project showcase</p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setSearchQuery("");
-              setIndustryFilter("");
-              setFeaturedFilter("all");
-            }}
-            className="text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
-          >
-            <X className="h-4 w-4 mr-1" />
-            Clear All
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-sm">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
             <Input
               placeholder="Search projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg focus:ring-2 focus:ring-primary/20 transition-all"
+              className="pl-10 h-11 rounded-xl bg-white/5 border-white/10 text-sm text-white placeholder:text-white/30 focus-visible:ring-primary/40 transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
-          
+
           {/* Industry Filter */}
-          <div className="relative group">
-            <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
+          <div className="relative">
+            <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
             <Input
-              placeholder="Industry..."
+              placeholder="Filter by industry..."
               value={industryFilter}
               onChange={(e) => setIndustryFilter(e.target.value)}
-              className="pl-12 h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg focus:ring-2 focus:ring-primary/20 transition-all"
+              className="pl-10 h-11 rounded-xl bg-white/5 border-white/10 text-sm text-white placeholder:text-white/30 focus-visible:ring-primary/40 transition-all"
             />
             {industryFilter && (
               <button
                 onClick={() => setIndustryFilter("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
-          
+
           {/* Featured Filter */}
           <div className="relative">
-            <select 
-              value={featuredFilter} 
+            <select
+              value={featuredFilter}
               onChange={(e) => setFeaturedFilter(e.target.value as "all" | "featured" | "not-featured")}
-              className="w-full h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg px-4 pr-10 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/20 transition-all"
+              className="w-full h-11 rounded-xl bg-white/5 border border-white/10 text-sm text-white px-4 pr-10 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/40 transition-all"
             >
-              <option value="all">🌟 All Projects</option>
-              <option value="featured">⭐ Featured Only</option>
-              <option value="not-featured">📁 Standard Projects</option>
+              <option value="all">All Projects</option>
+              <option value="featured">Featured Only</option>
+              <option value="not-featured">Standard Projects</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b pb-0">
+      <div className="flex gap-1 border-b border-white/10 pb-0">
         <button
           onClick={() => setActiveTab("mine")}
-          className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
+          className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold border-b-2 transition-all -mb-px ${
             activeTab === "mine"
               ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
+              : "border-transparent text-white/40 hover:text-white/70"
           }`}
         >
           <Briefcase className="h-4 w-4" />
-          Mes projets
+          My Projects
           {myProjects.length > 0 && (
-            <Badge variant="secondary" className="text-[10px] h-4 px-1">
+            <span className={`ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+              activeTab === "mine" ? "bg-primary/20 text-primary" : "bg-white/10 text-white/40"
+            }`}>
               {myProjects.length}
-            </Badge>
+            </span>
           )}
         </button>
 
         {isAdmin && (
           <button
             onClick={() => setActiveTab("all")}
-            className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold border-b-2 transition-all -mb-px ${
               activeTab === "all"
                 ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground"
+                : "border-transparent text-white/40 hover:text-white/70"
             }`}
           >
             <ShieldCheck className="h-4 w-4" />
-            Tous les projets
+            All Projects
             {allProjects.length > 0 && (
-              <Badge variant="secondary" className="text-[10px] h-4 px-1">
+              <span className={`ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                activeTab === "all" ? "bg-primary/20 text-primary" : "bg-white/10 text-white/40"
+              }`}>
                 {allProjects.length}
-              </Badge>
+              </span>
             )}
           </button>
         )}
@@ -1590,15 +1441,21 @@ export default function ProjectsPage() {
               </p>
             </div>
           ) : myProjects.length === 0 ? (
-            <Card className="border-dashed py-20 bg-muted/10 flex flex-col items-center">
-              <UserCircle className="h-16 w-16 text-muted-foreground/20 mb-4" />
-              <p className="text-muted-foreground mb-4">
-                Vous n'avez pas encore de projet.
-              </p>
-              <Button onClick={() => setIsDialogOpen(true)} variant="outline">
-                Nouveau projet
+            <div className="flex flex-col items-center justify-center py-24 gap-4">
+              <div className="p-5 bg-white/5 rounded-2xl border border-white/10">
+                <UserCircle className="h-10 w-10 text-white/20" />
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-semibold text-white/40">No projects yet</p>
+                <p className="text-xs text-white/20 mt-1">Click below to create your first project</p>
+              </div>
+              <Button
+                onClick={() => setIsDialogOpen(true)}
+                className="rounded-xl font-semibold px-5 h-10 gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 border-0 text-white"
+              >
+                <Plus className="h-4 w-4" /> New Project
               </Button>
-            </Card>
+            </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {myProjects.map((p) => (

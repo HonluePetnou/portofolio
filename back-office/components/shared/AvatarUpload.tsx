@@ -7,7 +7,6 @@ import {
   X,
   UserCircle,
   CloudUpload,
-  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -147,7 +146,7 @@ export function AvatarUpload({
         />
 
         {error && (
-          <p className="text-[9px] text-rose-500 font-bold uppercase tracking-[0.1em] animate-in slide-in-from-top-1">
+          <p className="text-[9px] text-rose-500 font-bold uppercase tracking-widest animate-in slide-in-from-top-1">
             {error}
           </p>
         )}
@@ -155,45 +154,35 @@ export function AvatarUpload({
     );
   }
 
-  // ── Banner Variant (Premium Large) ──────────────────────────────────────────
+  // ── Banner Variant ───────────────────────────────────────────────────────────
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-3 w-full">
       <div
         className={cn(
-          "relative rounded-[2rem] border-2 border-dashed overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-700 h-48",
+          "relative rounded-2xl border border-dashed overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-300 h-44",
           value
-            ? "border-transparent shadow-2xl"
-            : "border-white/10 bg-white/[0.02] hover:bg-primary/5 hover:border-primary/50",
+            ? "border-transparent"
+            : "border-white/20 bg-white/5 hover:bg-primary/5 hover:border-primary/40",
         )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => !isUploading && !value && inputRef.current?.click()}
       >
-        {/* Ambient Glow */}
-        <div
-          className={cn(
-            "absolute inset-0 bg-primary/10 blur-[80px] transition-opacity duration-1000",
-            isHovered && !value ? "opacity-100" : "opacity-0",
-          )}
-        />
-
         {value ? (
           <div className="relative h-full w-full group/banner">
             <img
               src={value}
-              alt="Contextual representation"
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover/banner:scale-105"
+              alt="Banner image"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover/banner:scale-105"
             />
 
-            <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover/banner:opacity-100 transition-opacity duration-500" />
-
-            <div className="absolute inset-0 flex items-center justify-center bg-primary/20 backdrop-blur-sm opacity-0 group-hover/banner:opacity-100 transition-all duration-500">
-              <div className="flex flex-col items-center gap-2 transform translate-y-4 group-hover/banner:translate-y-0 transition-transform duration-500">
-                <div className="p-3 bg-white text-primary rounded-2xl shadow-xl">
-                  <CloudUpload className="h-6 w-6" />
+            <div className="absolute inset-0 flex items-center justify-center bg-[#0a0d1f]/60 backdrop-blur-sm opacity-0 group-hover/banner:opacity-100 transition-all duration-300">
+              <div className="flex flex-col items-center gap-2">
+                <div className="p-2.5 bg-white/10 rounded-xl border border-white/20">
+                  <CloudUpload className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-[10px] font-black text-white uppercase tracking-widest">
-                  Replace Visual Artifact
+                <span className="text-xs font-semibold text-white/80">
+                  Replace image
                 </span>
               </div>
               <input
@@ -212,71 +201,44 @@ export function AvatarUpload({
                   e.stopPropagation();
                   handleClear();
                 }}
-                className="absolute top-4 right-4 bg-white/10 backdrop-blur-xl text-white p-3 rounded-2xl shadow-2xl hover:bg-rose-500 hover:text-white transition-all duration-300 border border-white/10 z-20"
+                className="absolute top-3 right-3 bg-[#0a0d1f]/80 backdrop-blur-md text-white p-2 rounded-lg border border-white/10 hover:bg-rose-500 hover:border-rose-500 transition-all duration-200 z-20"
               >
-                <X className="h-4 w-4" />
+                <X className="h-3.5 w-3.5" />
               </button>
             )}
 
             {isUploading && (
-              <div className="absolute inset-0 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center gap-4 z-30">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                <span className="text-[10px] font-black text-white uppercase tracking-widest">
-                  Updating...
+              <div className="absolute inset-0 bg-black/50 backdrop-blur-md flex flex-col items-center justify-center gap-3 z-30">
+                <Loader2 className="h-7 w-7 animate-spin text-primary" />
+                <span className="text-xs font-semibold text-white/70">
+                  Uploading...
                 </span>
               </div>
             )}
           </div>
         ) : isUploading ? (
-          <div className="flex flex-col items-center gap-4 relative z-10">
-            <Loader2 className="h-10 w-10 animate-spin text-primary" />
-            <div className="text-center space-y-1">
-              <span className="block text-[10px] font-black text-white uppercase tracking-widest">
-                Uploading High-End Assets
-              </span>
-              <span className="block text-[9px] text-white/30 font-bold italic tracking-tighter">
-                Please hold...
-              </span>
-            </div>
+          <div className="flex flex-col items-center gap-3 relative z-10">
+            <Loader2 className="h-7 w-7 animate-spin text-primary" />
+            <span className="text-xs font-semibold text-white/50">Uploading...</span>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-6 text-white/20 relative z-10 p-8 text-center transition-all duration-500">
-            <div
-              className={cn(
-                "p-5 rounded-[2rem] transition-all duration-500 transform bg-white/5 border border-white/5",
-                isHovered &&
-                  "scale-110 rotate-3 bg-primary text-white border-white/0 shadow-[0_0_50px_rgba(var(--primary),0.3)]",
-              )}
-            >
-              {isHovered ? (
-                <Sparkles className="h-8 w-8" />
-              ) : (
-                <Upload className="h-8 w-8" />
-              )}
+          <div className="flex flex-col items-center gap-3 text-white/30 relative z-10 text-center transition-all duration-300">
+            <div className={cn(
+              "p-3 rounded-xl transition-all duration-300 bg-white/5 border border-white/10",
+              isHovered && "bg-primary/20 border-primary/30 text-primary scale-105",
+            )}>
+              <Upload className="h-5 w-5" />
             </div>
-            <div className="space-y-2">
-              <span
-                className={cn(
-                  "block text-xs font-black uppercase tracking-[0.2em] transition-colors",
-                  isHovered ? "text-white" : "text-white/40",
-                )}
-              >
-                Elevate your visual identity
+            <div className="space-y-1">
+              <span className={cn(
+                "block text-xs font-semibold transition-colors",
+                isHovered ? "text-white/70" : "text-white/40",
+              )}>
+                Click to upload banner image
               </span>
-              <span className="block text-[10px] text-white/10 font-bold tracking-widest">
-                Optimized for PNG, WebP · Max 5MB
+              <span className="block text-[11px] text-white/20">
+                PNG, WebP or JPG · Max 5MB
               </span>
-            </div>
-
-            <div
-              className={cn(
-                "px-6 py-2 rounded-xl border font-black text-[10px] uppercase tracking-widest transition-all",
-                isHovered
-                  ? "bg-white text-primary border-white"
-                  : "bg-transparent border-white/10",
-              )}
-            >
-              Commit File
             </div>
           </div>
         )}
@@ -292,7 +254,7 @@ export function AvatarUpload({
       />
 
       {error && (
-        <p className="text-[10px] text-rose-500 font-bold text-center uppercase tracking-widest">
+        <p className="text-xs text-rose-500 font-semibold">
           {error}
         </p>
       )}

@@ -1,6 +1,5 @@
 from sqlmodel import create_engine, Session, SQLModel
 from .portfolio import *
-from .member import *
 import os
 from dotenv import load_dotenv
 

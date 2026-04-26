@@ -2,14 +2,25 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from contextlib import asynccontextmanager
 from app.api.routers import auth, profile, projects, testimonials, media, articles, ai, contact, social, settings
 from app.models.database import init_db
+from app.services.scheduler_service import start_scheduler, stop_scheduler
 import os
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    start_scheduler()
+    yield
+    # Shutdown
+    stop_scheduler()
 
 app = FastAPI(
     title="Portfolio API",
     description="Backend for Honlue Petnou Frederic Armel Portfolio",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # CORS configuration — must be registered BEFORE mounting static files

@@ -90,13 +90,10 @@ export default function InboxPage() {
     }
 
     try {
-      const updated: ContactMessage = await apiRequest(
-        `/admin/contact/${id}`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({ status: "READ" as ContactStatus }),
-        },
-      );
+      const updated: ContactMessage = await apiRequest(`/admin/contact/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status: "READ" as ContactStatus }),
+      });
       setMessages((prev) =>
         prev.map((m) => (m.id === id ? { ...m, status: updated.status } : m)),
       );
@@ -169,7 +166,7 @@ export default function InboxPage() {
           <CardHeader>
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-400">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
                   {selectedMsg.name
                     .split(" ")
                     .map((n) => n[0])
@@ -268,11 +265,11 @@ export default function InboxPage() {
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
                           <h3
-                            className={`font-semibold ${!msg.read ? "text-foreground" : "text-muted-foreground"}`}
+                            className={`font-semibold ${msg.status === "NEW" ? "text-foreground" : "text-muted-foreground"}`}
                           >
                             {msg.name}
                           </h3>
-                          {!msg.read && (
+                          {msg.status === "NEW" && (
                             <Badge variant="default" className="text-xs">
                               New
                             </Badge>

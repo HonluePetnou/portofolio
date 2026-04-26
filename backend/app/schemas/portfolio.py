@@ -4,7 +4,6 @@ import uuid
 from datetime import datetime
 from pydantic import ConfigDict, EmailStr
 from pydantic.alias_generators import to_camel
-from .member import MemberRead
 from ..models.blog import BlogStatus
 
 # --- Profile ---
@@ -74,7 +73,6 @@ class ProjectBase(SQLModel):
     interveners: List[Dict[str, Any]] = [] # name, role, avatar
     is_featured: bool = False
     user_id: Optional[int] = None
-    member_id: Optional[uuid.UUID] = None
     agency_visible: bool = False
 
 class ProjectCreate(ProjectBase):
@@ -103,7 +101,6 @@ class ProjectUpdate(SQLModel):
     interveners: Optional[List[Dict[str, Any]]] = None
     is_featured: Optional[bool] = None
     user_id: Optional[int] = None
-    member_id: Optional[uuid.UUID] = None
     agency_visible: Optional[bool] = None
 
 class ProjectRead(ProjectBase):
@@ -169,7 +166,6 @@ class ArticleBase(SQLModel):
     published: bool = False
     archived: bool = False
     reading_time: int = 5
-    member_id: Optional[uuid.UUID] = None
     agency_visible: bool = False
     published_at: Optional[datetime] = None
     status: BlogStatus = BlogStatus.draft
@@ -198,7 +194,6 @@ class ArticleUpdate(SQLModel):
     published: Optional[bool] = None
     archived: Optional[bool] = None
     reading_time: Optional[int] = None
-    member_id: Optional[uuid.UUID] = None
     agency_visible: Optional[bool] = None
     published_at: Optional[datetime] = None
     status: Optional[BlogStatus] = None
@@ -208,7 +203,6 @@ class ArticleUpdate(SQLModel):
 class ArticleRead(ArticleBase):
     id: uuid.UUID
     created_at: datetime
-    member: Optional[MemberRead] = None
 
 
 # --- Contact / Inbox ---
@@ -258,25 +252,55 @@ class ContactRead(ContactBase):
 # --- Social generation output ---
 
 class SocialLinkedIn(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
     storytelling: str
     value_driven: str
 
 
 class SocialTwitter(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
     thread_tweets: List[str]
     thread_combined: str
     short: str
 
 
 class SocialInstagram(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
     caption: str
 
 
 class SocialFacebook(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
     post: str
 
 
 class SocialGenerated(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
     blog_id: uuid.UUID
     linkedin: SocialLinkedIn
     twitter: SocialTwitter
@@ -301,6 +325,12 @@ class SettingsUpdate(SQLModel):
 
 
 class SettingsRead(SQLModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
     ai_provider: Optional[str] = None
     email_provider: Optional[str] = None
     notification_email: Optional[EmailStr] = None

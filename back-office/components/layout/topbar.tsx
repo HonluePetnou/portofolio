@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import { Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useEffect, useState } from "react";
 
 const titles: Record<string, string> = {
@@ -38,14 +37,12 @@ export function Topbar() {
         <h1 className="text-lg font-semibold">{title}</h1>
       </div>
       <div className="flex items-center gap-4">
-        <ThemeSwitcher />
-
         <Button variant="ghost" size="icon" className="text-muted-foreground">
           <Bell className="h-5 w-5" />
         </Button>
 
         <div className="flex items-center gap-2 border-l pl-4">
-          <div className="h-8 w-8 rounded-full bg-linear-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-xs font-bold text-white uppercase">
+          <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground uppercase">
             {username?.charAt(0) || "U"}
           </div>
           <div className="hidden flex-col md:flex">

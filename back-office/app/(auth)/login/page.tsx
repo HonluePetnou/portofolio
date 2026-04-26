@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import { login as loginService } from "@/lib/services/auth.service";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,26 +30,11 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append("username", username);
-      formData.append("password", password);
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/auth/login`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.detail || "Login failed");
-      }
-
-      const data = await response.json();
+      const data = await loginService(username, password);
+      localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("auth_token", data.access_token);
       localStorage.setItem("username", username);
+      document.cookie = `auth_token=${data.access_token}; path=/`;
 
       router.push("/dashboard");
     } catch (err: any) {
@@ -61,10 +46,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="absolute top-4 right-4 md:top-8 md:right-8">
-        <ThemeSwitcher />
-      </div>
-
       <Card className="w-[350px] shadow-lg animate-in fade-in zoom-in-95 duration-500">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">

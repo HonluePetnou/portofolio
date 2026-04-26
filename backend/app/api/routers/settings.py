@@ -29,7 +29,7 @@ def _upsert_setting(session: Session, key: str, value: str) -> None:
         session.add(setting)
 
 
-@router.get("", response_model=SettingsRead)
+@router.get("", response_model=SettingsRead, response_model_by_alias=True)
 def get_settings(
     session: Session = Depends(get_session),
     current_admin: User = Depends(get_current_admin),
@@ -49,7 +49,7 @@ def get_settings(
     )
 
 
-@router.patch("", response_model=SettingsRead)
+@router.patch("", response_model=SettingsRead, response_model_by_alias=True)
 def update_settings(
     payload: SettingsUpdate,
     session: Session = Depends(get_session),

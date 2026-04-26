@@ -44,8 +44,8 @@ export function ThemeSwitcher() {
       className="relative"
       title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
     >
-      <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className={`h-5 w-5 transition-all ${theme === "light" ? "rotate-0 scale-100" : "-rotate-90 scale-0"}`} />
+      <Moon className={`absolute h-5 w-5 transition-all ${theme === "dark" ? "rotate-0 scale-100" : "rotate-90 scale-0"}`} />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

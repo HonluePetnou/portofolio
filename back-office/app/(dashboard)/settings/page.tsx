@@ -215,7 +215,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {settings?.aiApiKey.configured && (
+                      {settings?.aiApiKey?.configured && (
                         <Badge variant="secondary" className="gap-1">
                           <Check className="h-3 w-3" />
                           Configured
@@ -225,7 +225,7 @@ export default function SettingsPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => testConnection("ai")}
-                        disabled={testing === "ai" || !settings?.aiApiKey.configured}
+                        disabled={testing === "ai" || !settings?.aiApiKey?.configured}
                       >
                         {testing === "ai" ? (
                           <RefreshCw className="h-4 w-4 animate-spin" />
@@ -242,7 +242,7 @@ export default function SettingsPage() {
                       <Label htmlFor="aiProvider">AI Provider</Label>
                       <Select
                         value={formData.aiProvider || ""}
-                        onValueChange={(value) => updateFormData("aiProvider", value)}
+                        onChange={(e) => updateFormData("aiProvider", e.target.value)}
                       >
                         <option value="">Select AI provider</option>
                         <SelectItem value="OPENAI">OpenAI</SelectItem>
@@ -295,7 +295,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {settings?.emailApiKey.configured && (
+                      {settings?.emailApiKey?.configured && (
                         <Badge variant="secondary" className="gap-1">
                           <Check className="h-3 w-3" />
                           Configured
@@ -305,7 +305,7 @@ export default function SettingsPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => testConnection("email")}
-                        disabled={testing === "email" || !settings?.emailApiKey.configured}
+                        disabled={testing === "email" || !settings?.emailApiKey?.configured}
                       >
                         {testing === "email" ? (
                           <RefreshCw className="h-4 w-4 animate-spin" />
@@ -322,7 +322,7 @@ export default function SettingsPage() {
                       <Label htmlFor="emailProvider">Email Provider</Label>
                       <Select
                         value={formData.emailProvider || ""}
-                        onValueChange={(value) => updateFormData("emailProvider", value)}
+                        onChange={(e) => updateFormData("emailProvider", e.target.value)}
                       >
                         <option value="">Select email provider</option>
                         <SelectItem value="RESEND">Resend</SelectItem>

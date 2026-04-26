@@ -195,7 +195,7 @@ export default function SocialMediaPage() {
     <Card className="relative opacity-75 border-orange-200 dark:border-orange-800">
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
-          <div className="h-16 w-20 rounded-lg overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
+          <div className="h-16 w-20 rounded-lg overflow-hidden shrink-0 bg-muted">
             {article.coverImage ? (
               <img
                 src={article.coverImage}
@@ -216,7 +216,7 @@ export default function SocialMediaPage() {
                   <h3 className="text-lg font-semibold line-clamp-1">
                     {article.title}
                   </h3>
-                  <Badge variant="secondary" className="bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300">
+                  <Badge variant="secondary" className="bg-orange-100 text-orange-800">
                     <Archive className="h-3 w-3 mr-1" />
                     Archived
                   </Badge>
@@ -333,11 +333,11 @@ const SocialContentCard = ({
               value={content}
               readOnly
               className={`w-full h-32 p-3 rounded-lg border resize-none text-sm font-mono ${
-                isOverLimit ? "border-red-500 bg-red-50 dark:bg-red-950/10" : "border-slate-200 dark:border-slate-700"
+                isOverLimit ? "border-destructive bg-destructive/10" : "border-border"
               }`}
             />
             {isOverLimit && (
-              <div className="absolute top-2 right-2 text-xs text-red-500 bg-white dark:bg-slate-800 px-2 py-1 rounded">
+              <div className="absolute top-2 right-2 text-xs text-destructive bg-card px-2 py-1 rounded">
                 Too long!
               </div>
             )}
@@ -373,13 +373,13 @@ const SocialContentCard = ({
 
       {/* Tab Navigation */}
       <div className="flex justify-center">
-        <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+        <div className="bg-muted p-1 rounded-xl">
           <div className="flex gap-1">
             <button
               onClick={() => setActiveView("active")}
               className={`px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
                 activeView === "active"
-                  ? "bg-white dark:bg-slate-900 text-primary shadow-sm"
+                  ? "bg-card text-primary shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -390,7 +390,7 @@ const SocialContentCard = ({
               onClick={() => setActiveView("archived")}
               className={`px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
                 activeView === "archived"
-                  ? "bg-white dark:bg-slate-900 text-primary shadow-sm"
+                  ? "bg-card text-primary shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -425,7 +425,7 @@ const SocialContentCard = ({
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="h-16 w-20 rounded-lg overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
+                      <div className="h-16 w-20 rounded-lg overflow-hidden shrink-0 bg-muted">
                         {article.coverImage ? (
                           <img
                             src={article.coverImage}
@@ -525,7 +525,7 @@ const SocialContentCard = ({
           {selectedArticle && socialContent && (
             <div className="space-y-6">
               {/* Article Preview */}
-              <Card className="bg-slate-50 dark:bg-slate-800">
+              <Card className="bg-muted">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-16 rounded-lg overflow-hidden shrink-0">
@@ -536,7 +536,7 @@ const SocialContentCard = ({
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-slate-200 dark:bg-slate-700">
+                        <div className="h-full w-full flex items-center justify-center bg-muted">
                           <ImageIcon className="h-4 w-4 text-muted-foreground" />
                         </div>
                       )}
@@ -598,9 +598,9 @@ const SocialContentCard = ({
               </Tabs>
 
               {/* Archive Section */}
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border">
+              <div className="flex items-center justify-between p-4 bg-muted rounded-lg border">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${allCopied ? "bg-green-100 dark:bg-green-900/20" : "bg-slate-100 dark:bg-slate-700"}`}>
+                  <div className={`p-2 rounded-lg ${allCopied ? "bg-green-100" : "bg-muted"}`}>
                     {allCopied ? (
                       <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                     ) : (

@@ -368,16 +368,16 @@ export default function ArticlesPage() {
   );
 
   const TableHeader = ({ icon: Icon, label, count, color }: any) => (
-    <div className="flex items-center justify-between mb-6 px-4">
-      <div className="flex items-center gap-4">
-        <div className={cn("p-3 rounded-xl shadow-lg", color)}>
-          <Icon className="h-5 w-5 text-white" />
+    <div className="flex items-center justify-between mb-4 px-2">
+      <div className="flex items-center gap-3">
+        <div className={cn("p-2 rounded-lg bg-white/5 border border-white/10", color.replace('bg-', 'text-'))}>
+          <Icon className="h-4 w-4" />
         </div>
         <div>
-          <h3 className="text-xl font-black tracking-tight uppercase">
+          <h3 className="text-lg font-semibold tracking-tight text-white">
             {label}
           </h3>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          <p className="text-xs font-medium text-white/40">
             {count} Assets Active
           </p>
         </div>
@@ -386,64 +386,57 @@ export default function ArticlesPage() {
   );
 
   const ArticleRow = ({ article }: { article: Article }) => (
-    <div className="group relative flex items-center gap-6 p-6 rounded-[2rem] bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 hover:border-primary/20 hover:shadow-2xl transition-all duration-500 mb-4">
-      <div className="h-20 w-28 rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800 relative">
+    <div className="group relative flex items-center gap-5 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-[#0a0d1f]/60 hover:border-primary/30 hover:shadow-[0_8px_30px_rgba(250,91,7,0.15)] transition-all duration-500 mb-3 hover:-translate-y-1">
+      <div className="h-16 w-24 rounded-xl overflow-hidden shrink-0 bg-white/5 border border-white/10 relative">
         {article.coverImage ? (
           <img
             src={article.coverImage}
-            className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
+            className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
             alt={article.title}
             onError={(e) => {
-              // Fallback to icon if image fails to load
               const target = e.target as HTMLImageElement;
               target.style.display = "none";
               const parent = target.parentElement;
               if (parent) {
-                parent.innerHTML = `<div class="absolute inset-0 flex items-center justify-center"><svg class="h-6 w-6 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>`;
+                parent.innerHTML = `<div class="absolute inset-0 flex items-center justify-center"><svg class="h-5 w-5 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>`;
               }
             }}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <ImageIcon className="h-6 w-6 opacity-20" />
+            <ImageIcon className="h-5 w-5 text-white/20" />
           </div>
         )}
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 py-1">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h4 className="text-lg font-black tracking-tight break-words truncate group-hover:text-primary transition-colors">
+            <h4 className="text-base font-bold tracking-tight text-white/90 break-words truncate group-hover:text-primary transition-colors">
               {article.title}
             </h4>
-            <p className="text-[11px] text-slate-400 font-medium truncate mt-1 line-clamp-2">
+            <p className="text-xs text-white/50 font-medium truncate mt-0.5 line-clamp-1">
               {article.excerpt}
             </p>
-            <div className="flex items-center gap-4 mt-3">
-              <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+            <div className="flex items-center gap-4 mt-2.5">
+              <div className="flex items-center gap-1.5 text-[10px] font-semibold text-white/40">
                 <Clock className="h-3 w-3" /> {article.readingTime} min read
               </div>
               {article.tags && article.tags.length > 0 && (
-                <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="flex items-center gap-1.5 text-[10px] font-semibold text-white/40">
                   <Tag className="h-3 w-3" /> {article.tags[0]}
-                  {article.tags.length > 1 && `+${article.tags.length - 1}`}
+                  {article.tags.length > 1 && <span className="px-1.5 py-0.5 rounded-md bg-white/10 text-white/60">+{article.tags.length - 1}</span>}
                 </div>
               )}
               <div
-                className={`flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest ${
-                  article.published ? "text-emerald-500" : "text-amber-500"
+                className={`flex items-center gap-1 text-[10px] font-bold ${
+                  article.published ? "text-emerald-400" : "text-amber-400"
                 }`}
               >
                 {article.published ? (
-                  <>
-                    <CheckCircle2 className="h-3 w-3" />
-                    Published
-                  </>
+                  <><CheckCircle2 className="h-3 w-3" /> Published</>
                 ) : (
-                  <>
-                    <FileEdit className="h-3 w-3" />
-                    Draft
-                  </>
+                  <><FileEdit className="h-3 w-3" /> Draft</>
                 )}
               </div>
             </div>
@@ -497,30 +490,19 @@ export default function ArticlesPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700 pb-20">
-      {/* Premium Header */}
-      <div className="flex items-center justify-between flex-wrap gap-10 border-b border-slate-200 dark:border-slate-800 pb-12">
-        <div className="space-y-3">
-          <div className="flex items-center gap-3 text-primary">
-            <Sparkles className="h-6 w-6 animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.5em]">
-              Authority Content System
-            </span>
-          </div>
-          <h1 className="text-6xl font-black tracking-tight italic">
+      {/* Sleek Premium Header */}
+      <div className="flex items-end justify-between flex-wrap gap-6 border-b border-white/5 pb-8">
+        <div className="space-y-1.5 animate-in slide-in-from-left-4 fade-in duration-500">
+          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <Sparkles className="h-6 w-6 text-primary" />
             Article Repository
           </h1>
+          <p className="text-sm text-white/50">
+            Manage and publish your strategic content assets.
+          </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="relative group/search">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within/search:text-primary transition-colors" />
-            <Input
-              placeholder="Filter by title or concept..."
-              className="pl-12 h-14 w-80 rounded-2xl bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 font-bold focus:ring-primary shadow-xl"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+        <div className="flex items-center gap-4 animate-in slide-in-from-right-4 fade-in duration-500">
           <Dialog
             open={isDialogOpen}
             onOpenChange={(open) => {
@@ -530,43 +512,41 @@ export default function ArticlesPage() {
           >
             <DialogTrigger asChild>
               <Button
-                size="lg"
-                className="rounded-2xl shadow-2xl shadow-primary/30 h-14 px-10 text-sm font-black gap-3 bg-primary hover:scale-[1.02] active:scale-95 transition-all"
+                className="rounded-xl shadow-lg shadow-primary/25 h-11 px-6 text-sm font-semibold gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0d1f] border-0"
+                aria-label="Create new article asset"
               >
-                <Plus className="h-5 w-5" /> CREATE NEW ASSET
+                <Plus className="h-4 w-4" /> New Article
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto p-0 border-none bg-slate-950 text-slate-50 rounded-[3rem] shadow-2xl">
+            <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto p-0 border border-white/10 bg-[#0a0d1f]/95 backdrop-blur-2xl text-white rounded-2xl shadow-2xl">
               <form onSubmit={handleSubmit} className="flex flex-col h-full">
                 {/* Editor Header */}
-                <div className="bg-slate-900/60 backdrop-blur-3xl border-b border-white/5 p-8 sticky top-0 z-50 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20">
-                      <FileEdit className="h-6 w-6 text-primary" />
+                <div className="bg-[#0a0d1f]/80 backdrop-blur-2xl border-b border-white/5 p-6 sticky top-0 z-50 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                      <FileEdit className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-black">Strategic Workshop</h2>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-white/30">
-                        Crafting high-conversion narratives
+                      <h2 className="text-lg font-bold">{formData.id ? "Edit Article" : "New Article"}</h2>
+                      <p className="text-xs text-white/40">
+                        {formData.title || "Untitled asset"}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl p-1.5 mr-4">
+                    <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-1 mr-2">
                       <Button
                         type="button"
                         variant="ghost"
                         className={cn(
-                          "h-10 px-6 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all",
+                          "h-8 px-4 rounded-lg font-semibold text-xs transition-all",
                           !formData.published
-                            ? "bg-white text-slate-950 shadow-xl"
-                            : "text-white/40",
+                            ? "bg-white/10 text-white shadow"
+                            : "text-white/40 hover:text-white"
                         )}
-                        onClick={() =>
-                          setFormData({ ...formData, published: false })
-                        }
+                        onClick={() => setFormData({ ...formData, published: false })}
                       >
                         Draft
                       </Button>
@@ -574,491 +554,314 @@ export default function ArticlesPage() {
                         type="button"
                         variant="ghost"
                         className={cn(
-                          "h-10 px-6 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all",
+                          "h-8 px-4 rounded-lg font-semibold text-xs transition-all",
                           formData.published
-                            ? "bg-emerald-500 text-white shadow-xl"
-                            : "text-white/40",
+                            ? "bg-emerald-500/20 text-emerald-400 shadow border border-emerald-500/20"
+                            : "text-white/40 hover:text-white"
                         )}
-                        onClick={() =>
-                          setFormData({ ...formData, published: true })
-                        }
+                        onClick={() => setFormData({ ...formData, published: true })}
                       >
-                        Ready
+                        Publish
                       </Button>
                     </div>
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="rounded-2xl font-black px-12 h-12 shadow-2xl shadow-primary/40 bg-primary hover:scale-105 transition-all"
+                      className="rounded-lg font-semibold px-6 h-10 shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95"
                     >
                       {isSubmitting ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        "PUBLISH TO CLOUD"
+                        "Save Asset"
                       )}
                     </Button>
                   </div>
                 </div>
 
-                <div className="p-12 space-y-16">
-                  <Tabs
-                    defaultValue="content"
-                    onValueChange={setActiveTab}
-                    value={activeTab}
-                  >
-                    <TabsList className="bg-white/5 p-1.5 rounded-[2rem] mb-12 w-fit border border-white/5">
-                      <TabsTrigger
-                        value="content"
-                        className="rounded-2xl px-12 py-4 data-[state=active]:bg-white data-[state=active]:text-primary transition-all font-black uppercase text-[10px] tracking-widest gap-3"
-                      >
-                        <Layout className="h-4 w-4" /> Content
+                <div className="p-8 space-y-8">
+                  <Tabs defaultValue="content" onValueChange={setActiveTab} value={activeTab}>
+                    <TabsList className="bg-white/5 p-1 rounded-xl mb-8 w-fit border border-white/5 flex gap-1">
+                      <TabsTrigger value="content" className="rounded-lg px-6 py-2 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 transition-all font-semibold text-xs gap-2">
+                        <Layout className="h-3.5 w-3.5" /> Content
                       </TabsTrigger>
-                      <TabsTrigger
-                        value="strategy"
-                        className="rounded-2xl px-12 py-4 data-[state=active]:bg-white data-[state=active]:text-primary transition-all font-black uppercase text-[10px] tracking-widest gap-3"
-                      >
-                        <Target className="h-4 w-4" /> Strategy
+                      <TabsTrigger value="strategy" className="rounded-lg px-6 py-2 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 transition-all font-semibold text-xs gap-2">
+                        <Target className="h-3.5 w-3.5" /> Strategy
                       </TabsTrigger>
-                      <TabsTrigger
-                        value="seo"
-                        className="rounded-2xl px-12 py-4 data-[state=active]:bg-white data-[state=active]:text-primary transition-all font-black uppercase text-[10px] tracking-widest gap-3"
-                      >
-                        <Globe className="h-4 w-4" /> SEO
+                      <TabsTrigger value="seo" className="rounded-lg px-6 py-2 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 transition-all font-semibold text-xs gap-2">
+                        <Globe className="h-3.5 w-3.5" /> SEO
                       </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent
-                      value="content"
-                      className="space-y-20 animate-in slide-in-from-bottom-10"
-                    >
-                      <div className="grid md:grid-cols-[1fr_420px] gap-20 items-start">
-                        <div className="space-y-12">
-                          <div className="space-y-4">
-                            <div className="flex justify-between items-end border-b border-white/5 pb-4">
-                              <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
-                                Primary Thought Label
-                              </Label>
+                    {/* CONTENT TAB */}
+                    <TabsContent value="content" className="space-y-8 animate-in slide-in-from-bottom-4">
+                      <div className="grid md:grid-cols-[1fr_280px] gap-8 items-start">
+                        <div className="space-y-6">
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <Label className="text-xs font-semibold text-white/50">Article Title</Label>
                               <Button
                                 type="button"
                                 variant="ghost"
                                 onClick={handleAIGenerate}
                                 disabled={isAiLoading || !formData.title}
-                                className="h-9 px-6 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 text-[10px] font-black tracking-widest gap-3 uppercase italic transition-all border border-primary/20"
+                                className="h-7 px-3 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 text-xs font-semibold gap-1.5 transition-all"
                               >
-                                {isAiLoading ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Sparkles className="h-4 w-4" />
-                                )}
-                                AI Synthesis
+                                {isAiLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                                AI Assist
                               </Button>
                             </div>
                             <Input
-                              className="text-6xl font-black bg-transparent border-none px-0 h-auto py-8 focus-visible:ring-0 placeholder:text-white/5 tracking-tighter"
-                              placeholder="Your breakthrough title..."
+                              className="text-2xl font-bold bg-white/5 border-white/10 px-4 h-14 focus-visible:ring-primary rounded-xl placeholder:text-white/20"
+                              placeholder="Your article title..."
                               value={formData.title}
                               onChange={(e) => updateTitle(e.target.value)}
                               required
                             />
                           </div>
-
-                          <div className="space-y-6">
-                            <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
-                              Executive Abstract
-                            </Label>
+                          <div className="space-y-2">
+                            <Label className="text-xs font-semibold text-white/50">Excerpt</Label>
                             <Textarea
-                              className="text-2xl bg-white/[0.02] border-white/5 rounded-[3rem] p-12 min-h-[160px] font-light leading-relaxed italic text-white/40 focus:border-white/10 transition-all shadow-2xl"
-                              placeholder="Validate your expertise in 2 sentences..."
+                              className="bg-white/5 border-white/10 rounded-xl p-4 min-h-[100px] text-sm text-white/70 focus:border-white/20 transition-all placeholder:text-white/20 resize-none"
+                              placeholder="Brief summary..."
                               value={formData.excerpt}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  excerpt: e.target.value,
-                                })
-                              }
+                              onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                               required
                             />
                           </div>
                         </div>
-
-                        <div className="space-y-6">
-                          <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
-                            Asset Branding
-                          </Label>
+                        <div className="space-y-2">
+                          <Label className="text-xs font-semibold text-white/50">Cover Image</Label>
                           <ImageUpload
                             value={formData.coverImage}
-                            onChange={(url) =>
-                              setFormData({ ...formData, coverImage: url })
-                            }
-                            className="aspect-square"
+                            onChange={(url) => setFormData({ ...formData, coverImage: url })}
+                            className="aspect-video rounded-xl bg-white/5 border border-white/10"
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-16 max-w-5xl">
-                        <div className="flex items-center justify-between border-b border-white/5 pb-8">
-                          <h3 className="text-3xl font-black tracking-tighter italic flex items-center gap-4">
-                            <Type className="h-10 w-10 text-primary" /> Body
-                            Composition
+                      <div className="space-y-8 border-t border-white/5 pt-8">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold flex items-center gap-2">
+                            <Type className="h-5 w-5 text-primary" /> Body Content
                           </h3>
                           <Button
                             type="button"
                             onClick={addSection}
-                            className="rounded-2xl h-14 px-10 gap-3 bg-white/5 hover:bg-white/10 border border-white/5 font-black uppercase text-[11px] tracking-widest"
+                            className="rounded-lg h-9 px-4 gap-2 bg-white/5 hover:bg-white/10 border border-white/10 font-semibold text-xs transition-colors"
                           >
-                            <Plus className="h-5 w-5" /> Add Narrative Block
+                            <Plus className="h-4 w-4" /> Add Section
                           </Button>
                         </div>
 
-                        <div className="space-y-8">
-                          <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 ml-2">
-                            Opening Context Node
-                          </Label>
+                        <div className="space-y-4">
+                          <Label className="text-xs font-semibold text-white/50">Introduction</Label>
                           <Textarea
-                            className="bg-white/[0.01] border-white/5 rounded-[3rem] p-12 min-h-[200px] leading-[1.8] text-slate-400 text-xl font-light focus:border-white/10 transition-all shadow-xl"
-                            placeholder="Establish the battlefield context..."
+                            className="bg-white/5 border-white/10 rounded-xl p-4 min-h-[120px] text-sm text-white/80 focus:border-white/20 transition-all placeholder:text-white/20 resize-none"
+                            placeholder="Hook your readers here..."
                             value={formData.content.intro}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                content: {
-                                  ...formData.content,
-                                  intro: e.target.value,
-                                },
-                              })
-                            }
+                            onChange={(e) => setFormData({ ...formData, content: { ...formData.content, intro: e.target.value } })}
                           />
                         </div>
 
-                        <div className="space-y-20">
+                        <div className="space-y-6">
                           {formData.content.sections.map((section, i) => (
-                            <div
-                              key={i}
-                              className="group/section relative bg-white/[0.01] border border-white/5 rounded-[4rem] p-16 transition-all hover:bg-white/[0.03] hover:border-white/10 hover:shadow-3xl"
-                            >
-                              <div className="absolute -right-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 opacity-0 group-hover/section:opacity-100 transition-all translate-x-6 group-hover/section:translate-x-0">
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  variant="secondary"
-                                  className="h-14 w-14 rounded-3xl shadow-2xl bg-slate-900 border border-white/5"
-                                  onClick={() => moveSection(i, "up")}
-                                  disabled={i === 0}
-                                >
-                                  <ChevronUp className="h-6 w-6" />
+                            <div key={i} className="group/section relative bg-white/5 border border-white/10 rounded-2xl p-6 transition-all hover:bg-white/10 hover:border-white/20">
+                              <div className="absolute top-4 right-4 flex items-center gap-1 opacity-0 group-hover/section:opacity-100 transition-opacity">
+                                <Button type="button" size="icon" variant="ghost" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-white/10" onClick={() => moveSection(i, "up")} disabled={i === 0}>
+                                  <ChevronUp className="h-4 w-4" />
                                 </Button>
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  variant="secondary"
-                                  className="h-14 w-14 rounded-3xl shadow-2xl bg-slate-900 border border-white/5"
-                                  onClick={() => moveSection(i, "down")}
-                                  disabled={
-                                    i === formData.content.sections.length - 1
-                                  }
-                                >
-                                  <ChevronDown className="h-6 w-6" />
+                                <Button type="button" size="icon" variant="ghost" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-white/10" onClick={() => moveSection(i, "down")} disabled={i === formData.content.sections.length - 1}>
+                                  <ChevronDown className="h-4 w-4" />
                                 </Button>
-                                <Separator className="bg-white/10 mx-auto w-8" />
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  variant="destructive"
-                                  className="h-14 w-14 rounded-3xl shadow-2xl bg-rose-500/20 text-rose-500 border border-rose-500/10 hover:bg-rose-500 hover:text-white transition-all"
-                                  onClick={() => removeSection(i)}
-                                >
-                                  <Trash2 className="h-5 w-5" />
+                                <div className="w-px h-4 bg-white/10 mx-1" />
+                                <Button type="button" size="icon" variant="ghost" className="h-8 w-8 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white transition-all" onClick={() => removeSection(i)}>
+                                  <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
 
-                              <div className="grid lg:grid-cols-[1fr_380px] gap-20">
-                                <div className="space-y-12">
-                                  <div className="space-y-4">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-primary/50">
-                                      H2 Narrative Header
-                                    </Label>
-                                    <Input
-                                      value={section.heading}
-                                      onChange={(e) =>
-                                        updateSection(
-                                          i,
-                                          "heading",
-                                          e.target.value,
-                                        )
-                                      }
-                                      className="text-5xl font-black bg-transparent border-none px-0 h-auto p-0 focus-visible:ring-0 placeholder:text-white/5 tracking-tighter"
-                                      placeholder="Block Title..."
-                                    />
-                                  </div>
-                                  <div className="space-y-4">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-white/10 italic">
-                                      Core Value Delivery
-                                    </Label>
-                                    <Textarea
-                                      value={section.body}
-                                      onChange={(e) =>
-                                        updateSection(i, "body", e.target.value)
-                                      }
-                                      className="bg-transparent border-none p-0 min-h-[300px] leading-[1.8] text-slate-400 focus-visible:ring-0 text-2xl font-light"
-                                      placeholder="Unfold the wisdom..."
-                                    />
-                                  </div>
+                              <span className="inline-flex items-center text-[10px] font-bold text-primary/80 bg-primary/10 border border-primary/20 px-2 py-0.5 rounded uppercase tracking-wider mb-4">
+                                Section {i + 1}
+                              </span>
+
+                              <div className="grid lg:grid-cols-[1fr_250px] gap-8">
+                                <div className="space-y-4">
+                                  <Input
+                                    value={section.heading}
+                                    onChange={(e) => updateSection(i, "heading", e.target.value)}
+                                    className="text-xl font-bold bg-transparent border-b border-white/10 border-t-0 border-l-0 border-r-0 rounded-none px-0 h-10 focus-visible:ring-0 placeholder:text-white/20"
+                                    placeholder="Section Heading..."
+                                  />
+                                  <Textarea
+                                    value={section.body}
+                                    onChange={(e) => updateSection(i, "body", e.target.value)}
+                                    className="bg-transparent border-none p-0 min-h-[150px] text-sm text-white/70 focus-visible:ring-0 placeholder:text-white/20 resize-none"
+                                    placeholder="Section content..."
+                                  />
                                 </div>
-                                <div className="space-y-8">
-                                  <Label className="text-[10px] font-black uppercase tracking-widest text-white/10">
-                                    Instructional Graphic
-                                  </Label>
+                                <div className="space-y-2">
+                                  <Label className="text-xs font-semibold text-white/50">Section Image</Label>
                                   <ImageUpload
                                     value={section.image || ""}
-                                    onChange={(url) =>
-                                      updateSection(i, "image", url)
-                                    }
+                                    onChange={(url) => updateSection(i, "image", url)}
                                   />
                                 </div>
                               </div>
                             </div>
                           ))}
+
+                          {formData.content.sections.length === 0 && (
+                            <button
+                              type="button"
+                              onClick={addSection}
+                              className="w-full py-12 border-2 border-dashed border-white/10 rounded-2xl text-center hover:border-primary/30 hover:bg-primary/5 transition-all group/empty"
+                            >
+                              <Plus className="h-6 w-6 mx-auto mb-2 text-white/20 group-hover/empty:text-primary/60 transition-colors" />
+                              <p className="text-xs font-semibold text-white/30 group-hover/empty:text-white/60 transition-colors">Add first section</p>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </TabsContent>
 
-                    <TabsContent
-                      value="strategy"
-                      className="space-y-20 animate-in slide-in-from-right-10 max-w-5xl"
-                    >
-                      <section className="space-y-12 bg-white/[0.02] border border-white/5 p-16 rounded-[4rem] relative overflow-hidden shadow-2xl">
-                        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 blur-[150px] pointer-events-none" />
-                        <h4 className="text-4xl font-black tracking-tighter italic flex items-center gap-5">
-                          <ArrowRight className="h-10 w-10 text-primary" />{" "}
-                          Conversion Hub
-                        </h4>
-
-                        <div className="grid md:grid-cols-2 gap-20">
-                          <div className="space-y-10">
-                            <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 ml-1">
-                              Engagement Terminal
-                            </Label>
-                            <div className="space-y-8 bg-slate-900/40 p-10 rounded-[2.5rem] border border-white/5 shadow-2xl">
-                              <div className="space-y-4">
-                                <Label className="text-[9px] font-black uppercase tracking-widest text-white/20">
-                                  CTA text
-                                </Label>
+                    {/* STRATEGY TAB */}
+                    <TabsContent value="strategy" className="space-y-8 animate-in slide-in-from-right-4">
+                      <div className="grid md:grid-cols-2 gap-8">
+                        {/* CTA */}
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+                          <div className="flex items-center gap-2">
+                            <ArrowRight className="h-4 w-4 text-primary" />
+                            <h4 className="text-sm font-semibold text-white">Call to Action</h4>
+                          </div>
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <Label className="text-xs font-semibold text-white/50">Button Text</Label>
+                              <Input
+                                value={formData.cta.text}
+                                onChange={(e) => setFormData({ ...formData, cta: { ...formData.cta, text: e.target.value } })}
+                                className="bg-white/5 border-white/10 rounded-lg h-10 text-sm px-4"
+                                placeholder="e.g. Get in Touch"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-xs font-semibold text-white/50">Destination URL</Label>
+                              <div className="flex gap-2">
+                                <div className="bg-white/5 border border-white/10 rounded-lg flex items-center px-3">
+                                  <LinkIcon className="h-4 w-4 text-white/20" />
+                                </div>
                                 <Input
-                                  value={formData.cta.text}
-                                  onChange={(e) =>
-                                    setFormData({
-                                      ...formData,
-                                      cta: {
-                                        ...formData.cta,
-                                        text: e.target.value,
-                                      },
-                                    })
-                                  }
-                                  className="bg-slate-950 border-white/5 rounded-2xl h-16 font-black px-8 uppercase tracking-widest text-[12px]"
-                                  placeholder="e.g. INITIATE AUDIT"
+                                  value={formData.cta.url}
+                                  onChange={(e) => setFormData({ ...formData, cta: { ...formData.cta, url: e.target.value } })}
+                                  className="bg-white/5 border-white/10 rounded-lg h-10 flex-1 font-mono text-sm px-4"
+                                  placeholder="/contact"
                                 />
                               </div>
-                              <div className="space-y-4">
-                                <Label className="text-[9px] font-black uppercase tracking-widest text-white/20">
-                                  Destination target
-                                </Label>
-                                <div className="flex gap-4">
-                                  <div className="bg-slate-950 border-white/5 border rounded-2xl flex items-center px-6">
-                                    <LinkIcon className="h-5 w-5 text-white/10" />
-                                  </div>
-                                  <Input
-                                    value={formData.cta.url}
-                                    onChange={(e) =>
-                                      setFormData({
-                                        ...formData,
-                                        cta: {
-                                          ...formData.cta,
-                                          url: e.target.value,
-                                        },
-                                      })
-                                    }
-                                    className="bg-slate-950 border-white/5 rounded-2xl h-16 flex-1 font-mono text-sm text-white/40 px-8"
-                                    placeholder="/commands/deploy"
-                                  />
-                                </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Related & Settings */}
+                        <div className="space-y-8">
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+                            <div className="flex items-center gap-2">
+                              <Rocket className="h-4 w-4 text-primary" />
+                              <h4 className="text-sm font-semibold text-white">Related Project</h4>
+                            </div>
+                            <Select
+                              value={formData.relatedProjectId}
+                              onChange={(e) => setFormData({ ...formData, relatedProjectId: e.target.value })}
+                              className="h-10 rounded-lg bg-white/5 border-white/10 text-sm"
+                            >
+                              <SelectItem value="">None</SelectItem>
+                              {projects.map((p) => (
+                                <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
+                              ))}
+                            </Select>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-4 w-4 text-primary" />
+                                <h4 className="text-sm font-semibold text-white">Read Time</h4>
                               </div>
+                              <Input
+                                type="number"
+                                value={formData.readingTime}
+                                onChange={(e) => setFormData({ ...formData, readingTime: parseInt(e.target.value) })}
+                                className="bg-white/5 border-white/10 rounded-lg h-10 font-bold px-4 text-center"
+                                min={1} max={60}
+                              />
                             </div>
-                          </div>
-
-                          <div className="space-y-10">
-                            <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 ml-1">
-                              Contextual Proof Anchor
-                            </Label>
-                            <div className="bg-primary/5 p-10 rounded-[2.5rem] border border-primary/20 h-full flex flex-col justify-center gap-8 shadow-2xl">
-                              <p className="text-sm text-primary/60 font-bold leading-relaxed italic">
-                                Bridge this thought piece with a verified
-                                deployment outcome to enhance authority score.
-                              </p>
-                              <Select
-                                value={formData.relatedProjectId}
-                                onChange={(e) =>
-                                  setFormData({
-                                    ...formData,
-                                    relatedProjectId: e.target.value,
-                                  })
-                                }
-                                className="h-16 rounded-2xl"
-                              >
-                                <SelectItem value="">
-                                  No direct proof linkage
-                                </SelectItem>
-                                {projects.map((p) => (
-                                  <SelectItem key={p.id} value={p.id}>
-                                    {p.title}
-                                  </SelectItem>
-                                ))}
-                              </Select>
+                            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+                              <div className="flex items-center gap-2">
+                                <Tag className="h-4 w-4 text-primary" />
+                                <h4 className="text-sm font-semibold text-white">Tags</h4>
+                              </div>
+                              <Input
+                                value={formData.tags}
+                                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                className="bg-white/5 border-white/10 rounded-lg h-10 text-sm px-4"
+                                placeholder="React, UI..."
+                              />
                             </div>
                           </div>
                         </div>
-                      </section>
-
-                      <section className="grid grid-cols-2 gap-16">
-                        <div className="space-y-6">
-                          <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 ml-4">
-                            Categorization Tokens
-                          </Label>
-                          <div className="relative group/tag">
-                            <Tag className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-white/20 group-focus-within/tag:text-primary transition-colors" />
-                            <Input
-                              value={formData.tags}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  tags: e.target.value,
-                                })
-                              }
-                              className="bg-white/5 border-white/10 h-20 rounded-[2rem] pl-16 font-black text-lg tracking-tight shadow-xl"
-                              placeholder="Architecture, DevOps, AI"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-6">
-                          <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 ml-4">
-                            Reading Latency (Target: 5-8)
-                          </Label>
-                          <div className="relative group/clock">
-                            <Clock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-white/20 group-focus-within/clock:text-primary transition-colors" />
-                            <Input
-                              type="number"
-                              value={formData.readingTime}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  readingTime: parseInt(e.target.value),
-                                })
-                              }
-                              className="bg-white/5 border-white/10 h-20 rounded-[2rem] pl-16 font-black text-2xl shadow-xl"
-                            />
-                          </div>
-                        </div>
-                      </section>
+                      </div>
                     </TabsContent>
 
-                    <TabsContent
-                      value="seo"
-                      className="space-y-20 animate-in slide-in-from-right-10 max-w-5xl"
-                    >
+                    {/* SEO TAB */}
+                    <TabsContent value="seo" className="space-y-8 animate-in slide-in-from-right-4">
                       {/* SEO Preview */}
-                      <div className="space-y-8 bg-white p-16 rounded-[4rem] shadow-3xl relative border-[12px] border-slate-50">
-                        <div className="flex items-center justify-between opacity-20 mb-4">
-                          <p className="text-[10px] font-black uppercase tracking-widest italic">
-                            Google Semantic Result
-                          </p>
-                          <Globe className="h-6 w-6" />
+                      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div className="flex items-center justify-between mb-4">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Google Preview</p>
+                          <Globe className="h-4 w-4 text-slate-300" />
                         </div>
-                        <div className="space-y-3 font-sans">
-                          <div className="text-[15px] text-gray-500 flex items-center gap-1.5">
+                        <div className="space-y-1 font-sans">
+                          <div className="text-[13px] text-gray-500 flex items-center gap-1.5">
                             <span>portfolio.io</span>
                             <span className="text-gray-300">›</span>
-                            <span>authority-hub</span>
-                            <span className="text-gray-300">›</span>
-                            <span className="text-primary font-bold">
-                              {formData.slug || "asset-slug"}
-                            </span>
+                            <span className="text-primary font-medium">{formData.slug || "article-slug"}</span>
                           </div>
-                          <h3 className="text-[24px] text-[#1a0dab] font-medium leading-tight hover:underline cursor-pointer">
-                            {formData.seo.metaTitle ||
-                              formData.title ||
-                              "Titre de l'article sur Google Authority"}
+                          <h3 className="text-[18px] text-[#1a0dab] font-medium hover:underline cursor-pointer truncate">
+                            {formData.seo.metaTitle || formData.title || "Your article title will appear here"}
                           </h3>
-                          <p className="text-[15px] text-gray-700 leading-relaxed max-w-2xl text-justify">
-                            <span className="text-gray-400 mr-2">
-                              {new Date().toLocaleDateString("en-US", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}{" "}
-                              —
-                            </span>
-                            {formData.seo.metaDescription ||
-                              formData.excerpt ||
-                              "Votre meta-description stratégique apparaîtra ici. Elle doit capturer l'intention de recherche."}
+                          <p className="text-[13px] text-gray-600 leading-relaxed line-clamp-2">
+                            <span className="text-gray-400 mr-2">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })} —</span>
+                            {formData.seo.metaDescription || formData.excerpt || "Your meta description will appear here."}
                           </p>
                         </div>
                       </div>
 
-                      <div className="grid gap-16">
-                        <div className="grid md:grid-cols-2 gap-16">
-                          <div className="space-y-6">
-                            <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 ml-4">
-                              Meta Title Strategy
-                            </Label>
-                            <Input
-                              value={formData.seo.metaTitle}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  seo: {
-                                    ...formData.seo,
-                                    metaTitle: e.target.value,
-                                  },
-                                })
-                              }
-                              className="bg-white/5 border-white/10 h-20 rounded-[2rem] font-black text-2xl px-10 shadow-xl"
-                            />
-                          </div>
-                          <div className="space-y-6">
-                            <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 ml-4">
-                              Permanent Semantic Slug
-                            </Label>
-                            <Input
-                              value={formData.slug}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  slug: slugify(e.target.value),
-                                })
-                              }
-                              className="bg-white/5 border-white/10 h-20 rounded-[2rem] font-mono text-xs text-white/30 px-10 shadow-xl"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-6">
-                          <Label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 ml-6">
-                            Meta Description Override
-                          </Label>
-                          <Textarea
-                            value={formData.seo.metaDescription}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                seo: {
-                                  ...formData.seo,
-                                  metaDescription: e.target.value,
-                                },
-                              })
-                            }
-                            className="bg-white/5 border-white/10 rounded-[4rem] p-16 min-h-[160px] leading-relaxed text-slate-400 font-medium italic text-lg shadow-2xl"
-                            placeholder="Draft to command high-quality search traffic..."
+                      <div className="grid md:grid-cols-2 gap-8">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-semibold text-white/50">Meta Title</Label>
+                          <Input
+                            value={formData.seo.metaTitle}
+                            onChange={(e) => setFormData({ ...formData, seo: { ...formData.seo, metaTitle: e.target.value } })}
+                            className="bg-white/5 border-white/10 rounded-lg h-10 text-sm px-4"
+                            placeholder="SEO title..."
                           />
                         </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs font-semibold text-white/50">URL Slug</Label>
+                          <Input
+                            value={formData.slug}
+                            onChange={(e) => setFormData({ ...formData, slug: slugify(e.target.value) })}
+                            className="bg-white/5 border-white/10 rounded-lg h-10 font-mono text-sm px-4 text-white/70"
+                            placeholder="article-slug"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-xs font-semibold text-white/50">Meta Description</Label>
+                        <Textarea
+                          value={formData.seo.metaDescription}
+                          onChange={(e) => setFormData({ ...formData, seo: { ...formData.seo, metaDescription: e.target.value } })}
+                          className="bg-white/5 border-white/10 rounded-xl p-4 min-h-[100px] text-sm text-white/70 resize-none"
+                          placeholder="Search snippet..."
+                        />
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -1071,144 +874,99 @@ export default function ArticlesPage() {
 
       {/* Filters */}
       {!isLoading && articles.length > 0 && (
-        <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-6 shadow-2xl backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-primary/10 rounded-2xl">
-                <Filter className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-foreground">
-                  Advanced Filters
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Refine your content discovery
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setSearchQuery("");
-                setPublishedFilter("all");
-                setTagFilter("");
-              }}
-              className="text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
-            >
-              <X className="h-4 w-4 mr-1" />
-              Clear All
-            </Button>
+        <div className="flex flex-col md:flex-row items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/5 p-3 rounded-2xl shadow-xl animate-in slide-in-from-bottom-4 fade-in duration-500">
+          <div className="flex-1 w-full relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Search articles..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-11 h-11 rounded-xl font-medium border-0 bg-white/5 text-white placeholder:text-white/30 focus-visible:ring-2 focus-visible:ring-primary transition-all w-full"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Search */}
-            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
-              <Input
-                placeholder="Search articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg focus:ring-2 focus:ring-primary/20 transition-all"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
 
-            {/* Published Filter */}
-            <div className="relative">
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="relative flex-1 md:flex-none md:w-48">
               <button
                 onClick={() => {
-                  const dropdown =
-                    document.getElementById("published-dropdown");
-                  if (dropdown) {
-                    dropdown.classList.toggle("hidden");
-                  }
+                  const dropdown = document.getElementById("published-dropdown");
+                  if (dropdown) dropdown.classList.toggle("hidden");
                 }}
-                className="w-full h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg px-4 pr-10 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+                className="w-full h-11 rounded-xl font-medium border border-white/5 bg-white/5 hover:bg-white/10 px-4 flex items-center justify-between text-sm text-white transition-all"
               >
                 <span className="flex items-center gap-2">
-                  {publishedFilter === "all" && (
-                    <>
-                      <Layers className="h-4 w-4" /> All Articles
-                    </>
-                  )}
-                  {publishedFilter === "published" && (
-                    <>
-                      <Eye className="h-4 w-4" /> Published Only
-                    </>
-                  )}
-                  {publishedFilter === "draft" && (
-                    <>
-                      <FileEdit className="h-4 w-4" /> Drafts Only
-                    </>
-                  )}
+                  {publishedFilter === "all" && <><Layers className="h-4 w-4 text-white/40" /> All Articles</>}
+                  {publishedFilter === "published" && <><Eye className="h-4 w-4 text-primary" /> Published</>}
+                  {publishedFilter === "draft" && <><FileEdit className="h-4 w-4 text-amber-500" /> Drafts</>}
                 </span>
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                <ChevronDown className="h-4 w-4 text-white/40" />
               </button>
               <div
                 id="published-dropdown"
-                className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 hidden z-50"
+                className="absolute top-full left-0 right-0 mt-2 bg-[#0a0d1f] rounded-xl shadow-xl border border-white/10 hidden z-50 overflow-hidden"
               >
                 <button
-                  onClick={() => {
-                    setPublishedFilter("all");
-                    document
-                      .getElementById("published-dropdown")
-                      ?.classList.add("hidden");
-                  }}
-                  className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 rounded-t-2xl flex items-center gap-2 transition-colors"
+                  onClick={() => { setPublishedFilter("all"); document.getElementById("published-dropdown")?.classList.add("hidden"); }}
+                  className="w-full px-4 py-2.5 text-left hover:bg-white/5 flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
                 >
-                  <Layers className="h-4 w-4" /> All Articles
+                  <Layers className="h-4 w-4 text-white/40" /> All Articles
                 </button>
                 <button
-                  onClick={() => {
-                    setPublishedFilter("published");
-                    document
-                      .getElementById("published-dropdown")
-                      ?.classList.add("hidden");
-                  }}
-                  className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors"
+                  onClick={() => { setPublishedFilter("published"); document.getElementById("published-dropdown")?.classList.add("hidden"); }}
+                  className="w-full px-4 py-2.5 text-left hover:bg-white/5 flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
                 >
-                  <Eye className="h-4 w-4" /> Published Only
+                  <Eye className="h-4 w-4 text-primary" /> Published Only
                 </button>
                 <button
-                  onClick={() => {
-                    setPublishedFilter("draft");
-                    document
-                      .getElementById("published-dropdown")
-                      ?.classList.add("hidden");
-                  }}
-                  className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 rounded-b-2xl flex items-center gap-2 transition-colors"
+                  onClick={() => { setPublishedFilter("draft"); document.getElementById("published-dropdown")?.classList.add("hidden"); }}
+                  className="w-full px-4 py-2.5 text-left hover:bg-white/5 flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
                 >
-                  <FileEdit className="h-4 w-4" /> Drafts Only
+                  <FileEdit className="h-4 w-4 text-amber-500" /> Drafts Only
                 </button>
               </div>
             </div>
 
-            {/* Tag Filter */}
-            <div className="relative group">
-              <Tag className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
+            <div className="relative flex-1 md:flex-none md:w-48 group">
+              <Tag className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 group-focus-within:text-primary transition-colors z-10" />
               <Input
-                placeholder="Filter by tag..."
+                placeholder="Filter tag..."
                 value={tagFilter}
                 onChange={(e) => setTagFilter(e.target.value)}
-                className="pl-12 h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg focus:ring-2 focus:ring-primary/20 transition-all"
+                className="pl-11 h-11 rounded-xl font-medium border border-white/5 bg-white/5 text-white placeholder:text-white/30 focus-visible:ring-2 focus-visible:ring-primary transition-all w-full text-sm"
               />
               {tagFilter && (
                 <button
                   onClick={() => setTagFilter("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
               )}
             </div>
+
+            {(searchQuery || publishedFilter !== "all" || tagFilter) && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setSearchQuery("");
+                  setPublishedFilter("all");
+                  setTagFilter("");
+                }}
+                className="h-11 w-11 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-colors"
+                title="Clear all filters"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
       )}
@@ -1226,18 +984,18 @@ export default function ArticlesPage() {
         </div>
       ) : (
         <Tabs defaultValue="published" className="space-y-12">
-          <TabsList className="bg-slate-100 dark:bg-slate-900/50 p-2 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 w-fit h-20">
+          <TabsList className="bg-white/5 p-1 rounded-xl border border-white/5 w-fit h-auto flex gap-1 animate-in slide-in-from-left-4 fade-in duration-500">
             <TabsTrigger
               value="published"
-              className="rounded-[2rem] px-14 h-full data-[state=active]:bg-primary data-[state=active]:text-white transition-all font-black uppercase text-xs tracking-widest gap-4"
+              className="rounded-lg px-6 py-2.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-white/50 data-[state=inactive]:hover:text-white transition-all font-semibold text-sm gap-2"
             >
-              <Eye className="h-5 w-5" /> Published ({publishedArticles.length})
+              <Eye className="h-4 w-4" /> Published ({publishedArticles.length})
             </TabsTrigger>
             <TabsTrigger
               value="drafts"
-              className="rounded-[2rem] px-14 h-full data-[state=active]:bg-slate-900 dark:data-[state=active]:bg-white data-[state=active]:text-white dark:data-[state=active]:text-slate-950 transition-all font-black uppercase text-xs tracking-widest gap-4"
+              className="rounded-lg px-6 py-2.5 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 data-[state=inactive]:hover:text-white transition-all font-semibold text-sm gap-2"
             >
-              <FileEdit className="h-5 w-5" /> Drafts ({draftArticles.length})
+              <FileEdit className="h-4 w-4" /> Drafts ({draftArticles.length})
             </TabsTrigger>
           </TabsList>
 
@@ -1257,12 +1015,12 @@ export default function ArticlesPage() {
                   <ArticleRow key={a.id} article={a} />
                 ))
               ) : (
-                <div className="py-40 border-4 border-dashed border-slate-100 dark:border-slate-800/10 rounded-[4rem] flex flex-col items-center justify-center text-center opacity-20">
-                  <Eye className="h-20 w-20 mb-10" />
-                  <p className="text-2xl font-black italic tracking-tighter">
-                    No published articles found.
+                <div className="py-24 border border-dashed border-white/10 rounded-3xl flex flex-col items-center justify-center text-center bg-white/5 opacity-60">
+                  <Eye className="h-10 w-10 mb-4 text-white/40" />
+                  <p className="text-lg font-semibold tracking-tight text-white/80">
+                    No published articles
                   </p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest mt-2">
+                  <p className="text-sm text-white/40 mt-1">
                     Publish your first article to see it here.
                   </p>
                 </div>
@@ -1284,12 +1042,12 @@ export default function ArticlesPage() {
               {draftArticles.length > 0 ? (
                 draftArticles.map((a) => <ArticleRow key={a.id} article={a} />)
               ) : (
-                <div className="py-40 border-4 border-dashed border-slate-100 dark:border-slate-800/10 rounded-[4rem] flex flex-col items-center justify-center text-center opacity-20">
-                  <FileEdit className="h-20 w-20 mb-10" />
-                  <p className="text-2xl font-black italic tracking-tighter">
-                    No draft articles found.
+                <div className="py-24 border border-dashed border-white/10 rounded-3xl flex flex-col items-center justify-center text-center bg-white/5 opacity-60">
+                  <FileEdit className="h-10 w-10 mb-4 text-white/40" />
+                  <p className="text-lg font-semibold tracking-tight text-white/80">
+                    No draft articles
                   </p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest mt-2">
+                  <p className="text-sm text-white/40 mt-1">
                     Create your first draft to get started.
                   </p>
                 </div>
@@ -1301,21 +1059,21 @@ export default function ArticlesPage() {
 
       {/* Global Empty State */}
       {!isLoading && articles.length === 0 && (
-        <div className="py-60 border-8 border-dashed border-slate-50 dark:border-slate-900/40 rounded-[6rem] flex flex-col items-center justify-center text-center">
-          <div className="p-10 bg-primary/5 rounded-[4rem] mb-12">
-            <Layout className="h-28 w-28 text-primary/10" />
+        <div className="py-32 border border-dashed border-white/10 rounded-3xl flex flex-col items-center justify-center text-center bg-white/5">
+          <div className="p-6 bg-primary/10 rounded-2xl mb-6">
+            <Layout className="h-12 w-12 text-primary" />
           </div>
-          <h2 className="text-4xl font-black italic tracking-tighter text-slate-300 dark:text-slate-800 mb-4">
-            Command Center Inactive.
+          <h2 className="text-2xl font-bold tracking-tight text-white mb-2">
+            No articles yet
           </h2>
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.5em] mb-12">
-            Operational content nodes missing from neural network.
+          <p className="text-sm text-white/50 mb-8 max-w-sm">
+            You haven't created any articles. Click the button below to start building your content repository.
           </p>
           <Button
             onClick={() => setIsDialogOpen(true)}
-            className="h-16 px-16 rounded-3xl font-black uppercase text-sm tracking-[0.4em] shadow-3xl hover:scale-105 active:scale-95 transition-all"
+            className="rounded-xl shadow-lg shadow-primary/25 h-11 px-8 text-sm font-semibold gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0d1f] border-0"
           >
-            Ignite Knowledge Engine
+            Create Your First Article
           </Button>
         </div>
       )}

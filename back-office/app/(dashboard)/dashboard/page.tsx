@@ -23,13 +23,39 @@ import {
   MessageSquare,
   Sparkles,
 } from "lucide-react";
+import { projectsService } from "@/lib/services/projects.service";
+import { articlesService } from "@/lib/services/articles.service";
+import { contactService } from "@/lib/services/contact.service";
 
 export default function DashboardPage() {
   const [username, setUsername] = useState<string | null>(null);
+  const [stats, setStats] = useState({
+    projects: 0,
+    articles: 0,
+    unreadMessages: 0,
+  });
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     setUsername(storedUsername);
+
+    const loadStats = async () => {
+      try {
+        const [projects, articles, contacts] = await Promise.all([
+          projectsService.getAll(),
+          articlesService.getAll(),
+          contactService.getAll(),
+        ]);
+        setStats({
+          projects: projects.length,
+          articles: articles.length,
+          unreadMessages: contacts.filter((m) => m.status === "NEW").length,
+        });
+      } catch (error) {
+        console.error("Failed to load dashboard stats", error);
+      }
+    };
+    void loadStats();
   }, []);
 
   const getGreeting = () => {
@@ -45,7 +71,7 @@ export default function DashboardPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold flex items-center gap-2 text-indigo-900 dark:text-indigo-100">
+        <h1 className="text-3xl font-bold flex items-center gap-2 text-foreground">
           {getGreeting()}, {username}!{" "}
           <Sparkles className="h-6 w-6 text-indigo-500 animate-pulse" />
         </h1>
@@ -56,7 +82,7 @@ export default function DashboardPage() {
 
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-indigo-100 dark:border-indigo-900 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="border-primary/20 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Projects
@@ -64,11 +90,11 @@ export default function DashboardPage() {
             <FolderPlus className="h-4 w-4 text-indigo-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-2xl font-bold">{stats.projects}</div>
             <p className="text-xs text-muted-foreground">+2 from last month</p>
           </CardContent>
         </Card>
-        <Card className="border-purple-100 dark:border-purple-900 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="border-secondary shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Articles Published
@@ -76,11 +102,11 @@ export default function DashboardPage() {
             <FilePlus className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
+            <div className="text-2xl font-bold">{stats.articles}</div>
             <p className="text-xs text-muted-foreground">+4 this week</p>
           </CardContent>
         </Card>
-        <Card className="border-pink-100 dark:border-pink-900 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="border-accent shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Content Drafts
@@ -92,7 +118,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">3 ready for review</p>
           </CardContent>
         </Card>
-        <Card className="border-blue-100 dark:border-blue-900 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="border-muted shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Unread Messages
@@ -100,7 +126,7 @@ export default function DashboardPage() {
             <Mail className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
+            <div className="text-2xl font-bold">{stats.unreadMessages}</div>
             <p className="text-xs text-muted-foreground">2 new inquiries</p>
           </CardContent>
         </Card>
@@ -115,7 +141,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">12,543</div>
-            <div className="flex items-center text-xs text-green-600 dark:text-green-500">
+            <div className="flex items-center text-xs text-green-600">
               <TrendingUp className="h-3 w-3 mr-1" />
               +12.5% from last month
             </div>
@@ -130,7 +156,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3,241</div>
-            <div className="flex items-center text-xs text-green-600 dark:text-green-500">
+            <div className="flex items-center text-xs text-green-600">
               <TrendingUp className="h-3 w-3 mr-1" />
               +8.2% from last month
             </div>
@@ -145,7 +171,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">68%</div>
-            <div className="flex items-center text-xs text-green-600 dark:text-green-500">
+            <div className="flex items-center text-xs text-green-600">
               <TrendingUp className="h-3 w-3 mr-1" />
               +5.1% from last month
             </div>

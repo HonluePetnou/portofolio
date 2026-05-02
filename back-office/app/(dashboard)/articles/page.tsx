@@ -412,7 +412,7 @@ export default function ArticlesPage() {
       <div className="flex-1 min-w-0 py-1">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h4 className="text-base font-bold tracking-tight text-white/90 break-words truncate group-hover:text-primary transition-colors">
+            <h4 className="text-base font-bold tracking-tight text-white/90 wrap-break-word truncate group-hover:text-primary transition-colors">
               {article.title}
             </h4>
             <p className="text-xs text-white/50 font-medium truncate mt-0.5 line-clamp-1">
@@ -512,7 +512,7 @@ export default function ArticlesPage() {
           >
             <DialogTrigger asChild>
               <Button
-                className="rounded-xl shadow-lg shadow-primary/25 h-11 px-6 text-sm font-semibold gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0d1f] border-0"
+                className="rounded-xl shadow-lg shadow-primary/25 h-11 px-6 text-sm font-semibold gap-2 bg-linear-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0d1f] border-0"
                 aria-label="Create new article asset"
               >
                 <Plus className="h-4 w-4" /> New Article
@@ -567,7 +567,7 @@ export default function ArticlesPage() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="rounded-lg font-semibold px-6 h-10 shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95"
+                      className="rounded-lg font-semibold px-6 h-10 shadow-lg shadow-primary/20 bg-linear-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95"
                     >
                       {isSubmitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -1071,7 +1071,7 @@ export default function ArticlesPage() {
           </p>
           <Button
             onClick={() => setIsDialogOpen(true)}
-            className="rounded-xl shadow-lg shadow-primary/25 h-11 px-8 text-sm font-semibold gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0d1f] border-0"
+            className="rounded-xl shadow-lg shadow-primary/25 h-11 px-8 text-sm font-semibold gap-2 bg-linear-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0d1f] border-0"
           >
             Create Your First Article
           </Button>

@@ -30,11 +30,17 @@ Select.displayName = "Select";
 const SelectItem = ({
   children,
   value,
+  disabled,
 }: {
   children: React.ReactNode;
   value: string;
+  disabled?: boolean;
 }) => {
-  return <option value={value}>{children}</option>;
+  return (
+    <option value={value} disabled={disabled}>
+      {children}
+    </option>
+  );
 };
 
 export { Select, SelectItem };

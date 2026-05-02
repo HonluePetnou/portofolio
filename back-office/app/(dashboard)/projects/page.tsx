@@ -556,13 +556,13 @@ export default function ProjectsPage() {
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-[#0a0d1f] to-indigo-950/60 flex items-center justify-center">
+            <div className="h-full w-full bg-linear-to-br from-[#0a0d1f] to-indigo-950/60 flex items-center justify-center">
               <ImageIcon className="h-10 w-10 text-white/10" />
             </div>
           )}
 
           {/* Gradient overlay */}
-          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#0a0d1f] via-[#0a0d1f]/40 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#0a0d1f] via-[#0a0d1f]/40 to-transparent" />
 
           {/* Top badges */}
           <div className="absolute top-3 left-3 flex gap-2 z-20">
@@ -972,7 +972,7 @@ export default function ProjectsPage() {
           <DialogTrigger asChild>
             <Button
               onClick={resetForm}
-              className="rounded-xl font-semibold px-5 h-10 gap-2 shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95 border-0 text-white"
+              className="rounded-xl font-semibold px-5 h-10 gap-2 shadow-lg shadow-primary/20 bg-linear-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95 border-0 text-white"
             >
               <Plus className="h-4 w-4" /> New Project
             </Button>
@@ -1006,7 +1006,7 @@ export default function ProjectsPage() {
                   <Button
                     type="submit"
                     disabled={isSubmitting || slugStatus.includes("taken") || formData.screenshots.length < 3}
-                    className="rounded-lg font-semibold px-6 h-10 shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95 border-0 text-white"
+                    className="rounded-lg font-semibold px-6 h-10 shadow-lg shadow-primary/20 bg-linear-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-transform active:scale-95 border-0 text-white"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -1451,7 +1451,7 @@ export default function ProjectsPage() {
               </div>
               <Button
                 onClick={() => setIsDialogOpen(true)}
-                className="rounded-xl font-semibold px-5 h-10 gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 border-0 text-white"
+                className="rounded-xl font-semibold px-5 h-10 gap-2 bg-linear-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 border-0 text-white"
               >
                 <Plus className="h-4 w-4" /> New Project
               </Button>

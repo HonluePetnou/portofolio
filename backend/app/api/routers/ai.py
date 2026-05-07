@@ -31,7 +31,7 @@ async def generate_content(
         api_key = decrypt_value(setting.value)
     
     if not api_key:
-        api_key = "AIzaSyA5GwuecNTU4xziKtlkfddf-JCTn063TGw"
+        api_key = ""
         
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
     

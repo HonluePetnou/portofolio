@@ -16,6 +16,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectItem } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { apiRequest } from "@/lib/api";
 import { 
   Settings as SettingsIcon, 
@@ -28,7 +36,9 @@ import {
   Eye, 
   EyeOff,
   Save,
-  RefreshCw
+  RefreshCw,
+  AlertCircle,
+  CheckCircle2
 } from "lucide-react";
 
 interface SettingsData {
@@ -54,6 +64,7 @@ export default function SettingsPage() {
   const [testing, setTesting] = useState<"ai" | "email" | null>(null);
   const [showApiKeys, setShowApiKeys] = useState<Record<string, boolean>>({});
   const [formData, setFormData] = useState<SettingsUpdate>({});
+  const [dialogMessage, setDialogMessage] = useState<{ title: string; message: string; type: "success" | "error" } | null>(null);
 
   useEffect(() => {
     loadSettings();
@@ -94,10 +105,18 @@ export default function SettingsPage() {
     setTesting(type);
     try {
       await apiRequest(`/settings/test/${type}`, { method: "POST" });
-      alert(`${type.toUpperCase()} connection successful!`);
+      setDialogMessage({
+        title: "Success",
+        message: `${type.toUpperCase()} connection successful!`,
+        type: "success"
+      });
     } catch (error) {
       console.error(`Failed to test ${type}:`, error);
-      alert(`${type.toUpperCase()} connection failed!`);
+      setDialogMessage({
+        title: "Error",
+        message: `${type.toUpperCase()} connection failed!`,
+        type: "error"
+      });
     } finally {
       setTesting(null);
     }
@@ -109,6 +128,29 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
+      <Dialog open={!!dialogMessage} onOpenChange={(open) => !open && setDialogMessage(null)}>
+        <DialogContent className="sm:max-w-md border border-white/10 bg-[#0a0d1f] text-white rounded-2xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className={`flex items-center gap-2 ${dialogMessage?.type === 'success' ? 'text-emerald-500' : 'text-rose-500'}`}>
+              {dialogMessage?.type === 'success' ? <CheckCircle2 className="h-5 w-5" /> : <AlertCircle className="h-5 w-5" />}
+              {dialogMessage?.title}
+            </DialogTitle>
+            <DialogDescription className="text-white/60">
+              {dialogMessage?.message}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4">
+            <Button
+              type="button"
+              variant="default"
+              className={dialogMessage?.type === 'success' ? "bg-emerald-500 hover:bg-emerald-600 text-white" : "bg-rose-500 hover:bg-rose-600 text-white"}
+              onClick={() => setDialogMessage(null)}
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {/* Header */}
       <div className="flex items-center gap-3">
         <SettingsIcon className="h-8 w-8 text-primary" />
@@ -244,7 +286,7 @@ export default function SettingsPage() {
                         value={formData.aiProvider || ""}
                         onChange={(e) => updateFormData("aiProvider", e.target.value)}
                       >
-                        <option value="">Select AI provider</option>
+                        <option value="" className="bg-[#0a0d1f] text-white">Select AI provider</option>
                         <SelectItem value="OPENAI">OpenAI</SelectItem>
                         <SelectItem value="CLAUDE">Claude (Anthropic)</SelectItem>
                         <SelectItem value="GEMINI">Google Gemini</SelectItem>
@@ -324,7 +366,7 @@ export default function SettingsPage() {
                         value={formData.emailProvider || ""}
                         onChange={(e) => updateFormData("emailProvider", e.target.value)}
                       >
-                        <option value="">Select email provider</option>
+                        <option value="" className="bg-[#0a0d1f] text-white">Select email provider</option>
                         <SelectItem value="RESEND">Resend</SelectItem>
                         <SelectItem value="SENDGRID">SendGrid</SelectItem>
                         <SelectItem value="NONE">Disabled</SelectItem>

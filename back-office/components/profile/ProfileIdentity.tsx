@@ -12,13 +12,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Save, User } from "lucide-react";
+import { Loader2, Save, User, CheckCircle2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { apiRequest } from "@/lib/api";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 
 export function ProfileIdentity() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [profile, setProfile] = useState({
     id: null as number | null,
     name: "",
@@ -63,7 +72,7 @@ export function ProfileIdentity() {
           body: JSON.stringify(profile),
         });
       }
-      alert("Identité mise à jour avec succès !");
+      setSuccessMessage("Identité mise à jour avec succès !");
     } catch (err) {
       console.error("Failed to save profile:", err);
     } finally {
@@ -81,6 +90,29 @@ export function ProfileIdentity() {
 
   return (
     <div className="space-y-6">
+      <Dialog open={!!successMessage} onOpenChange={(open) => !open && setSuccessMessage(null)}>
+        <DialogContent className="sm:max-w-md border border-white/10 bg-[#0a0d1f] text-white rounded-2xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-emerald-500">
+              <CheckCircle2 className="h-5 w-5" />
+              Succès
+            </DialogTitle>
+            <DialogDescription className="text-white/60">
+              {successMessage}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4">
+            <Button
+              type="button"
+              variant="default"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white"
+              onClick={() => setSuccessMessage(null)}
+            >
+              Fermer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

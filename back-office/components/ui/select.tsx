@@ -27,20 +27,20 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 );
 Select.displayName = "Select";
 
-const SelectItem = ({
-  children,
-  value,
-  disabled,
-}: {
-  children: React.ReactNode;
-  value: string;
-  disabled?: boolean;
-}) => {
+const SelectItem = React.forwardRef<
+  HTMLOptionElement,
+  React.OptionHTMLAttributes<HTMLOptionElement>
+>(({ className, children, ...props }, ref) => {
   return (
-    <option value={value} disabled={disabled}>
+    <option
+      ref={ref}
+      className={cn("bg-[#0a0d1f] text-white", className)}
+      {...props}
+    >
       {children}
     </option>
   );
-};
+});
+SelectItem.displayName = "SelectItem";
 
 export { Select, SelectItem };

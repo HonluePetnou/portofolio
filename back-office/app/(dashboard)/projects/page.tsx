@@ -279,7 +279,12 @@ const initialForm = {
   githubUrl: "",
   mainImage: "",
   screenshots: [] as string[],
-  interveners: [] as Intervener[],
+  interveners: [
+    { name: "Dieuba", role: "Project Manager", avatar: null },
+    { name: "Lontsie", role: "UI/UX Designer", avatar: null },
+    { name: "Petnou", role: "Frontend Developer", avatar: null },
+    { name: "Abogo", role: "Backend Developer", avatar: null },
+  ] as Intervener[],
   isFeatured: false,
   slugManual: false,
 };
@@ -299,6 +304,7 @@ export default function ProjectsPage() {
     "idle" | "checking" | "ok" | "taken text-destructive"
   >("idle");
   const [editingAsAdmin, setEditingAsAdmin] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<{ id: string; asAdmin: boolean } | null>(null);
 
   const [formData, setFormData] = useState(initialForm);
 
@@ -483,15 +489,21 @@ export default function ProjectsPage() {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (id: string, asAdmin = false) => {
-    if (!confirm("Supprimer ce projet ?")) return;
+  const handleDelete = (id: string, asAdmin = false) => {
+    setProjectToDelete({ id, asAdmin });
+  };
+
+  const confirmDelete = async () => {
+    if (!projectToDelete) return;
     try {
-      const deleteUrl = asAdmin ? `/projects/admin/${id}` : `/projects/${id}`;
+      const deleteUrl = projectToDelete.asAdmin ? `/projects/admin/${projectToDelete.id}` : `/projects/${projectToDelete.id}`;
       await apiRequest(deleteUrl, { method: "DELETE" });
       fetchMine();
       if (isAdmin) fetchAll();
     } catch (err) {
       console.error("Failed to delete project:", err);
+    } finally {
+      setProjectToDelete(null);
     }
   };
 
@@ -954,6 +966,40 @@ export default function ProjectsPage() {
   return (
     <div className="space-y-6">
       <ProjectDetailDialog />
+      
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!projectToDelete} onOpenChange={(open) => !open && setProjectToDelete(null)}>
+        <DialogContent className="sm:max-w-md border border-white/10 bg-[#0a0d1f] text-white rounded-2xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-500">
+              <Trash2 className="h-5 w-5" />
+              Delete Project
+            </DialogTitle>
+            <DialogDescription className="text-white/60">
+              Are you sure you want to delete this project? This action cannot be undone and will permanently remove the project and its media.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0 mt-4">
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-white/40 hover:text-white"
+              onClick={() => setProjectToDelete(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              className="bg-rose-500 hover:bg-rose-600 text-white"
+              onClick={confirmDelete}
+            >
+              Delete Permanently
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-white">Projects</h2>
@@ -1078,13 +1124,23 @@ export default function ProjectsPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="industry" className="text-xs font-semibold text-white/50">Industry</Label>
-                      <Input
+                      <Select
                         id="industry"
-                        value={formData.industry}
+                        value={formData.industry || ""}
                         onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                        placeholder="Digital / Design"
-                        className="bg-white/5 border-white/10 rounded-xl px-4 h-12 focus-visible:ring-primary transition-all placeholder:text-white/20"
-                      />
+                        className="bg-white/5 border-white/10 rounded-xl h-12 focus-visible:ring-primary transition-all w-full text-sm"
+                      >
+                        <SelectItem value="" disabled className="bg-[#0a0d1f] text-white">Select Industry...</SelectItem>
+                        <SelectItem value="Digital / Design" className="bg-[#0a0d1f] text-white">Digital / Design</SelectItem>
+                        <SelectItem value="Tech / Software" className="bg-[#0a0d1f] text-white">Tech / Software</SelectItem>
+                        <SelectItem value="E-commerce / Retail" className="bg-[#0a0d1f] text-white">E-commerce / Retail</SelectItem>
+                        <SelectItem value="Healthcare / Medical" className="bg-[#0a0d1f] text-white">Healthcare / Medical</SelectItem>
+                        <SelectItem value="Finance / FinTech" className="bg-[#0a0d1f] text-white">Finance / FinTech</SelectItem>
+                        <SelectItem value="Education / EdTech" className="bg-[#0a0d1f] text-white">Education / EdTech</SelectItem>
+                        <SelectItem value="Real Estate" className="bg-[#0a0d1f] text-white">Real Estate</SelectItem>
+                        <SelectItem value="Entertainment / Media" className="bg-[#0a0d1f] text-white">Entertainment / Media</SelectItem>
+                        <SelectItem value="Other" className="bg-[#0a0d1f] text-white">Other</SelectItem>
+                      </Select>
                     </div>
                   </div>
 
@@ -1378,9 +1434,9 @@ export default function ProjectsPage() {
               onChange={(e) => setFeaturedFilter(e.target.value as "all" | "featured" | "not-featured")}
               className="w-full h-11 rounded-xl bg-white/5 border border-white/10 text-sm text-white px-4 pr-10 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/40 transition-all"
             >
-              <option value="all">All Projects</option>
-              <option value="featured">Featured Only</option>
-              <option value="not-featured">Standard Projects</option>
+              <option value="all" className="bg-[#0a0d1f] text-white">All Projects</option>
+              <option value="featured" className="bg-[#0a0d1f] text-white">Featured Only</option>
+              <option value="not-featured" className="bg-[#0a0d1f] text-white">Standard Projects</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
           </div>

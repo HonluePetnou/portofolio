@@ -80,6 +80,7 @@ export function ProfileTestimonials() {
   const [formData, setFormData] = useState(emptyForm);
   // Tracks whether the current edit was started from the admin 'all' tab
   const [editingAsAdmin, setEditingAsAdmin] = useState(false);
+  const [testimonialToDelete, setTestimonialToDelete] = useState<{ id: number; asAdmin: boolean } | null>(null);
 
   // Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -189,17 +190,23 @@ export function ProfileTestimonials() {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (id: number, asAdmin = false) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce témoignage ?")) return;
+  const handleDelete = (id: number, asAdmin = false) => {
+    setTestimonialToDelete({ id, asAdmin });
+  };
+
+  const confirmDelete = async () => {
+    if (!testimonialToDelete) return;
     try {
-      const deleteUrl = asAdmin
-        ? `/testimonials/admin/${id}`
-        : `/testimonials/${id}`;
+      const deleteUrl = testimonialToDelete.asAdmin
+        ? `/testimonials/admin/${testimonialToDelete.id}`
+        : `/testimonials/${testimonialToDelete.id}`;
       await apiRequest(deleteUrl, { method: "DELETE" });
       fetchMine();
       if (isAdmin) fetchAll();
     } catch (err) {
       console.error("Failed to delete testimonial:", err);
+    } finally {
+      setTestimonialToDelete(null);
     }
   };
 
@@ -321,6 +328,38 @@ export function ProfileTestimonials() {
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="space-y-6">
+      <Dialog open={!!testimonialToDelete} onOpenChange={(open) => !open && setTestimonialToDelete(null)}>
+        <DialogContent className="sm:max-w-md border border-white/10 bg-[#0a0d1f] text-white rounded-2xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-500">
+              <Trash2 className="h-5 w-5" />
+              Delete Testimonial
+            </DialogTitle>
+            <DialogDescription className="text-white/60">
+              Êtes-vous sûr de vouloir supprimer ce témoignage ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0 mt-4">
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-white/40 hover:text-white"
+              onClick={() => setTestimonialToDelete(null)}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              className="bg-rose-500 hover:bg-rose-600 text-white"
+              onClick={confirmDelete}
+            >
+              Supprimer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Header row */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
@@ -531,12 +570,12 @@ export function ProfileTestimonials() {
               onChange={(e) => setRatingFilter(e.target.value ? parseInt(e.target.value) : "")}
               className="w-full h-12 rounded-2xl font-medium border-0 bg-white dark:bg-slate-800 shadow-lg px-4 pr-10 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/20 transition-all"
             >
-              <option value="">⭐ All Ratings</option>
-              <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
-              <option value="4">⭐⭐⭐⭐ 4 Stars</option>
-              <option value="3">⭐⭐⭐ 3 Stars</option>
-              <option value="2">⭐⭐ 2 Stars</option>
-              <option value="1">⭐ 1 Star</option>
+              <option value="" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">⭐ All Ratings</option>
+              <option value="5" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">⭐⭐⭐⭐⭐ 5 Stars</option>
+              <option value="4" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">⭐⭐⭐⭐ 4 Stars</option>
+              <option value="3" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">⭐⭐⭐ 3 Stars</option>
+              <option value="2" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">⭐⭐ 2 Stars</option>
+              <option value="1" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">⭐ 1 Star</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           </div>

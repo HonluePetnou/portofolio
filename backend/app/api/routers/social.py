@@ -24,8 +24,8 @@ async def generate_social_for_article(
     current_admin: User = Depends(get_current_admin),
 ):
     article = session.get(Article, article_id)
-    if not article or not article.published:
-        raise HTTPException(status_code=400, detail="Article must exist and be published.")
+    if not article:
+        raise HTTPException(status_code=404, detail="Article not found.")
 
     try:
         ai = await get_ai_client(session)

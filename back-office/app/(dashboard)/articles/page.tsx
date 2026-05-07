@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,8 +36,18 @@ import {
   Filter,
   X,
   Layers,
+  AlertCircle,
+  Share2,
+  Twitter,
+  Linkedin,
+  Facebook,
+  Instagram,
+  Copy,
+  Check
 } from "lucide-react";
 import { apiRequest } from "@/lib/api";
+import { aiService } from "@/lib/services/ai.service";
+import type { SocialGenerated } from "@/lib/types";
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { Select, SelectItem } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -144,6 +154,11 @@ export default function ArticlesPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [socialPosts, setSocialPosts] = useState<SocialGenerated | null>(null);
+  const [isSocialLoading, setIsSocialLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [articleToDelete, setArticleToDelete] = useState<string | null>(null);
+  const [alertMessage, setAlertMessage] = useState<{ title: string; message: string; type: "warning" | "error" } | null>(null);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -257,18 +272,25 @@ export default function ArticlesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this strategic asset permanently?")) return;
+  const handleDelete = (id: string) => {
+    setArticleToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!articleToDelete) return;
     try {
-      await apiRequest(`/articles/${id}`, { method: "DELETE" });
+      await apiRequest(`/articles/${articleToDelete}`, { method: "DELETE" });
       fetchData();
     } catch (err) {
       console.error("Failed to delete article:", err);
+    } finally {
+      setArticleToDelete(null);
     }
   };
 
   const resetForm = () => {
     setFormData(initialForm);
+    setSocialPosts(null);
     setActiveTab("content");
   };
 
@@ -291,18 +313,18 @@ export default function ArticlesPage() {
   };
 
   const handleAIGenerate = async () => {
-    if (!formData.title) return alert("Prompt required for AI activation.");
+    if (!formData.title) {
+      setAlertMessage({ title: "Warning", message: "Prompt required for AI activation.", type: "warning" });
+      return;
+    }
     setIsAiLoading(true);
     try {
-      const data = await apiRequest("/ai/generate", {
-        method: "POST",
-        body: JSON.stringify({ prompt: formData.title }),
-      });
+      const data = await aiService.generate(formData.title, "article");
       setFormData((prev) => ({
         ...prev,
         title: data.title,
         excerpt: data.excerpt,
-        content: data.content,
+        content: data.content as unknown as { intro: string; sections: ArticleSection[] },
         seo: {
           ...prev.seo,
           metaTitle: data.title,
@@ -313,6 +335,33 @@ export default function ArticlesPage() {
       console.error("AI node failure:", err);
     } finally {
       setIsAiLoading(false);
+    }
+  };
+
+  const handleSocialGenerate = async () => {
+    if (!formData.id) {
+      setAlertMessage({ title: "Warning", message: "Please save the article first before generating social media posts.", type: "warning" });
+      return;
+    }
+    setIsSocialLoading(true);
+    try {
+      const data = await aiService.generateSocial(formData.id);
+      setSocialPosts(data);
+    } catch (err) {
+      console.error("Failed to generate social posts:", err);
+      setAlertMessage({ title: "Error", message: "Failed to generate social media content. Ensure API key is valid.", type: "error" });
+    } finally {
+      setIsSocialLoading(false);
+    }
+  };
+
+  const copyToClipboard = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
     }
   };
 
@@ -490,6 +539,41 @@ export default function ArticlesPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700 pb-20">
+      <Dialog open={!!articleToDelete} onOpenChange={(open) => !open && setArticleToDelete(null)}>
+        <DialogContent className="sm:max-w-md border border-white/10 bg-[#0a0d1f] text-white rounded-2xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-500">
+              <Trash2 className="h-5 w-5" />
+              Delete Article
+            </DialogTitle>
+            <DialogDescription className="text-white/60">
+              Delete this strategic asset permanently? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 gap-2 sm:gap-0">
+            <Button type="button" variant="ghost" className="text-white/40 hover:text-white" onClick={() => setArticleToDelete(null)}>Cancel</Button>
+            <Button type="button" variant="destructive" className="bg-rose-500 hover:bg-rose-600 text-white" onClick={confirmDelete}>Delete Permanently</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!alertMessage} onOpenChange={(open) => !open && setAlertMessage(null)}>
+        <DialogContent className="sm:max-w-md border border-white/10 bg-[#0a0d1f] text-white rounded-2xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className={`flex items-center gap-2 ${alertMessage?.type === 'warning' ? 'text-amber-500' : 'text-rose-500'}`}>
+              <AlertCircle className="h-5 w-5" />
+              {alertMessage?.title}
+            </DialogTitle>
+            <DialogDescription className="text-white/60">
+              {alertMessage?.message}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4">
+            <Button type="button" variant="default" className="bg-white/10 hover:bg-white/20 text-white" onClick={() => setAlertMessage(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Sleek Premium Header */}
       <div className="flex items-end justify-between flex-wrap gap-6 border-b border-white/5 pb-8">
         <div className="space-y-1.5 animate-in slide-in-from-left-4 fade-in duration-500">
@@ -589,6 +673,9 @@ export default function ArticlesPage() {
                       </TabsTrigger>
                       <TabsTrigger value="seo" className="rounded-lg px-6 py-2 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 transition-all font-semibold text-xs gap-2">
                         <Globe className="h-3.5 w-3.5" /> SEO
+                      </TabsTrigger>
+                      <TabsTrigger value="social" className="rounded-lg px-6 py-2 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 transition-all font-semibold text-xs gap-2">
+                        <Share2 className="h-3.5 w-3.5" /> Social Media
                       </TabsTrigger>
                     </TabsList>
 
@@ -786,8 +873,8 @@ export default function ArticlesPage() {
                               </div>
                               <Input
                                 type="number"
-                                value={formData.readingTime}
-                                onChange={(e) => setFormData({ ...formData, readingTime: parseInt(e.target.value) })}
+                                value={Number.isNaN(formData.readingTime) ? "" : (formData.readingTime || "")}
+                                onChange={(e) => setFormData({ ...formData, readingTime: parseInt(e.target.value, 10) || 0 })}
                                 className="bg-white/5 border-white/10 rounded-lg h-10 font-bold px-4 text-center"
                                 min={1} max={60}
                               />
@@ -863,6 +950,124 @@ export default function ArticlesPage() {
                           placeholder="Search snippet..."
                         />
                       </div>
+                    </TabsContent>
+
+                    {/* SOCIAL TAB */}
+                    <TabsContent value="social" className="space-y-8 animate-in slide-in-from-right-4">
+                      {!formData.id ? (
+                        <div className="text-center py-12 border border-white/10 border-dashed rounded-2xl bg-white/5">
+                          <Share2 className="h-10 w-10 text-white/20 mx-auto mb-4" />
+                          <h3 className="text-lg font-bold text-white mb-2">Save Article First</h3>
+                          <p className="text-sm text-white/50 max-w-md mx-auto">
+                            You need to save this article before the AI can read it and generate perfectly tailored social media content for all your platforms.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-6">
+                          <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <div>
+                              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                <Sparkles className="h-5 w-5 text-primary" /> AI Social Generator
+                              </h3>
+                              <p className="text-xs text-white/50 mt-1">Generate multi-platform content to promote this article.</p>
+                            </div>
+                            <Button 
+                              type="button"
+                              onClick={handleSocialGenerate} 
+                              disabled={isSocialLoading}
+                              className="gap-2 bg-primary hover:bg-primary/90 text-white shadow-lg"
+                            >
+                              {isSocialLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                              Generate Posts
+                            </Button>
+                          </div>
+
+                          {socialPosts && (
+                            <div className="grid md:grid-cols-2 gap-6 text-left">
+                              {/* LinkedIn */}
+                              <div className="space-y-6">
+                                <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-white/10 pb-2">
+                                  <Linkedin className="h-4 w-4 text-[#0A66C2]" /> LinkedIn
+                                </h4>
+                                
+                                <Card className="bg-white/5 border-white/10 relative group shadow-none">
+                                  <CardContent className="p-4 pt-5">
+                                    <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-primary uppercase tracking-wider border border-white/10 rounded-full">Storytelling Hook</span>
+                                    <p className="text-sm text-white/80 whitespace-pre-wrap">{socialPosts.linkedin?.storytelling}</p>
+                                    <div className="mt-4 flex justify-end">
+                                      <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.linkedin?.storytelling || "", "li-story")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
+                                        {copiedId === "li-story" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                                        {copiedId === "li-story" ? "Copied" : "Copy"}
+                                      </Button>
+                                    </div>
+                                  </CardContent>
+                                </Card>
+
+                                <Card className="bg-white/5 border-white/10 relative group shadow-none">
+                                  <CardContent className="p-4 pt-5">
+                                    <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-emerald-400 uppercase tracking-wider border border-white/10 rounded-full">Value-Driven / Educational</span>
+                                    <p className="text-sm text-white/80 whitespace-pre-wrap">{socialPosts.linkedin?.value_driven}</p>
+                                    <div className="mt-4 flex justify-end">
+                                      <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.linkedin?.value_driven || "", "li-value")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
+                                        {copiedId === "li-value" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                                        {copiedId === "li-value" ? "Copied" : "Copy"}
+                                      </Button>
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              </div>
+
+                              {/* Twitter & Others */}
+                              <div className="space-y-6">
+                                <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-white/10 pb-2">
+                                  <Twitter className="h-4 w-4 text-[#1DA1F2]" /> Twitter / X
+                                </h4>
+                                
+                                <Card className="bg-white/5 border-white/10 relative group shadow-none">
+                                  <CardContent className="p-4 pt-5">
+                                    <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-primary uppercase tracking-wider border border-white/10 rounded-full">Deep-Dive Thread ({socialPosts.twitter?.thread_tweets?.length || 0} tweets)</span>
+                                    <p className="text-sm text-white/80 whitespace-pre-wrap">{socialPosts.twitter?.thread_combined}</p>
+                                    <div className="mt-4 flex justify-end">
+                                      <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.twitter?.thread_combined || "", "tw-thread")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
+                                        {copiedId === "tw-thread" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                                        {copiedId === "tw-thread" ? "Copied" : "Copy"}
+                                      </Button>
+                                    </div>
+                                  </CardContent>
+                                </Card>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                  <Card className="bg-white/5 border-white/10 relative group shadow-none">
+                                    <CardContent className="p-4 pt-5">
+                                      <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-white/60 uppercase tracking-wider border border-white/10 rounded-full flex items-center gap-1"><Instagram className="h-3 w-3 text-[#E1306C]" /> Insta</span>
+                                      <p className="text-xs text-white/80 whitespace-pre-wrap line-clamp-6">{socialPosts.instagram?.caption}</p>
+                                      <div className="mt-4 flex justify-end">
+                                        <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.instagram?.caption || "", "ig-cap")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
+                                          {copiedId === "ig-cap" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                                          {copiedId === "ig-cap" ? "Copied" : "Copy"}
+                                        </Button>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+
+                                  <Card className="bg-white/5 border-white/10 relative group shadow-none">
+                                    <CardContent className="p-4 pt-5">
+                                      <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-white/60 uppercase tracking-wider border border-white/10 rounded-full flex items-center gap-1"><Facebook className="h-3 w-3 text-[#4267B2]" /> FB</span>
+                                      <p className="text-xs text-white/80 whitespace-pre-wrap line-clamp-6">{socialPosts.facebook?.post}</p>
+                                      <div className="mt-4 flex justify-end">
+                                        <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.facebook?.post || "", "fb-post")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
+                                          {copiedId === "fb-post" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                                          {copiedId === "fb-post" ? "Copied" : "Copy"}
+                                        </Button>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </TabsContent>
                   </Tabs>
                 </div>

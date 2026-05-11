@@ -31,21 +31,29 @@ async def generate_social_for_article(
         ai = await get_ai_client(session)
 
         base_context = f"""
-You are generating social media copy for a B2B agency.
-Do NOT use emojis unless explicitly requested.
+Tu es le Community Manager de Soluty, une agence B2B de premier plan.
+Ta mission est de rédiger des posts pour les réseaux sociaux afin de promouvoir un nouvel article de blog.
+Les posts doivent impérativement tourner autour de la thématique centrale de l'article, apporter de la valeur et avoir un ton direct, professionnel et accrocheur.
+L'objectif est de générer du trafic vers l'article ou d'encourager la prise de contact avec l'agence.
 
-Blog title: "{article.title}"
-Summary: "{article.excerpt}"
-Content: {json.dumps(article.content)}
+Titre de l'article : "{article.title}"
+Résumé : "{article.excerpt}"
+Contenu : {json.dumps(article.content)}
 """.strip()
 
         tasks = [
-            ai.generate_text(base_context + "\n\nCreate a LinkedIn post in a storytelling tone aimed at agency buyers.\nUse a strong hook in the first line, 2–3 short paragraphs, and a clear CTA to contact the agency.\nDo not add emojis."),
-            ai.generate_text(base_context + "\n\nCreate a LinkedIn post that is value-driven and educational.\nUse bullet-like short sentences (each on a new line) and end with a CTA to read the full article or contact the agency.\nDo not add emojis."),
-            ai.generate_text(base_context + "\n\nCreate a Twitter/X thread with exactly 5 short tweets.\nReturn the result as a valid JSON array of 5 strings, where each string is one tweet.\nTweets should have strong hooks, be concise, and end the last tweet with a clear CTA to read the article or contact the agency.\nDo not add emojis. Output ONLY the JSON array, nothing else."),
-            ai.generate_text(base_context + "\n\nCreate a single, short, punchy tweet (max 240 characters) that teases the article and ends with a clear CTA.\nDo not add emojis."),
-            ai.generate_text(base_context + "\n\nCreate an Instagram caption optimized for saves and shares.\nUse short lines, strong hook at the top, and end with a clear CTA to check the link in bio or contact the agency.\nDo not add emojis."),
-            ai.generate_text(base_context + "\n\nCreate a Facebook post that is friendly but professional.\nUse 2–4 short paragraphs and end with a CTA to read the article or contact the agency.\nDo not add emojis.")
+            # LinkedIn Post 1
+            ai.generate_text(base_context + "\n\nRédige un post LinkedIn (Post 1/2) sous forme de Storytelling ou Retour d'expérience. Accroche forte (sans dire 'Dans cet article'), paragraphes aérés, et un Call-to-Action clair à la fin. Ton pro, direct, pas de hashtags abusifs. Pas d'émojis sauf si très pertinents."),
+            # LinkedIn Post 2
+            ai.generate_text(base_context + "\n\nRédige un post LinkedIn (Post 2/2) orienté 'Valeur & Éducation'. Utilise des phrases courtes ou des bullet points pour distiller les conseils de l'article. Termine par une question engageante et un CTA. Pas d'émojis sauf si très pertinents."),
+            # Twitter / X Thread
+            ai.generate_text(base_context + "\n\nRédige un Thread Twitter/X (3 à 5 tweets maximum). Le premier tweet doit être un gros 'Hook' (une accroche choc). Les suivants distillent le contenu. Le dernier contient le CTA. Renvoie STRICTEMENT un tableau JSON de chaînes de caractères (ex: [\"Tweet 1\", \"Tweet 2\"]). Aucun autre texte ou markdown autour du JSON !"),
+            # Twitter / X Short
+            ai.generate_text(base_context + "\n\nRédige un seul tweet punchy (max 240 caractères) pour teaser l'article. Il doit générer de la curiosité avec un CTA clair."),
+            # Instagram
+            ai.generate_text(base_context + "\n\nRédige une légende Instagram optimisée pour l'engagement. Des lignes courtes, une accroche visuelle, et un CTA 'lien en bio'. Utilise des hashtags pertinents."),
+            # Facebook
+            ai.generate_text(base_context + "\n\nRédige un post Facebook B2B, amical mais professionnel (Post 1/1). 2 à 4 paragraphes courts. Met en avant le bénéfice direct pour le lecteur s'il lit l'article. Termine par un CTA. Pas d'émojis abusifs.")
         ]
         
         results = cast(Any, await asyncio.gather(*tasks))

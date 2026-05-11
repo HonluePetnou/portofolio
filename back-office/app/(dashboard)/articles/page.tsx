@@ -154,8 +154,6 @@ export default function ArticlesPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
-  const [socialPosts, setSocialPosts] = useState<SocialGenerated | null>(null);
-  const [isSocialLoading, setIsSocialLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [articleToDelete, setArticleToDelete] = useState<string | null>(null);
   const [alertMessage, setAlertMessage] = useState<{ title: string; message: string; type: "warning" | "error" } | null>(null);
@@ -290,7 +288,6 @@ export default function ArticlesPage() {
 
   const resetForm = () => {
     setFormData(initialForm);
-    setSocialPosts(null);
     setActiveTab("content");
   };
 
@@ -335,23 +332,6 @@ export default function ArticlesPage() {
       console.error("AI node failure:", err);
     } finally {
       setIsAiLoading(false);
-    }
-  };
-
-  const handleSocialGenerate = async () => {
-    if (!formData.id) {
-      setAlertMessage({ title: "Warning", message: "Please save the article first before generating social media posts.", type: "warning" });
-      return;
-    }
-    setIsSocialLoading(true);
-    try {
-      const data = await aiService.generateSocial(formData.id);
-      setSocialPosts(data);
-    } catch (err) {
-      console.error("Failed to generate social posts:", err);
-      setAlertMessage({ title: "Error", message: "Failed to generate social media content. Ensure API key is valid.", type: "error" });
-    } finally {
-      setIsSocialLoading(false);
     }
   };
 
@@ -674,9 +654,6 @@ export default function ArticlesPage() {
                       <TabsTrigger value="seo" className="rounded-lg px-6 py-2 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 transition-all font-semibold text-xs gap-2">
                         <Globe className="h-3.5 w-3.5" /> SEO
                       </TabsTrigger>
-                      <TabsTrigger value="social" className="rounded-lg px-6 py-2 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=inactive]:text-white/50 transition-all font-semibold text-xs gap-2">
-                        <Share2 className="h-3.5 w-3.5" /> Social Media
-                      </TabsTrigger>
                     </TabsList>
 
                     {/* CONTENT TAB */}
@@ -950,124 +927,6 @@ export default function ArticlesPage() {
                           placeholder="Search snippet..."
                         />
                       </div>
-                    </TabsContent>
-
-                    {/* SOCIAL TAB */}
-                    <TabsContent value="social" className="space-y-8 animate-in slide-in-from-right-4">
-                      {!formData.id ? (
-                        <div className="text-center py-12 border border-white/10 border-dashed rounded-2xl bg-white/5">
-                          <Share2 className="h-10 w-10 text-white/20 mx-auto mb-4" />
-                          <h3 className="text-lg font-bold text-white mb-2">Save Article First</h3>
-                          <p className="text-sm text-white/50 max-w-md mx-auto">
-                            You need to save this article before the AI can read it and generate perfectly tailored social media content for all your platforms.
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="space-y-6">
-                          <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-2xl p-6">
-                            <div>
-                              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                <Sparkles className="h-5 w-5 text-primary" /> AI Social Generator
-                              </h3>
-                              <p className="text-xs text-white/50 mt-1">Generate multi-platform content to promote this article.</p>
-                            </div>
-                            <Button 
-                              type="button"
-                              onClick={handleSocialGenerate} 
-                              disabled={isSocialLoading}
-                              className="gap-2 bg-primary hover:bg-primary/90 text-white shadow-lg"
-                            >
-                              {isSocialLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
-                              Generate Posts
-                            </Button>
-                          </div>
-
-                          {socialPosts && (
-                            <div className="grid md:grid-cols-2 gap-6 text-left">
-                              {/* LinkedIn */}
-                              <div className="space-y-6">
-                                <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-white/10 pb-2">
-                                  <Linkedin className="h-4 w-4 text-[#0A66C2]" /> LinkedIn
-                                </h4>
-                                
-                                <Card className="bg-white/5 border-white/10 relative group shadow-none">
-                                  <CardContent className="p-4 pt-5">
-                                    <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-primary uppercase tracking-wider border border-white/10 rounded-full">Storytelling Hook</span>
-                                    <p className="text-sm text-white/80 whitespace-pre-wrap">{socialPosts.linkedin?.storytelling}</p>
-                                    <div className="mt-4 flex justify-end">
-                                      <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.linkedin?.storytelling || "", "li-story")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
-                                        {copiedId === "li-story" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
-                                        {copiedId === "li-story" ? "Copied" : "Copy"}
-                                      </Button>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-
-                                <Card className="bg-white/5 border-white/10 relative group shadow-none">
-                                  <CardContent className="p-4 pt-5">
-                                    <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-emerald-400 uppercase tracking-wider border border-white/10 rounded-full">Value-Driven / Educational</span>
-                                    <p className="text-sm text-white/80 whitespace-pre-wrap">{socialPosts.linkedin?.value_driven}</p>
-                                    <div className="mt-4 flex justify-end">
-                                      <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.linkedin?.value_driven || "", "li-value")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
-                                        {copiedId === "li-value" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
-                                        {copiedId === "li-value" ? "Copied" : "Copy"}
-                                      </Button>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-                              </div>
-
-                              {/* Twitter & Others */}
-                              <div className="space-y-6">
-                                <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-white/10 pb-2">
-                                  <Twitter className="h-4 w-4 text-[#1DA1F2]" /> Twitter / X
-                                </h4>
-                                
-                                <Card className="bg-white/5 border-white/10 relative group shadow-none">
-                                  <CardContent className="p-4 pt-5">
-                                    <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-primary uppercase tracking-wider border border-white/10 rounded-full">Deep-Dive Thread ({socialPosts.twitter?.thread_tweets?.length || 0} tweets)</span>
-                                    <p className="text-sm text-white/80 whitespace-pre-wrap">{socialPosts.twitter?.thread_combined}</p>
-                                    <div className="mt-4 flex justify-end">
-                                      <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.twitter?.thread_combined || "", "tw-thread")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
-                                        {copiedId === "tw-thread" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
-                                        {copiedId === "tw-thread" ? "Copied" : "Copy"}
-                                      </Button>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                  <Card className="bg-white/5 border-white/10 relative group shadow-none">
-                                    <CardContent className="p-4 pt-5">
-                                      <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-white/60 uppercase tracking-wider border border-white/10 rounded-full flex items-center gap-1"><Instagram className="h-3 w-3 text-[#E1306C]" /> Insta</span>
-                                      <p className="text-xs text-white/80 whitespace-pre-wrap line-clamp-6">{socialPosts.instagram?.caption}</p>
-                                      <div className="mt-4 flex justify-end">
-                                        <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.instagram?.caption || "", "ig-cap")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
-                                          {copiedId === "ig-cap" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
-                                          {copiedId === "ig-cap" ? "Copied" : "Copy"}
-                                        </Button>
-                                      </div>
-                                    </CardContent>
-                                  </Card>
-
-                                  <Card className="bg-white/5 border-white/10 relative group shadow-none">
-                                    <CardContent className="p-4 pt-5">
-                                      <span className="absolute -top-3 left-4 bg-[#0a0d1f] px-2 text-[10px] font-bold text-white/60 uppercase tracking-wider border border-white/10 rounded-full flex items-center gap-1"><Facebook className="h-3 w-3 text-[#4267B2]" /> FB</span>
-                                      <p className="text-xs text-white/80 whitespace-pre-wrap line-clamp-6">{socialPosts.facebook?.post}</p>
-                                      <div className="mt-4 flex justify-end">
-                                        <Button type="button" variant="ghost" size="sm" onClick={() => copyToClipboard(socialPosts.facebook?.post || "", "fb-post")} className="h-8 gap-1.5 text-xs bg-white/5 hover:bg-white/10 text-white">
-                                          {copiedId === "fb-post" ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
-                                          {copiedId === "fb-post" ? "Copied" : "Copy"}
-                                        </Button>
-                                      </div>
-                                    </CardContent>
-                                  </Card>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
                     </TabsContent>
                   </Tabs>
                 </div>
